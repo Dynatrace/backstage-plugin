@@ -19,6 +19,9 @@ backend:
     client: better-sqlite3
     connection: ':memory:'
 
+techdocs:
+  builder: local
+
 catalog:
   rules:
     - allow: [Component, System, API, Resource, Location, User, Group]
