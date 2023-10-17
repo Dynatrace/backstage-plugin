@@ -47,7 +47,8 @@ practices:
   Commit message format
 - Automated versioning and changelog generation (pending, either using
   [Commitizen](https://github.com/commitizen/cz-cli) or
-  [Semantic Release](https://github.com/semantic-release/semantic-release))
+  [Semantic Release](https://github.com/semantic-release/semantic-release) or
+  even just Lerna)
 
 ### (Conventional) Commit Messages
 
