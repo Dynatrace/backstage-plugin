@@ -1,0 +1,42 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: demo-backstage
+  description: Backstage Demo instance.
+spec:
+  type: website
+  owner: user:default/mjakl
+  lifecycle: experimental
+  system: integrations
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: mjakl
+spec:
+  profile:
+    displayName: Michael Jakl
+    email: michael.jakl@semanticlabs.at
+  memberOf: [group:default/semanticlabs]
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: semanticlabs
+  description: Semanticlabs GmbH
+spec:
+  type: partner
+  profile:
+    displayName: Semanticlabs GmbH
+    email: office@semanticlabs.at
+  children: []
+  members: [mjakl]
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: integrations
+  description: Dynatrae integrations for other systems.
+spec:
+  owner: user:default/mjakl
+  type: service
