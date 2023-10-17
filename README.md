@@ -5,7 +5,8 @@ This repository contains a collection of Backstage plugins for Dynatrace.
 - [Dynatrace Backstage Plugins](#dynatrace-backstage-plugins)
   - [Plugins](#plugins)
   - [Getting Started](#getting-started)
-  - [Contributing](#contributing)
+  - [Development](#development)
+    - [(Conventional) Commit Messages](#conventional-commit-messages)
 
 ## Plugins
 
@@ -34,6 +35,8 @@ information for the plugins. You can see the catalog at
 http://localhost:3000/catalog.
 
 ## Contributing
+
+## Development
 
 We use a small set of tools to keep the repository tidy and promote best
 practices:
