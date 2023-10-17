@@ -13,6 +13,8 @@ This repository contains a collection of Backstage plugins for Dynatrace.
   workloads managed in Dynatrace into Backstage.
 - [Kubernetes Backend](./plugins/kubernetes-backend/README.md) - The backend for
   the Kubernetes plugin.
+- [Kubernetes Common](./plugins/kubernetes-common/README.md) - Common
+  functionality shared between the frontend and backend plugin.
 
 ## Getting Started
 
