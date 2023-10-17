@@ -34,9 +34,11 @@ Backstage is configured to be self documenting, it includes the catalog
 information for the plugins. You can see the catalog at
 http://localhost:3000/catalog.
 
-## Contributing
-
 ## Development
+
+After your initial checkout, run `yarn install` to get the project set up. This
+also installs Husky hooks, which will run on every commit. If the Husky
+installation fails, use `yarn prepare` to install the hooks manually.
 
 We use a small set of tools to keep the repository tidy and promote best
 practices:
