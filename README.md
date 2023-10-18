@@ -32,7 +32,7 @@ yarn dev
 
 Backstage is configured to be self documenting, it includes the catalog
 information for the plugins. You can see the catalog at
-http://localhost:3000/catalog.
+[http://localhost:3000/catalog](http://localhost:3000/catalog).
 
 ## Development
 
@@ -63,7 +63,7 @@ To simplify semantic versioning and changelog generation, we use
 [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). This
 means that commit messages should follow a specific format:
 
-```
+```commit
 <type>[optional scope]: <description>
 
 [optional body]
