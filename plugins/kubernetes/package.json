@@ -38,7 +38,7 @@
   "devDependencies": {
     "@backstage/cli": "^0.22.13",
     "@backstage/core-app-api": "^1.10.0",
-    "@backstage/dev-utils": "^1.0.21",
+    "@backstage/dev-utils": "1.0.21",
     "@backstage/test-utils": "^1.4.3",
     "@testing-library/jest-dom": "^5.10.1",
     "@testing-library/react": "^12.1.3",
