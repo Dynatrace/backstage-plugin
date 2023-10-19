@@ -6,7 +6,7 @@ import {
 import { rootRouteRef } from './routes';
 
 export const kubernetesPlugin = createPlugin({
-  id: 'kubernetes',
+  id: 'dynatrace-kubernetes',
   routes: {
     root: rootRouteRef,
   },
