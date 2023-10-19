@@ -1,4 +1,9 @@
-import { Progress, Table, TableColumn } from '@backstage/core-components';
+import {
+  Progress,
+  ResponseErrorPanel,
+  Table,
+  TableColumn,
+} from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { makeStyles } from '@material-ui/core';
 import React from 'react';
@@ -54,19 +59,19 @@ export const DenseTable = ({ users }: DenseTableProps) => {
 
 export const KubernetesWorkload = () => {
   const { entity } = useEntity();
-  const { error, loading, status, data } = useKubernetesWorkloadData();
+  const { error, loading, value } = useKubernetesWorkloadData();
 
   if (loading) {
     return <Progress />;
   } else if (error) {
-    return <div>Error</div>;
+    return <ResponseErrorPanel error={error} />;
   }
 
   return (
     <>
       <div>Hello {entity.metadata.name}</div>
-      <div>Status: {status}</div>
-      <DenseTable users={data || []} />;
+      <div>Status: {value?.status}</div>
+      <DenseTable users={value?.data || []} />;
     </>
   );
 };
