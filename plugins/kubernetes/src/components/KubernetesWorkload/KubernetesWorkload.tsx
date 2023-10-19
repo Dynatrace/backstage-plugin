@@ -71,7 +71,7 @@ export const KubernetesWorkload = () => {
     <>
       <div>Hello {entity.metadata.name}</div>
       <div>Status: {value?.status}</div>
-      <DenseTable users={value?.data || []} />;
+      <DenseTable users={value?.data || []} />
     </>
   );
 };
