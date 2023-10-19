@@ -1,7 +1,9 @@
 import { Entity } from '@backstage/catalog-model';
 import { createDevApp } from '@backstage/dev-utils';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
+import { TestApiProvider } from '@backstage/test-utils';
 import React from 'react';
+import { KubernetesWorkloadApi, kubernetesWorkloadApiRef } from '../src/api';
 import { EntityKubernetesWorkloadCard, kubernetesPlugin } from '../src/plugin';
 
 const mockEntity: Entity = {
@@ -21,13 +23,23 @@ const mockEntity: Entity = {
   },
 };
 
+class MockKubernetesWorkloadApi implements KubernetesWorkloadApi {
+  async getHealth(): Promise<{ status: string }> {
+    return { status: 'ok' };
+  }
+}
+
 createDevApp()
   .registerPlugin(kubernetesPlugin)
   .addPage({
     element: (
-      <EntityProvider entity={mockEntity}>
-        <EntityKubernetesWorkloadCard />
-      </EntityProvider>
+      <TestApiProvider
+        apis={[[kubernetesWorkloadApiRef, new MockKubernetesWorkloadApi()]]}
+      >
+        <EntityProvider entity={mockEntity}>
+          <EntityKubernetesWorkloadCard />
+        </EntityProvider>
+      </TestApiProvider>
     ),
     title: 'Root Page',
     path: '/catalog/hardening/component/backstage-example',
