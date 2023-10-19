@@ -1,6 +1,6 @@
 import {
+  createComponentExtension,
   createPlugin,
-  createRoutableExtension,
 } from '@backstage/core-plugin-api';
 
 import { rootRouteRef } from './routes';
@@ -12,11 +12,14 @@ export const kubernetesPlugin = createPlugin({
   },
 });
 
-export const KubernetesPage = kubernetesPlugin.provide(
-  createRoutableExtension({
-    name: 'KubernetesPage',
-    component: () =>
-      import('./components/ExampleComponent').then(m => m.ExampleComponent),
-    mountPoint: rootRouteRef,
+export const EntityKubernetesWorkload = kubernetesPlugin.provide(
+  createComponentExtension({
+    name: 'EntityKubernetesWorkload',
+    component: {
+      lazy: () =>
+        import('./components/KubernetesWorkload').then(
+          m => m.KubernetesWorkload,
+        ),
+    },
   }),
 );

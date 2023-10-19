@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { ExampleFetchComponent } from './ExampleFetchComponent';
+import { KubernetesWorkload } from './KubernetesWorkload';
 
-describe('ExampleFetchComponent', () => {
+describe('EntityKubernetesWorkload', () => {
   it('renders the user table', async () => {
-    render(<ExampleFetchComponent />);
+    render(<KubernetesWorkload />);
 
     // Wait for the table to render
     const table = await screen.findByRole('table');
