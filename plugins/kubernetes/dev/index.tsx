@@ -2,7 +2,7 @@ import { Entity } from '@backstage/catalog-model';
 import { createDevApp } from '@backstage/dev-utils';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import React from 'react';
-import { EntityKubernetesWorkload, kubernetesPlugin } from '../src/plugin';
+import { EntityKubernetesWorkloadCard, kubernetesPlugin } from '../src/plugin';
 
 const mockEntity: Entity = {
   apiVersion: 'backstage.io/v1alpha1',
@@ -26,7 +26,7 @@ createDevApp()
   .addPage({
     element: (
       <EntityProvider entity={mockEntity}>
-        <EntityKubernetesWorkload />
+        <EntityKubernetesWorkloadCard />
       </EntityProvider>
     ),
     title: 'Root Page',

@@ -12,9 +12,9 @@ export const kubernetesPlugin = createPlugin({
   },
 });
 
-export const EntityKubernetesWorkload = kubernetesPlugin.provide(
+export const EntityKubernetesWorkloadCard = kubernetesPlugin.provide(
   createComponentExtension({
-    name: 'EntityKubernetesWorkload',
+    name: 'EntityKubernetesWorkloadCard',
     component: {
       lazy: () =>
         import('./components/KubernetesWorkload').then(

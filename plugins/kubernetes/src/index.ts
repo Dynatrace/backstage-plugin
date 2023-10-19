@@ -1,1 +1,1 @@
-export { kubernetesPlugin, EntityKubernetesWorkload } from './plugin';
+export { EntityKubernetesWorkloadCard, kubernetesPlugin } from './plugin';
