@@ -8,6 +8,9 @@ by Dynatrace. It lists all deployments of components configured in Backstage.
 The ID of the plugin is `dynatrace-kubernetes` (to not conflict with other
 Kubernetes plugins).
 
+The ID of the backend plugin is expected to be
+`plugin.dynatrace-kubernetes.service`.
+
 ## Getting started
 
 Use `yarn start` to run the plugin in isolation (as configured in the
