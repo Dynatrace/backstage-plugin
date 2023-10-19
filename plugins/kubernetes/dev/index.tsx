@@ -5,6 +5,8 @@ import { TestApiProvider } from '@backstage/test-utils';
 import React from 'react';
 import { KubernetesWorkloadApi, kubernetesWorkloadApiRef } from '../src/api';
 import { EntityKubernetesWorkloadCard, kubernetesPlugin } from '../src/plugin';
+import { User } from '../src/types';
+import { exampleUsers } from './data';
 
 const mockEntity: Entity = {
   apiVersion: 'backstage.io/v1alpha1',
@@ -26,6 +28,10 @@ const mockEntity: Entity = {
 class MockKubernetesWorkloadApi implements KubernetesWorkloadApi {
   async getHealth(): Promise<{ status: string }> {
     return { status: 'ok' };
+  }
+
+  async getData(): Promise<User[]> {
+    return exampleUsers;
   }
 }
 
