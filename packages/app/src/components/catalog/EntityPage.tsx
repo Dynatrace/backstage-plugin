@@ -57,6 +57,7 @@ import React from 'react';
 
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
+import { EntityKubernetesWorkload } from 'backstage-plugin-kubernetes';
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -175,6 +176,10 @@ const serviceEntityPage = (
     <EntityLayout.Route path="/docs" title="Docs">
       {techdocsContent}
     </EntityLayout.Route>
+
+    <EntityLayout.Route path="/dynatrace-kubernetes" title="Dynatrace">
+      <EntityKubernetesWorkload />
+    </EntityLayout.Route>
   </EntityLayout>
 );
 
@@ -201,6 +206,10 @@ const websiteEntityPage = (
 
     <EntityLayout.Route path="/docs" title="Docs">
       {techdocsContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/dynatrace-kubernetes" title="Dynatrace">
+      <EntityKubernetesWorkload />
     </EntityLayout.Route>
   </EntityLayout>
 );
