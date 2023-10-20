@@ -31,7 +31,7 @@
     ]
   },
   "devDependencies": {
-    "@backstage/cli": "^0.22.13",
+    "@backstage/cli": "^0.22.14",
     "@commitlint/cli": "^17.8.0",
     "@commitlint/config-conventional": "^17.8.0",
     "@commitlint/config-lerna-scopes": "^17.7.0",

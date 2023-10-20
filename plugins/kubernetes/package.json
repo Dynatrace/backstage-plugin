@@ -37,7 +37,7 @@
     "react": "^16.13.1 || ^17.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.22.13",
+    "@backstage/cli": "^0.22.14",
     "@backstage/core-app-api": "^1.10.0",
     "@backstage/dev-utils": "1.0.21",
     "@backstage/test-utils": "^1.4.3",
