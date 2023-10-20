@@ -1,5 +1,5 @@
 {
-  "name": "backstage-plugin-kubernetes",
+  "name": "@dynatrace/backstage-plugin-kubernetes",
   "version": "0.1.0",
   "main": "src/index.ts",
   "types": "src/index.ts",

@@ -57,7 +57,7 @@ import React from 'react';
 
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
-import { EntityKubernetesWorkloadCard } from 'backstage-plugin-kubernetes';
+import { EntityKubernetesWorkloadCard } from '@dynatrace/backstage-plugin-kubernetes';
 
 const techdocsContent = (
   <EntityTechdocsContent>

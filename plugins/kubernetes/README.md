@@ -1,4 +1,6 @@
-# Dynatrae Kubernetes
+# Dynatrace Kubernetes
+
+Package name: `@dynatrace/backstage-plugin-kubernetes`
 
 Welcome to the Kubernetes plugin for Dynatrace!
 
@@ -15,3 +17,6 @@ The ID of the backend plugin is expected to be
 
 Use `yarn start` to run the plugin in isolation (as configured in the
 [/dev](./dev) directory).
+
+The plugin is available via
+[localhost:3000/...](http://localhost:3000/catalog/hardening/component/backstage-example).

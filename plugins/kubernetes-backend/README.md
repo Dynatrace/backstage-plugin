@@ -1,4 +1,6 @@
-# Dynatrae Kubernetes Backend
+# Dynatrace Kubernetes Backend
+
+Package name: `@dynatrace/backstage-plugin-kubernetes-backend`
 
 Welcome to the Kubernetes backend plugin for Dynatrace!
 
@@ -8,4 +10,4 @@ by Dynatrace. It lists all deployments of components configured in Backstage.
 ## Development
 
 The backend can be started locally using `yarn start`, this starts the backend
-on [localhost:7007/kubernetes/health](http://localhost:7007/kubernetes/health).
+on [localhost:7007/kubernetes](http://localhost:7007/kubernetes).

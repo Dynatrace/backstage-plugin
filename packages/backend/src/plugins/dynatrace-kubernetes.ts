@@ -1,4 +1,4 @@
-import { createRouter } from 'backstage-plugin-kubernetes-backend';
+import { createRouter } from '@dynatrace/backstage-plugin-kubernetes-backend';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
 
