@@ -69,7 +69,11 @@ export const KubernetesWorkload = () => {
 
   return (
     <>
-      <div>Hello {entity.metadata.name}</div>
+      <div>
+        Hello{' '}
+        {entity.metadata.namespace ? entity.metadata.namespace : 'default'}/
+        {entity.metadata.name}
+      </div>
       <div>Status: {value?.status}</div>
       <DenseTable users={value?.data || []} />
     </>
