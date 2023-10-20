@@ -10,7 +10,7 @@ by Dynatrace. It lists all deployments of components configured in Backstage.
 The ID of the plugin is `dynatrace-kubernetes` (to not conflict with other
 Kubernetes plugins).
 
-The ID of the backend plugin is expected to be
+The ID of the backend plugin API is set to be
 `plugin.dynatrace-kubernetes.service`.
 
 ## Getting started
