@@ -1,6 +1,4 @@
 import { DiscoveryApi } from '@backstage/core-plugin-api';
-import { Deployment } from '@dynatrace/backstage-plugin-kubernetes-common';
-import { exampleData } from '../../dev/data';
 import { KubernetesWorkloadApi } from './types';
 
 export class KubernetesWorkloadApiClient implements KubernetesWorkloadApi {
@@ -19,8 +17,14 @@ export class KubernetesWorkloadApiClient implements KubernetesWorkloadApi {
     });
     return response.json();
   }
-  async getData(): Promise<Deployment[]> {
-    // const url = `${await this.discoveryApi.getBaseUrl('dynatrace-kubernetes')}/workload...`;
-    return exampleData;
+
+  async getDeployments(component: string): Promise<any> {
+    const url = `${await this.discoveryApi.getBaseUrl(
+      'dynatrace-kubernetes',
+    )}/deployments?component=${encodeURIComponent(component)}`;
+    const response = await fetch(url, {
+      method: 'GET',
+    });
+    return response.json();
   }
 }

@@ -1,5 +1,5 @@
 export interface Config {
-  'dynatrace-kubernetes-plugin': {
+  dynatrace: {
     /**
      * @visibility secret
      */
@@ -9,8 +9,16 @@ export interface Config {
      */
     clientSecret: string;
     /**
+     * @visibility secret
+     */
+    accountUrn: string;
+    /**
+     * @visibility backend
+     */
+    tokenUrl: string;
+    /**
      * @visibility frontend
      */
-    environmentIds: string[];
+    url: string;
   };
 }

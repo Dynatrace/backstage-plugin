@@ -3,6 +3,8 @@ import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import { Config } from '@backstage/config';
+import { getAccessToken } from './dynatract-auth';
+import { DynatraceAccessInfo, getDeployments } from './dynatrace-dql';
 
 export interface RouterOptions {
   logger: Logger;
@@ -13,13 +15,11 @@ export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
   const { logger, config } = options;
-  const clientId = config.getString('dynatrace-kubernetes-plugin.clientId');
-  const clientSecret = config.getString(
-    'dynatrace-kubernetes-plugin.clientSecret',
-  );
-  const environmentIds = config.getStringArray(
-    'dynatrace-kubernetes-plugin.environmentIds',
-  );
+  const url: string = config.getString('dynatrace.url');
+  const tokenUrl: string = config.getString('dynatrace.tokenUrl');
+  const clientId = config.getString('dynatrace.clientId');
+  const clientSecret = config.getString('dynatrace.clientSecret');
+  const accountUrn: string = config.getString('dynatrace.accountUrn');
 
   const router = Router();
   router.use(express.json());
@@ -27,6 +27,24 @@ export async function createRouter(
   router.get('/health', (_, response) => {
     logger.info('PONG!');
     response.json({ status: 'ok' });
+  });
+
+  router.get('/deployments', async (req, res) => {
+    const tokenResponse = await getAccessToken({
+      clientId,
+      clientSecret,
+      tokenUrl,
+      accountUrn,
+    });
+    const environment: DynatraceAccessInfo = {
+      url,
+      accessToken: tokenResponse.access_token,
+    };
+    const deployments = await getDeployments(
+      environment,
+      req.query.component as string,
+    );
+    res.json(deployments);
   });
 
   router.use(errorHandler());

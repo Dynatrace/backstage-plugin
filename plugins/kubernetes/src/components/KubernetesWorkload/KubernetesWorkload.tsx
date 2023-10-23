@@ -31,7 +31,10 @@ export const DenseTable = ({ deployments }: DenseTableProps) => {
 
 export const KubernetesWorkload = () => {
   const { entity } = useEntity();
-  const { error, loading, value } = useKubernetesWorkloadData();
+  const component = `${entity.metadata.name}.${
+    entity.metadata.namespace ?? 'default'
+  }`;
+  const { error, loading, value } = useKubernetesWorkloadData(component);
 
   if (loading) {
     return <Progress />;
@@ -41,13 +44,9 @@ export const KubernetesWorkload = () => {
 
   return (
     <>
-      <div>
-        Hello{' '}
-        {entity.metadata.namespace ? entity.metadata.namespace : 'default'}/
-        {entity.metadata.name}
-      </div>
+      <div>Hello {component}</div>
       <div>Status: {value?.status}</div>
-      <DenseTable deployments={value?.data || []} />
+      <DenseTable deployments={value?.deployments || []} />
     </>
   );
 };

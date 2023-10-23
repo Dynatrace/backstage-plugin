@@ -3,7 +3,7 @@ import { Deployment } from '@dynatrace/backstage-plugin-kubernetes-common';
 
 export interface KubernetesWorkloadApi {
   getHealth(): Promise<{ status: string }>;
-  getData(): Promise<Deployment[]>;
+  getDeployments(component: string): Promise<Deployment[]>;
 }
 
 export const kubernetesWorkloadApiRef = createApiRef<KubernetesWorkloadApi>({

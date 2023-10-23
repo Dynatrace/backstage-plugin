@@ -50,6 +50,10 @@ class MockKubernetesWorkloadApi implements KubernetesWorkloadApi {
   async getData(): Promise<Deployment[]> {
     return exampleData;
   }
+
+  getDeployments(_: string): Promise<Deployment[]> {
+    return Promise.resolve([]);
+  }
 }
 
 const DemoCard: FC<{ mockData: Entity }> = ({ mockData }) => {
