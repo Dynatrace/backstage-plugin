@@ -1,9 +1,8 @@
+import { createRouter } from './router';
 import { getVoidLogger } from '@backstage/backend-common';
+import { MockConfigApi } from '@backstage/test-utils';
 import express from 'express';
 import request from 'supertest';
-
-import { createRouter } from './router';
-import { MockConfigApi } from '@backstage/test-utils';
 
 describe('createRouter', () => {
   let app: express.Express;

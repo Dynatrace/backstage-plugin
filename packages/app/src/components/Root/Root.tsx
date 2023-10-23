@@ -1,3 +1,5 @@
+import LogoFull from './LogoFull';
+import LogoIcon from './LogoIcon';
 import {
   Link,
   Sidebar,
@@ -24,8 +26,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import MapIcon from '@material-ui/icons/MyLocation';
 import SearchIcon from '@material-ui/icons/Search';
 import React, { PropsWithChildren } from 'react';
-import LogoFull from './LogoFull';
-import LogoIcon from './LogoIcon';
 
 const useSidebarLogoStyles = makeStyles({
   root: {

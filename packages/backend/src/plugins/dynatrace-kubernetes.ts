@@ -1,6 +1,6 @@
+import { PluginEnvironment } from '../types';
 import { createRouter } from '@dynatrace/backstage-plugin-kubernetes-backend';
 import { Router } from 'express';
-import { PluginEnvironment } from '../types';
 
 export default async function createPlugin(
   env: PluginEnvironment,

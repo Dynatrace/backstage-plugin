@@ -1,12 +1,11 @@
+import { KubernetesWorkloadApiClient, kubernetesWorkloadApiRef } from './api';
+import { rootRouteRef } from './routes';
 import {
   createApiFactory,
   createComponentExtension,
   createPlugin,
   discoveryApiRef,
 } from '@backstage/core-plugin-api';
-
-import { KubernetesWorkloadApiClient, kubernetesWorkloadApiRef } from './api';
-import { rootRouteRef } from './routes';
 
 export const kubernetesPlugin = createPlugin({
   id: 'dynatrace-kubernetes',

@@ -1,3 +1,4 @@
+import { PluginEnvironment } from '../types';
 import { useHotCleanup } from '@backstage/backend-common';
 import { DefaultCatalogCollatorFactory } from '@backstage/plugin-catalog-backend';
 import { createRouter } from '@backstage/plugin-search-backend';
@@ -7,7 +8,6 @@ import {
 } from '@backstage/plugin-search-backend-node';
 import { DefaultTechDocsCollatorFactory } from '@backstage/plugin-techdocs-backend';
 import { Router } from 'express';
-import { PluginEnvironment } from '../types';
 
 export default async function createPlugin(
   env: PluginEnvironment,

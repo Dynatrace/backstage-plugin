@@ -1,5 +1,5 @@
-import { DiscoveryApi } from '@backstage/core-plugin-api';
 import { KubernetesWorkloadApi } from './types';
+import { DiscoveryApi } from '@backstage/core-plugin-api';
 
 export class KubernetesWorkloadApiClient implements KubernetesWorkloadApi {
   private readonly discoveryApi: DiscoveryApi;

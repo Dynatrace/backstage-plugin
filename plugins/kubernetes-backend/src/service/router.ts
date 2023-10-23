@@ -1,10 +1,10 @@
+import { DynatraceAccessInfo, getDeployments } from './dynatrace-dql';
+import { getAccessToken } from './dynatract-auth';
 import { errorHandler } from '@backstage/backend-common';
+import { Config } from '@backstage/config';
 import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
-import { Config } from '@backstage/config';
-import { getAccessToken } from './dynatract-auth';
-import { DynatraceAccessInfo, getDeployments } from './dynatrace-dql';
 
 export interface RouterOptions {
   logger: Logger;

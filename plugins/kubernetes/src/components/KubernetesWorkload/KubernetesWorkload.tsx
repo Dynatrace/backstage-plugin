@@ -1,3 +1,4 @@
+import { useKubernetesWorkloadData } from '../../hooks/useKubernetesWorkloadData';
 import {
   Progress,
   ResponseErrorPanel,
@@ -7,7 +8,6 @@ import {
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { Deployment } from '@dynatrace/backstage-plugin-kubernetes-common';
 import React from 'react';
-import { useKubernetesWorkloadData } from '../../hooks/useKubernetesWorkloadData';
 
 type DenseTableProps = {
   deployments: Deployment[];
