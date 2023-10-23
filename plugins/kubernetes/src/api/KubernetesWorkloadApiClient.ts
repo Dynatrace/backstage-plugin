@@ -1,5 +1,5 @@
 import { DiscoveryApi } from '@backstage/core-plugin-api';
-import { User } from '../types';
+import { User } from '@dynatrace/backstage-plugin-kubernetes-common';
 import { KubernetesWorkloadApi } from './types';
 
 export class KubernetesWorkloadApiClient implements KubernetesWorkloadApi {

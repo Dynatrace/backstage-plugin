@@ -5,10 +5,10 @@ import {
   TableColumn,
 } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { User } from '@dynatrace/backstage-plugin-kubernetes-common';
 import { makeStyles } from '@material-ui/core';
 import React from 'react';
 import { useKubernetesWorkloadData } from '../../hooks/useKubernetesWorkloadData';
-import { User } from '../../types';
 
 type DenseTableProps = {
   users: User[];

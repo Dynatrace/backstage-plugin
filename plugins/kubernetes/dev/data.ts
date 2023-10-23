@@ -1,4 +1,4 @@
-import { User } from '../src/types';
+import { User } from '@dynatrace/backstage-plugin-kubernetes-common';
 
 export const exampleUsers: User[] = [
   {
