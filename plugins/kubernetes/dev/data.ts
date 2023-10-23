@@ -1,26 +1,15 @@
-import { User } from '@dynatrace/backstage-plugin-kubernetes-common';
+import {
+  Deployment,
+  fromObject,
+} from '@dynatrace/backstage-plugin-kubernetes-common';
 
-export const exampleUsers: User[] = [
+export const exampleData: Deployment[] = [
   {
-    gender: 'female',
-    name: {
-      title: 'Miss',
-      first: 'Carolyn',
-      last: 'Moore',
-    },
-    email: 'carolyn.moore@example.com',
-    picture: 'https://api.dicebear.com/6.x/open-peeps/svg?seed=Carolyn',
-    nat: 'GB',
+    name: 'backstage',
+    namespace: 'hardening',
   },
   {
-    gender: 'female',
-    name: {
-      title: 'Ms',
-      first: 'Esma',
-      last: 'Berberoğlu',
-    },
-    email: 'esma.berberoglu@example.com',
-    picture: 'https://api.dicebear.com/6.x/open-peeps/svg?seed=Esma',
-    nat: 'TR',
+    name: 'nginx',
+    // default namespace
   },
-];
+].map(deployment => fromObject(deployment));

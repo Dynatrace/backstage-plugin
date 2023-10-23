@@ -1,5 +1,6 @@
 import { DiscoveryApi } from '@backstage/core-plugin-api';
-import { User } from '@dynatrace/backstage-plugin-kubernetes-common';
+import { Deployment } from '@dynatrace/backstage-plugin-kubernetes-common';
+import { exampleData } from '../../dev/data';
 import { KubernetesWorkloadApi } from './types';
 
 export class KubernetesWorkloadApiClient implements KubernetesWorkloadApi {
@@ -18,20 +19,8 @@ export class KubernetesWorkloadApiClient implements KubernetesWorkloadApi {
     });
     return response.json();
   }
-  async getData(): Promise<User[]> {
+  async getData(): Promise<Deployment[]> {
     // const url = `${await this.discoveryApi.getBaseUrl('dynatrace-kubernetes')}/workload...`;
-    return [
-      {
-        gender: 'female',
-        name: {
-          title: 'Miss',
-          first: 'Carolyn',
-          last: 'Moore',
-        },
-        email: 'carolyn.moore@example.com',
-        picture: 'https://api.dicebear.com/6.x/open-peeps/svg?seed=Carolyn',
-        nat: 'GB',
-      },
-    ];
+    return exampleData;
   }
 }

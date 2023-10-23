@@ -1,9 +1,9 @@
 import { createApiRef } from '@backstage/core-plugin-api';
-import { User } from '@dynatrace/backstage-plugin-kubernetes-common';
+import { Deployment } from '@dynatrace/backstage-plugin-kubernetes-common';
 
 export interface KubernetesWorkloadApi {
   getHealth(): Promise<{ status: string }>;
-  getData(): Promise<User[]>;
+  getData(): Promise<Deployment[]>;
 }
 
 export const kubernetesWorkloadApiRef = createApiRef<KubernetesWorkloadApi>({
