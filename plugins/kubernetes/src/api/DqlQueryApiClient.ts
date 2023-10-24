@@ -1,11 +1,11 @@
-import { KubernetesWorkloadApi } from './types';
+import { DqlQueryApi } from './types';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
 import {
   TabularData,
   TabularDataFactory,
 } from '@dynatrace/backstage-plugin-kubernetes-common';
 
-export class KubernetesWorkloadApiClient implements KubernetesWorkloadApi {
+export class DqlQueryApiClient implements DqlQueryApi {
   private readonly discoveryApi: DiscoveryApi;
 
   constructor(options: { discoveryApi: DiscoveryApi }) {
@@ -14,8 +14,10 @@ export class KubernetesWorkloadApiClient implements KubernetesWorkloadApi {
 
   async getData(component: string): Promise<TabularData> {
     const url = `${await this.discoveryApi.getBaseUrl(
-      'dynatrace-kubernetes',
-    )}/deployments?component=${encodeURIComponent(component)}`;
+      'dynatrace-dql',
+    )}/dynatrace/kubernetes-deployments?component=${encodeURIComponent(
+      component,
+    )}`;
     const response = await fetch(url, {
       method: 'GET',
     });

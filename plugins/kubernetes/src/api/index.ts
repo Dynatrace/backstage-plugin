@@ -1,3 +1,3 @@
-export { KubernetesWorkloadApiClient } from './KubernetesWorkloadApiClient';
-export { kubernetesWorkloadApiRef } from './types';
-export type { KubernetesWorkloadApi } from './types';
+export { DqlQueryApiClient } from './DqlQueryApiClient';
+export { dqlQueryApiRef } from './types';
+export type { DqlQueryApi } from './types';

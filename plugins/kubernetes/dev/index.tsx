@@ -1,5 +1,5 @@
-import { KubernetesWorkloadApi, kubernetesWorkloadApiRef } from '../src/api';
-import { EntityKubernetesWorkloadCard, kubernetesPlugin } from '../src/plugin';
+import { DqlQueryApi, dqlQueryApiRef } from '../src/api';
+import { EntityDqlQueryResultTableCard, dqlQueryPlugin } from '../src/plugin';
 import { exampleData } from './data';
 import { Entity } from '@backstage/catalog-model';
 import { createDevApp } from '@backstage/dev-utils';
@@ -42,7 +42,7 @@ const mockComponentDefaultNamespace: Entity = {
   },
 };
 
-class MockKubernetesWorkloadApi implements KubernetesWorkloadApi {
+class MockDqlQueryApi implements DqlQueryApi {
   async getData(): Promise<TabularData> {
     return exampleData;
   }
@@ -52,19 +52,17 @@ const DemoCard: FC<{ mockData: Entity }> = ({ mockData }) => {
   return (
     <Box m={4}>
       <EntityProvider entity={mockData}>
-        <EntityKubernetesWorkloadCard />
+        <EntityDqlQueryResultTableCard />
       </EntityProvider>
     </Box>
   );
 };
 
 createDevApp()
-  .registerPlugin(kubernetesPlugin)
+  .registerPlugin(dqlQueryPlugin)
   .addPage({
     element: (
-      <TestApiProvider
-        apis={[[kubernetesWorkloadApiRef, new MockKubernetesWorkloadApi()]]}
-      >
+      <TestApiProvider apis={[[dqlQueryApiRef, new MockDqlQueryApi()]]}>
         <DemoCard mockData={mockComponentWithNamespace} />
         <DemoCard mockData={mockComponentDefaultNamespace} />
       </TestApiProvider>

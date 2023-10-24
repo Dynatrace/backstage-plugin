@@ -1,1 +1,1 @@
-export { EntityKubernetesWorkloadCard, kubernetesPlugin } from './plugin';
+export { EntityDqlQueryResultTableCard, dqlQueryPlugin } from './plugin';
