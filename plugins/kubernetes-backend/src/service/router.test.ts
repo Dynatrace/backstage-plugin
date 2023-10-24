@@ -19,6 +19,6 @@ describe('createRouter', () => {
   });
 
   it('should not fail because of missing tests', () => {
-    expect(true).toBe(true);
+    expect(app).toBeDefined();
   });
 });

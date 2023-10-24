@@ -1,5 +1,6 @@
 import { createRouter } from './router';
 import { createServiceBuilder } from '@backstage/backend-common';
+import { ConfigReader } from '@backstage/config';
 import { Server } from 'http';
 import { Logger } from 'winston';
 
@@ -16,6 +17,7 @@ export async function startStandaloneServer(
   logger.debug('Starting application server...');
   const router = await createRouter({
     logger,
+    config: new ConfigReader({}),
   });
 
   let service = createServiceBuilder(module)
