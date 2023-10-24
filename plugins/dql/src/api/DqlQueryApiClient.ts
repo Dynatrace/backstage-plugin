@@ -12,15 +12,18 @@ export class DqlQueryApiClient implements DqlQueryApi {
     this.discoveryApi = options.discoveryApi;
   }
 
-  async getData(component: string): Promise<TabularData> {
-    const url = `${await this.discoveryApi.getBaseUrl(
-      'dynatrace-dql',
-    )}/dynatrace/kubernetes-deployments?component=${encodeURIComponent(
-      component,
-    )}`;
+  async getData(
+    namespace: string,
+    queryName: string,
+    component: string,
+  ): Promise<TabularData> {
+    const baseUrl = await this.discoveryApi.getBaseUrl('dynatrace-dql');
+    const encodedComponent = encodeURIComponent(component);
+    const url = `${baseUrl}/${namespace}/${queryName}?component=${encodedComponent}`;
     const response = await fetch(url, {
       method: 'GET',
     });
-    return TabularDataFactory.fromObject(await response.json());
+    const jsonResponse = await response.json();
+    return TabularDataFactory.fromObject(jsonResponse);
   }
 }

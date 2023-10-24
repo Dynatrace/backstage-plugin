@@ -36,19 +36,45 @@ export const DenseTable = ({ title, data }: DenseTableProps) => {
   );
 };
 
+const namespaceSchema = z.enum(['dynatrace', 'custom']);
+const queryNameSchema = z.string().regex(/^[a-z\-]+$/);
+
 const dqlQueryResultTableSchema = z.strictObject({
   title: z.string().default('Query Result'),
-  queryId: z.string(),
+  queryId: z
+    .string()
+    .toLowerCase()
+    .refine(
+      value => {
+        // Check the namespace and queryName separately
+        const [namespace, queryName] = value.split('.');
+        return (
+          namespaceSchema.safeParse(namespace).success &&
+          queryNameSchema.safeParse(queryName).success
+        );
+      },
+      {
+        message:
+          "String must be in the format 'namespace.query-name'. Namespace must be 'dynatrace' or 'custom'. Query name must be lowercase and may only contain letters and dashes.",
+      },
+    ),
 });
 
 type DqlQueryResultTableProps = z.infer<typeof dqlQueryResultTableSchema>;
 
 export const DqlQueryResultTable = (props: DqlQueryResultTableProps) => {
+  const { title, queryId } = dqlQueryResultTableSchema.parse(props);
+  const [namespace, queryName] = queryId.split('.');
+
   const { entity } = useEntity();
   const component = `${entity.metadata.name}.${
     entity.metadata.namespace ?? 'default'
   }`;
-  const { error, loading, value } = useDqlQuery(component);
+  const { error, loading, value } = useDqlQuery(
+    namespace,
+    queryName,
+    component,
+  );
 
   if (loading) {
     return <Progress />;
@@ -56,5 +82,5 @@ export const DqlQueryResultTable = (props: DqlQueryResultTableProps) => {
     return <ResponseErrorPanel error={error} />;
   }
 
-  return <DenseTable title={props.title} data={value || []} />;
+  return <DenseTable title={title} data={value || []} />;
 };
