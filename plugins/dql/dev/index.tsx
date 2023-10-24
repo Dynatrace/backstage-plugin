@@ -48,11 +48,15 @@ class MockDqlQueryApi implements DqlQueryApi {
   }
 }
 
-const DemoCard: FC<{ mockData: Entity }> = ({ mockData }) => {
+const DemoCard: FC<{ mockData: Entity; title: string; queryId: string }> = ({
+  mockData,
+  title,
+  queryId,
+}) => {
   return (
     <Box m={4}>
       <EntityProvider entity={mockData}>
-        <EntityDqlQueryResultTableCard />
+        <EntityDqlQueryResultTableCard title={title} queryId={queryId} />
       </EntityProvider>
     </Box>
   );
@@ -63,8 +67,16 @@ createDevApp()
   .addPage({
     element: (
       <TestApiProvider apis={[[dqlQueryApiRef, new MockDqlQueryApi()]]}>
-        <DemoCard mockData={mockComponentWithNamespace} />
-        <DemoCard mockData={mockComponentDefaultNamespace} />
+        <DemoCard
+          title="Some Deployments"
+          queryId="kubernetes-deployments"
+          mockData={mockComponentWithNamespace}
+        />
+        <DemoCard
+          title="Other Deployments"
+          queryId="kubernetes-deployments"
+          mockData={mockComponentDefaultNamespace}
+        />
       </TestApiProvider>
     ),
     title: 'Root Page',
