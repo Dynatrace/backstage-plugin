@@ -3,7 +3,7 @@ import { DiscoveryApi } from '@backstage/core-plugin-api';
 import {
   TabularData,
   TabularDataFactory,
-} from '@dynatrace/backstage-plugin-kubernetes-common';
+} from '@dynatrace/backstage-plugin-dql-common';
 
 export class DqlQueryApiClient implements DqlQueryApi {
   private readonly discoveryApi: DiscoveryApi;
