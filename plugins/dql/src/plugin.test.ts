@@ -1,6 +1,6 @@
 import { dqlQueryPlugin } from './plugin';
 
-describe('kubernetes', () => {
+describe('dql', () => {
   it('should export plugin', () => {
     expect(dqlQueryPlugin).toBeDefined();
   });
