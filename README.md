@@ -10,12 +10,12 @@ This repository contains a collection of Backstage plugins for Dynatrace.
 
 ## Plugins
 
-- [Kubernetes](./plugins/kubernetes/README.md) - A plugin add Kubernetes
-  workloads managed in Dynatrace into Backstage.
-- [Kubernetes Backend](./plugins/kubernetes-backend/README.md) - The backend for
-  the Kubernetes plugin.
-- [Kubernetes Common](./plugins/kubernetes-common/README.md) - Common
-  functionality shared between the frontend and backend plugin.
+- [DQL](./plugins/dql/README.md) - A plugin showing DQL query results from
+  Dynatrace in Backstage.
+- [DQL Backend](./plugins/dql-backend/README.md) - The backend for the DQL
+  plugin.
+- [DQL Common](./plugins/dql-common/README.md) - Common functionality shared
+  between the DQL frontend and backend plugin.
 
 ## Getting Started
 
@@ -85,6 +85,6 @@ are allowed):
 - `chore`: Anything else
 
 The optional scope should be the name of the package affected by the change.
-E.g. `fix(kubernetes): fix a bug in the Kubernetes plugin`.
+E.g. `fix(dql): fix a bug in the DQL plugin`.
 
 Commitlint ensures that the package is one of the known Lerna packages.

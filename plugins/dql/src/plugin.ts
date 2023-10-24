@@ -8,7 +8,7 @@ import {
 } from '@backstage/core-plugin-api';
 
 export const dqlQueryPlugin = createPlugin({
-  id: 'dynatrace-kubernetes',
+  id: 'dynatrace-dql',
   apis: [
     createApiFactory({
       api: dqlQueryApiRef,
