@@ -6,7 +6,7 @@ import {
   TableColumn,
 } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { TabularData } from '@dynatrace/backstage-plugin-kubernetes-common';
+import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 import _ from 'lodash';
 import React from 'react';
 

@@ -1,5 +1,5 @@
 {
-  "name": "@dynatrace/backstage-plugin-kubernetes-backend",
+  "name": "@dynatrace/backstage-plugin-dql-backend",
   "version": "0.1.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -25,7 +25,7 @@
   "dependencies": {
     "@backstage/backend-common": "^0.19.5",
     "@backstage/config": "^1.1.0",
-    "@dynatrace/backstage-plugin-kubernetes-common": "^0.1.0",
+    "@dynatrace/backstage-plugin-dql-common": "^0.1.0",
     "@types/express": "*",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",

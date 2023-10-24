@@ -1,5 +1,5 @@
 import { PluginEnvironment } from '../types';
-import { createRouter } from '@dynatrace/backstage-plugin-kubernetes-backend';
+import { createRouter } from '@dynatrace/backstage-plugin-dql-backend';
 import { Router } from 'express';
 
 export default async function createPlugin(

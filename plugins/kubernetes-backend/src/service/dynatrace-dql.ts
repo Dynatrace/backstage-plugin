@@ -1,4 +1,4 @@
-import { TabularData } from '@dynatrace/backstage-plugin-kubernetes-common';
+import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 
 export interface DynatraceAccessInfo {
   url: string;
