@@ -1,4 +1,4 @@
-import { KubernetesWorkloadApiClient, kubernetesWorkloadApiRef } from './api';
+import { DqlQueryApiClient, dqlQueryApiRef } from './api';
 import { rootRouteRef } from './routes';
 import {
   createApiFactory,
@@ -7,16 +7,15 @@ import {
   discoveryApiRef,
 } from '@backstage/core-plugin-api';
 
-export const kubernetesPlugin = createPlugin({
+export const dqlQueryPlugin = createPlugin({
   id: 'dynatrace-kubernetes',
   apis: [
     createApiFactory({
-      api: kubernetesWorkloadApiRef,
+      api: dqlQueryApiRef,
       deps: {
         discoveryApi: discoveryApiRef,
       },
-      factory: ({ discoveryApi }) =>
-        new KubernetesWorkloadApiClient({ discoveryApi }),
+      factory: ({ discoveryApi }) => new DqlQueryApiClient({ discoveryApi }),
     }),
   ],
   routes: {
@@ -24,13 +23,13 @@ export const kubernetesPlugin = createPlugin({
   },
 });
 
-export const EntityKubernetesWorkloadCard = kubernetesPlugin.provide(
+export const EntityDqlQueryResultTableCard = dqlQueryPlugin.provide(
   createComponentExtension({
-    name: 'EntityKubernetesWorkloadCard',
+    name: 'EntityDqlQueryResultTableCard',
     component: {
       lazy: () =>
-        import('./components/KubernetesWorkload').then(
-          m => m.KubernetesWorkload,
+        import('./components/DqlQueryResultTable').then(
+          m => m.DqlQueryResultTable,
         ),
     },
   }),

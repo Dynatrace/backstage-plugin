@@ -1,4 +1,4 @@
-import { useKubernetesWorkloadData } from '../../hooks/useKubernetesWorkloadData';
+import { useDqlQuery } from '../hooks/useDqlQuery';
 import {
   Progress,
   ResponseErrorPanel,
@@ -34,12 +34,12 @@ export const DenseTable = ({ data }: DenseTableProps) => {
   );
 };
 
-export const KubernetesWorkload = () => {
+export const DqlQueryResultTable = () => {
   const { entity } = useEntity();
   const component = `${entity.metadata.name}.${
     entity.metadata.namespace ?? 'default'
   }`;
-  const { error, loading, value } = useKubernetesWorkloadData(component);
+  const { error, loading, value } = useDqlQuery(component);
 
   if (loading) {
     return <Progress />;
