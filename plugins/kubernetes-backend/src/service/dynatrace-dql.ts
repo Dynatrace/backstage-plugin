@@ -1,4 +1,4 @@
-import { Deployment } from '@dynatrace/backstage-plugin-kubernetes-common';
+import { TabularData } from '@dynatrace/backstage-plugin-kubernetes-common';
 
 export interface DynatraceAccessInfo {
   url: string;
@@ -73,7 +73,7 @@ async function waitForQueryResult<RecordType>(
 export async function getDeployments(
   accessInfo: DynatraceAccessInfo,
   component: string,
-): Promise<Deployment[]> {
+): Promise<TabularData[]> {
   const query = `
     fetch dt.entity.cloud_application
     | fields name = entity.name, namespace.id = belongs_to[dt.entity.cloud_application_namespace], backstageComponent = cloudApplicationLabels[\`backstage.io/component\`]

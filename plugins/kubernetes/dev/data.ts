@@ -1,15 +1,6 @@
-import {
-  Deployment,
-  DeploymentFactory,
-} from '@dynatrace/backstage-plugin-kubernetes-common';
+import { TabularData } from '@dynatrace/backstage-plugin-kubernetes-common';
 
-export const exampleData: Deployment[] = [
-  {
-    name: 'backstage',
-    namespace: 'hardening',
-  },
-  {
-    name: 'nginx',
-    // default namespace
-  },
-].map(deployment => DeploymentFactory.fromObject(deployment));
+export const exampleData: TabularData = [
+  { Name: 'backstage', Namespace: 'hardening' },
+  { Name: 'nginx', Namespace: 'default' },
+];

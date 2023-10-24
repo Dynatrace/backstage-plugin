@@ -5,8 +5,7 @@ import useAsync from 'react-use/lib/useAsync';
 export const useKubernetesWorkloadData = (component: string) => {
   const kubernetesWorkloadApi = useApi(kubernetesWorkloadApiRef);
 
-  const getObjects = async () =>
-    await kubernetesWorkloadApi.getDeployments(component);
+  const getObjects = async () => await kubernetesWorkloadApi.getData(component);
 
   const { value, loading, error } = useAsync(getObjects);
 

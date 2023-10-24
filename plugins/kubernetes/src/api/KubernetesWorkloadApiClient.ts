@@ -1,5 +1,9 @@
 import { KubernetesWorkloadApi } from './types';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
+import {
+  TabularData,
+  TabularDataFactory,
+} from '@dynatrace/backstage-plugin-kubernetes-common';
 
 export class KubernetesWorkloadApiClient implements KubernetesWorkloadApi {
   private readonly discoveryApi: DiscoveryApi;
@@ -8,13 +12,13 @@ export class KubernetesWorkloadApiClient implements KubernetesWorkloadApi {
     this.discoveryApi = options.discoveryApi;
   }
 
-  async getDeployments(component: string): Promise<any> {
+  async getData(component: string): Promise<TabularData> {
     const url = `${await this.discoveryApi.getBaseUrl(
       'dynatrace-kubernetes',
     )}/deployments?component=${encodeURIComponent(component)}`;
     const response = await fetch(url, {
       method: 'GET',
     });
-    return response.json();
+    return TabularDataFactory.fromObject(await response.json());
   }
 }

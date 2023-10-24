@@ -1,8 +1,8 @@
 import { createApiRef } from '@backstage/core-plugin-api';
-import { Deployment } from '@dynatrace/backstage-plugin-kubernetes-common';
+import { TabularData } from '@dynatrace/backstage-plugin-kubernetes-common';
 
 export interface KubernetesWorkloadApi {
-  getDeployments(component: string): Promise<Deployment[]>;
+  getData(component: string): Promise<TabularData>;
 }
 
 export const kubernetesWorkloadApiRef = createApiRef<KubernetesWorkloadApi>({
