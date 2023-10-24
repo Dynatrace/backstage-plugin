@@ -179,7 +179,7 @@ const serviceEntityPage = (
     <EntityLayout.Route path="/dynatrace-kubernetes" title="Dynatrace">
       <EntityDqlQueryResultTableCard
         title="Service Deployments"
-        queryId="kubernetes-deployments"
+        queryId="dynatrace.kubernetes-deployments"
       />
     </EntityLayout.Route>
   </EntityLayout>
@@ -213,7 +213,7 @@ const websiteEntityPage = (
     <EntityLayout.Route path="/dynatrace-kubernetes" title="Dynatrace">
       <EntityDqlQueryResultTableCard
         title="Website Deployments"
-        queryId="kubernetes-deployments"
+        queryId="dynatrace.kubernetes-deployments"
       />
     </EntityLayout.Route>
   </EntityLayout>

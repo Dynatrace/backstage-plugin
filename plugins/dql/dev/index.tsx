@@ -69,12 +69,12 @@ createDevApp()
       <TestApiProvider apis={[[dqlQueryApiRef, new MockDqlQueryApi()]]}>
         <DemoCard
           title="Some Deployments"
-          queryId="kubernetes-deployments"
+          queryId="dynatrace.kubernetes-deployments"
           mockData={mockComponentWithNamespace}
         />
         <DemoCard
           title="Other Deployments"
-          queryId="kubernetes-deployments"
+          queryId="dynatrace.kubernetes-deployments"
           mockData={mockComponentDefaultNamespace}
         />
       </TestApiProvider>
