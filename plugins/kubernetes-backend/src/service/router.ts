@@ -14,7 +14,7 @@ export interface RouterOptions {
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const { logger, config } = options;
+  const { config } = options;
   const url: string = config.getString('dynatrace.url');
   const tokenUrl: string = config.getString('dynatrace.tokenUrl');
   const clientId = config.getString('dynatrace.clientId');
@@ -23,11 +23,6 @@ export async function createRouter(
 
   const router = Router();
   router.use(express.json());
-
-  router.get('/health', (_, response) => {
-    logger.info('PONG!');
-    response.json({ status: 'ok' });
-  });
 
   router.get('/deployments', async (req, res) => {
     const tokenResponse = await getAccessToken({

@@ -43,10 +43,6 @@ const mockComponentDefaultNamespace: Entity = {
 };
 
 class MockKubernetesWorkloadApi implements KubernetesWorkloadApi {
-  async getHealth(): Promise<{ status: string }> {
-    return { status: 'ok' };
-  }
-
   async getData(): Promise<Deployment[]> {
     return exampleData;
   }

@@ -45,8 +45,7 @@ export const KubernetesWorkload = () => {
   return (
     <>
       <div>Hello {component}</div>
-      <div>Status: {value?.status}</div>
-      <DenseTable deployments={value?.deployments || []} />
+      <DenseTable deployments={value || []} />
     </>
   );
 };
