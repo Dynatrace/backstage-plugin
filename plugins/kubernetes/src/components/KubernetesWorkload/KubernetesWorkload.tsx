@@ -6,25 +6,30 @@ import {
   TableColumn,
 } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { Deployment } from '@dynatrace/backstage-plugin-kubernetes-common';
+import { TabularData } from '@dynatrace/backstage-plugin-kubernetes-common';
+import _ from 'lodash';
 import React from 'react';
 
 type DenseTableProps = {
-  deployments: Deployment[];
+  data: TabularData;
 };
 
-export const DenseTable = ({ deployments }: DenseTableProps) => {
-  const columns: TableColumn[] = [
-    { title: 'Name', field: 'name' },
-    { title: 'Namespace', field: 'namespace' },
-  ];
+export const DenseTable = ({ data }: DenseTableProps) => {
+  let columns: TableColumn[] = [];
+
+  if (data.length !== 0) {
+    const firstRow = data[0];
+    columns = _.keys(firstRow).map(key => {
+      return { title: key, field: key };
+    });
+  }
 
   return (
     <Table
       title="Deployments"
       options={{ search: false, paging: false }}
       columns={columns}
-      data={deployments}
+      data={data}
     />
   );
 };
@@ -42,10 +47,5 @@ export const KubernetesWorkload = () => {
     return <ResponseErrorPanel error={error} />;
   }
 
-  return (
-    <>
-      <div>Hello {component}</div>
-      <DenseTable deployments={value || []} />
-    </>
-  );
+  return <DenseTable data={value || []} />;
 };
