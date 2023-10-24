@@ -9,7 +9,15 @@ describe('createRouter', () => {
   beforeAll(async () => {
     const router = await createRouter({
       logger: getVoidLogger(),
-      config: new MockConfigApi({}),
+      config: new MockConfigApi({
+        dynatrace: {
+          url: 'dynatrace-url',
+          tokenUrl: 'token-url',
+          clientId: 'dynatrace-client-id',
+          clientSecret: 'dynatrace-client-secret',
+          accountUrn: 'dynatrace-account-urn',
+        },
+      }),
     });
     app = express().use(router);
   });
