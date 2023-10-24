@@ -8,7 +8,7 @@
 import app from './plugins/app';
 import auth from './plugins/auth';
 import catalog from './plugins/catalog';
-import kubernetes from './plugins/dynatrace-kubernetes';
+import dql from './plugins/dynatrace-dql';
 import proxy from './plugins/proxy';
 import scaffolder from './plugins/scaffolder';
 import search from './plugins/search';
@@ -85,8 +85,8 @@ async function main() {
   const techdocsEnv = useHotMemoize(module, () => createEnv('techdocs'));
   const searchEnv = useHotMemoize(module, () => createEnv('search'));
   const appEnv = useHotMemoize(module, () => createEnv('app'));
-  const dynatraceKubernetesEnv = useHotMemoize(module, () =>
-    createEnv('dynatrace-kubernetes'),
+  const dynatraceDqlEnv = useHotMemoize(module, () =>
+    createEnv('dynatrace-dql'),
   );
 
   const apiRouter = Router();
@@ -96,10 +96,7 @@ async function main() {
   apiRouter.use('/techdocs', await techdocs(techdocsEnv));
   apiRouter.use('/proxy', await proxy(proxyEnv));
   apiRouter.use('/search', await search(searchEnv));
-  apiRouter.use(
-    '/dynatrace-kubernetes',
-    await kubernetes(dynatraceKubernetesEnv),
-  );
+  apiRouter.use('/dynatrace-dql', await dql(dynatraceDqlEnv));
 
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback
   apiRouter.use(notFoundHandler());

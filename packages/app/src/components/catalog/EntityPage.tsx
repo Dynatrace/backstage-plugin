@@ -54,7 +54,7 @@ import {
 import { EntityTechdocsContent } from '@backstage/plugin-techdocs';
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
-import { EntityKubernetesWorkloadCard } from '@dynatrace/backstage-plugin-kubernetes';
+import { EntityDqlQueryResultTableCard } from '@dynatrace/backstage-plugin-kubernetes';
 import { Button, Grid } from '@material-ui/core';
 import React from 'react';
 
@@ -177,7 +177,7 @@ const serviceEntityPage = (
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/dynatrace-kubernetes" title="Dynatrace">
-      <EntityKubernetesWorkloadCard />
+      <EntityDqlQueryResultTableCard />
     </EntityLayout.Route>
   </EntityLayout>
 );
@@ -208,7 +208,7 @@ const websiteEntityPage = (
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/dynatrace-kubernetes" title="Dynatrace">
-      <EntityKubernetesWorkloadCard />
+      <EntityDqlQueryResultTableCard />
     </EntityLayout.Route>
   </EntityLayout>
 );
