@@ -5,13 +5,13 @@ const deploymentSchema = z.object({
   namespace: z.string().default('default'),
 });
 
-export function fromString(input: string): Deployment {
-  const data = JSON.parse(input);
-  return fromObject(data);
-}
+export const DeploymentFactory = {
+  fromString: (input: string): Deployment => {
+    const data = JSON.parse(input);
+    return DeploymentFactory.fromObject(data);
+  },
 
-export function fromObject(input: any): Deployment {
-  return deploymentSchema.parse(input);
-}
+  fromObject: deploymentSchema.parse,
+};
 
 export type Deployment = z.infer<typeof deploymentSchema>;

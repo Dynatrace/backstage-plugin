@@ -1,6 +1,6 @@
 import {
   Deployment,
-  fromObject,
+  DeploymentFactory,
 } from '@dynatrace/backstage-plugin-kubernetes-common';
 
 export const exampleData: Deployment[] = [
@@ -12,4 +12,4 @@ export const exampleData: Deployment[] = [
     name: 'nginx',
     // default namespace
   },
-].map(deployment => fromObject(deployment));
+].map(deployment => DeploymentFactory.fromObject(deployment));
