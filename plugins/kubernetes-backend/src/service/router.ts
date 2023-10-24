@@ -24,7 +24,7 @@ export async function createRouter(
   const router = Router();
   router.use(express.json());
 
-  router.get('/deployments', async (req, res) => {
+  router.get('/dynatrace/kubernetes-deployments', async (req, res) => {
     const tokenResponse = await getAccessToken({
       clientId,
       clientSecret,
