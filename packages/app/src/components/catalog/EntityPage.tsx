@@ -177,7 +177,10 @@ const serviceEntityPage = (
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/dynatrace-kubernetes" title="Dynatrace">
-      <EntityDqlQueryResultTableCard />
+      <EntityDqlQueryResultTableCard
+        title="Service Deployments"
+        queryId="kubernetes-deployments"
+      />
     </EntityLayout.Route>
   </EntityLayout>
 );
@@ -208,7 +211,10 @@ const websiteEntityPage = (
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/dynatrace-kubernetes" title="Dynatrace">
-      <EntityDqlQueryResultTableCard />
+      <EntityDqlQueryResultTableCard
+        title="Website Deployments"
+        queryId="kubernetes-deployments"
+      />
     </EntityLayout.Route>
   </EntityLayout>
 );

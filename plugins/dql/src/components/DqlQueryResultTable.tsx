@@ -9,12 +9,14 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 import _ from 'lodash';
 import React from 'react';
+import { z } from 'zod';
 
 type DenseTableProps = {
+  title: string;
   data: TabularData;
 };
 
-export const DenseTable = ({ data }: DenseTableProps) => {
+export const DenseTable = ({ title, data }: DenseTableProps) => {
   let columns: TableColumn[] = [];
 
   if (data.length !== 0) {
@@ -26,7 +28,7 @@ export const DenseTable = ({ data }: DenseTableProps) => {
 
   return (
     <Table
-      title="Deployments"
+      title={title}
       options={{ search: false, paging: false }}
       columns={columns}
       data={data}
@@ -34,7 +36,14 @@ export const DenseTable = ({ data }: DenseTableProps) => {
   );
 };
 
-export const DqlQueryResultTable = () => {
+const dqlQueryResultTableSchema = z.strictObject({
+  title: z.string().default('Query Result'),
+  queryId: z.string(),
+});
+
+type DqlQueryResultTableProps = z.infer<typeof dqlQueryResultTableSchema>;
+
+export const DqlQueryResultTable = (props: DqlQueryResultTableProps) => {
   const { entity } = useEntity();
   const component = `${entity.metadata.name}.${
     entity.metadata.namespace ?? 'default'
@@ -47,5 +56,5 @@ export const DqlQueryResultTable = () => {
     return <ResponseErrorPanel error={error} />;
   }
 
-  return <DenseTable data={value || []} />;
+  return <DenseTable title={props.title} data={value || []} />;
 };
