@@ -24,7 +24,7 @@ const dqlQueryPropsSchema = z.strictObject({
       },
       {
         message:
-          "String must be in the format 'namespace.query-name'. Namespace must be 'dynatrace' or 'custom'. Query name must be lowercase and may only contain letters and dashes.",
+          "String must be in the format 'namespace.query-name'. Namespace must be 'dynatrace' or 'custom'. Query name may only contain letters and dashes.",
       },
     ),
 });
