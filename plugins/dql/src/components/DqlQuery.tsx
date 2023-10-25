@@ -6,7 +6,7 @@ import React from 'react';
 import { z } from 'zod';
 
 const namespaceSchema = z.enum(['dynatrace', 'custom']);
-const queryNameSchema = z.string().regex(/^[a-z\-]+$/);
+const queryNameSchema = z.string().regex(/^[a-z1-9\-]+$/);
 
 const dqlQueryPropsSchema = z.strictObject({
   title: z.string().default('Query Result'),
@@ -24,7 +24,7 @@ const dqlQueryPropsSchema = z.strictObject({
       },
       {
         message:
-          "String must be in the format 'namespace.query-name'. Namespace must be 'dynatrace' or 'custom'. Query name may only contain letters and dashes.",
+          "String must be in the format 'namespace.query-name'. Namespace must be 'dynatrace' or 'custom'. Query name may only contain alphanumerics and dashes.",
       },
     ),
 });
