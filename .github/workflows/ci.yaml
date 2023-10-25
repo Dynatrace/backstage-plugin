@@ -28,4 +28,4 @@ jobs:
         run: yarn tsc:full
 
       - name: Run Tests
-        run: yarn test
+        run: yarn test:all
