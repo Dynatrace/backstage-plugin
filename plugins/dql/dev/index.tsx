@@ -1,5 +1,5 @@
 import { DqlQueryApi, dqlQueryApiRef } from '../src/api';
-import { EntityDqlQueryResultTableCard, dqlQueryPlugin } from '../src/plugin';
+import { EntityDqlQueryCard, dqlQueryPlugin } from '../src/plugin';
 import { exampleData } from './data';
 import { Entity } from '@backstage/catalog-model';
 import { createDevApp } from '@backstage/dev-utils';
@@ -56,7 +56,7 @@ const DemoCard: FC<{ mockData: Entity; title: string; queryId: string }> = ({
   return (
     <Box m={4}>
       <EntityProvider entity={mockData}>
-        <EntityDqlQueryResultTableCard title={title} queryId={queryId} />
+        <EntityDqlQueryCard title={title} queryId={queryId} />
       </EntityProvider>
     </Box>
   );

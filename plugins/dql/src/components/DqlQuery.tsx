@@ -1,45 +1,14 @@
 import { useDqlQuery } from '../hooks/useDqlQuery';
-import {
-  Progress,
-  ResponseErrorPanel,
-  Table,
-  TableColumn,
-} from '@backstage/core-components';
+import { TabularDataTable } from './TabularDataTable';
+import { Progress, ResponseErrorPanel } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
-import _ from 'lodash';
 import React from 'react';
 import { z } from 'zod';
-
-type DenseTableProps = {
-  title: string;
-  data: TabularData;
-};
-
-export const DenseTable = ({ title, data }: DenseTableProps) => {
-  let columns: TableColumn[] = [];
-
-  if (data.length !== 0) {
-    const firstRow = data[0];
-    columns = _.keys(firstRow).map(key => {
-      return { title: key, field: key };
-    });
-  }
-
-  return (
-    <Table
-      title={title}
-      options={{ search: false, paging: false }}
-      columns={columns}
-      data={data}
-    />
-  );
-};
 
 const namespaceSchema = z.enum(['dynatrace', 'custom']);
 const queryNameSchema = z.string().regex(/^[a-z\-]+$/);
 
-const dqlQueryResultTableSchema = z.strictObject({
+const dqlQueryPropsSchema = z.strictObject({
   title: z.string().default('Query Result'),
   queryId: z
     .string()
@@ -60,10 +29,10 @@ const dqlQueryResultTableSchema = z.strictObject({
     ),
 });
 
-type DqlQueryResultTableProps = z.infer<typeof dqlQueryResultTableSchema>;
+type DqlQueryProps = z.infer<typeof dqlQueryPropsSchema>;
 
-export const DqlQueryResultTable = (props: DqlQueryResultTableProps) => {
-  const { title, queryId } = dqlQueryResultTableSchema.parse(props);
+export const DqlQuery = (props: DqlQueryProps) => {
+  const { title, queryId } = dqlQueryPropsSchema.parse(props);
   const [namespace, queryName] = queryId.split('.');
 
   const { entity } = useEntity();
@@ -82,5 +51,5 @@ export const DqlQueryResultTable = (props: DqlQueryResultTableProps) => {
     return <ResponseErrorPanel error={error} />;
   }
 
-  return <DenseTable title={title} data={value || []} />;
+  return <TabularDataTable title={title} data={value || []} />;
 };

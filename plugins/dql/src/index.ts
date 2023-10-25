@@ -1,1 +1,1 @@
-export { EntityDqlQueryResultTableCard, dqlQueryPlugin } from './plugin';
+export { EntityDqlQueryCard, dqlQueryPlugin } from './plugin';

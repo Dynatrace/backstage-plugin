@@ -23,14 +23,11 @@ export const dqlQueryPlugin = createPlugin({
   },
 });
 
-export const EntityDqlQueryResultTableCard = dqlQueryPlugin.provide(
+export const EntityDqlQueryCard = dqlQueryPlugin.provide(
   createComponentExtension({
-    name: 'EntityDqlQueryResultTableCard',
+    name: 'EntityDqlQueryCard',
     component: {
-      lazy: () =>
-        import('./components/DqlQueryResultTable').then(
-          m => m.DqlQueryResultTable,
-        ),
+      lazy: () => import('./components/DqlQuery').then(m => m.DqlQuery),
     },
   }),
 );
