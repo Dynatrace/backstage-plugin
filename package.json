@@ -24,6 +24,11 @@
     "new": "backstage-cli new --scope internal",
     "prepare": "husky install"
   },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "packages"
+    ]
+  },
   "workspaces": {
     "packages": [
       "packages/*",
