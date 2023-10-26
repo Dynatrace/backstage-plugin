@@ -25,7 +25,7 @@ describe('TabularDataTable', () => {
     expect(rendered.getByText('some title')).toBeInTheDocument();
   });
 
-  it('should render plain text', () => {
+  it('should render plain text cells', () => {
     const data: TabularData = [
       {
         Header: 'value',
@@ -37,7 +37,7 @@ describe('TabularDataTable', () => {
     expect(rendered.getByText('value').closest('td')).toBeInTheDocument();
   });
 
-  it('should render links', () => {
+  it('should render link cells', () => {
     const href = 'https://example.com/';
     const data: TabularData = [
       {

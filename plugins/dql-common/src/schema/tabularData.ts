@@ -9,7 +9,7 @@ const tableCell = z.string().or(
   }),
 );
 
-const rowData = z.strictObject({}).catchall(tableCell);
+const rowData = z.record(tableCell);
 
 const tabularDataSchema = z.array(rowData);
 
@@ -42,3 +42,5 @@ export const TabularDataFactory = {
 };
 
 export type TabularData = z.infer<typeof tabularDataSchema>;
+export type TabularDataRow = z.infer<typeof rowData>;
+export type TabularDataCell = z.infer<typeof tableCell>;

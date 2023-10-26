@@ -1,5 +1,8 @@
 import { Table, TableColumn } from '@backstage/core-components';
-import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
+import {
+  TabularData,
+  TabularDataRow,
+} from '@dynatrace/backstage-plugin-dql-common';
 import { Link } from '@material-ui/core';
 import _ from 'lodash';
 import React, { ReactNode } from 'react';
@@ -10,11 +13,8 @@ type TabularDataTableProps = {
 };
 
 function cellRenderer(field: string) {
-  return (data: any): ReactNode => {
+  return (data: TabularDataRow): ReactNode => {
     const cellData = data[field];
-    if (cellData === undefined) {
-      return null;
-    }
 
     if (typeof cellData === 'string') {
       return cellData;
