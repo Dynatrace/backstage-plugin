@@ -46,7 +46,9 @@ async function pollQuery<T>(
   requestToken: string,
 ): Promise<PollQueryResponse<T>> {
   const queryPollRes = await fetch(
-    `${url}/platform/storage/query/v1/query:poll?request-token=${requestToken}`,
+    `${url}/platform/storage/query/v1/query:poll?request-token=${encodeURIComponent(
+      requestToken,
+    )}`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
