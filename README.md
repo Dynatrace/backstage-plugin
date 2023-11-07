@@ -23,6 +23,25 @@ The repository contains a full Backstage installation at its root, with the
 individual plugins in the `plugins` directory. Backstage is configured to
 include the plugins, so you can start the app and see them in action.
 
+Create a `app-config.local.yaml` file (excluded by .gitignore) configuring the
+connection to the Dynatrace environment:
+
+```yaml
+dynatrace:
+  url: https://xxxxxxxx.sprint.apps.dynatracelabs.com
+  tokenUrl: https://sso-sprint.dynatracelabs.com/sso/oauth2/token
+  accountUrn: <accountUrn>
+  clientId: <clientId>
+  clientSecret: <clientSecret>
+```
+
+Kubernetes pods with a `backstage.io/component` label will be listed for the
+corresponding backstage component:
+
+```yaml
+backstage.io/component: <backstage-component-name>.<backstage-namespace>
+```
+
 To start the app, run:
 
 ```sh
