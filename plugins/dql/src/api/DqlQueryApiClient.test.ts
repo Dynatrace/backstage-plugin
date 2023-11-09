@@ -1,13 +1,29 @@
 import { DqlQueryApiClient } from './DqlQueryApiClient';
+import { DiscoveryApi } from '@backstage/core-plugin-api';
+import { rest } from 'msw';
+import { setupServer } from 'msw/node';
 
-function mockFetchResponse(response: unknown) {
-  (global.fetch as jest.Mock).mockResolvedValueOnce({
-    ok: true,
-    json: jest.fn().mockResolvedValueOnce(response),
-  });
+const server = setupServer();
+
+function mockFetchResponse(
+  response: any,
+  url: string = '*',
+  queryParams: string | null = null,
+) {
+  server.use(
+    rest.get(url, (req, res, ctx) => {
+      if (
+        queryParams === null ||
+        req.url.searchParams.toString() === queryParams
+      ) {
+        return res(ctx.json(response));
+      }
+      return res(ctx.status(404));
+    }),
+  );
 }
 
-function mockDiscoveryApiUrl(url: string) {
+function mockDiscoveryApiUrl(url: string): DiscoveryApi {
   const discoveryApi = {
     getBaseUrl: jest.fn().mockResolvedValue(url),
   };
@@ -15,16 +31,10 @@ function mockDiscoveryApiUrl(url: string) {
 }
 
 describe('DQLQueryApiClient', () => {
-  const originalFetch = global.fetch;
-
-  beforeEach(() => {
-    jest.resetAllMocks();
-    global.fetch = jest.fn();
-  });
-
-  afterEach(() => {
-    global.fetch = originalFetch;
-  });
+  beforeAll(() => server.listen());
+  beforeEach(() => jest.resetAllMocks());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 
   it('should ask the discovery API for the DQL query API URL', async () => {
     mockFetchResponse([]);
@@ -36,23 +46,20 @@ describe('DQLQueryApiClient', () => {
     expect(discoveryApi.getBaseUrl).toHaveBeenCalledWith('dynatrace-dql');
   });
 
-  it('should fetch the correct URL', async () => {
-    mockFetchResponse([]);
+  it('should encode the component parameter', async () => {
     const discoveryApiUrl = 'https://discovery-api.com';
+    const namespace = 'namespace';
+    const queryName = 'query';
+    const component = 'component^^^';
+    const url = `${discoveryApiUrl}/${namespace}/${queryName}`;
+    const queryParams = `component=component%5E%5E%5E`;
+    mockFetchResponse([], url, queryParams);
     const discoveryApi = mockDiscoveryApiUrl(discoveryApiUrl);
     const client = new DqlQueryApiClient({ discoveryApi });
 
-    const namespace = 'namespace';
-    const queryName = 'query';
-    const component = 'component';
-    await client.getData(namespace, queryName, component);
+    const result = await client.getData(namespace, queryName, component);
 
-    expect(global.fetch).toHaveBeenCalledWith(
-      `${discoveryApiUrl}/${namespace}/${queryName}?component=${encodeURIComponent(
-        component,
-      )}`,
-      { method: 'GET' },
-    );
+    expect(result).toEqual([]);
   });
 
   it('should return the data from fetch', async () => {
@@ -67,10 +74,12 @@ describe('DQLQueryApiClient', () => {
   });
 
   it('should reject for non-json data', async () => {
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: jest.fn().mockRejectedValueOnce(new Error('invalid json')),
-    });
+    server.use(
+      rest.get('*', (_, res, ctx) => {
+        return res(ctx.text('not json'));
+      }),
+    );
+
     const discoveryApi = mockDiscoveryApiUrl('https://discovery-api.com');
     const client = new DqlQueryApiClient({ discoveryApi });
 
