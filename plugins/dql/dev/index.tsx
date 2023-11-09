@@ -7,7 +7,7 @@ import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { TestApiProvider } from '@backstage/test-utils';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 import { Box } from '@material-ui/core';
-import React, { FC } from 'react';
+import React from 'react';
 
 const mockComponentWithNamespace: Entity = {
   apiVersion: 'backstage.io/v1alpha1',
@@ -48,11 +48,13 @@ class MockDqlQueryApi implements DqlQueryApi {
   }
 }
 
-const DemoCard: FC<{ mockData: Entity; title: string; queryId: string }> = ({
-  mockData,
-  title,
-  queryId,
-}) => {
+type DemoCardProps = {
+  mockData: Entity;
+  title: string;
+  queryId: string;
+};
+
+const DemoCard = ({ mockData, title, queryId }: DemoCardProps) => {
   return (
     <Box m={4}>
       <EntityProvider entity={mockData}>
