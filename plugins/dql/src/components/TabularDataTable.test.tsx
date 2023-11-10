@@ -53,4 +53,13 @@ describe('TabularDataTable', () => {
     const link = rendered.getByText('value').closest('a');
     expect(link?.href).toBe(href);
   });
+
+  it('should render 20 rows per page', () => {
+    const data: TabularData = Array.from({ length: 30 }).map((_, i) => ({
+      Header: `value ${i}`,
+    }));
+    const rendered = prepareComponent({ data });
+
+    expect(rendered.getAllByRole('row').length).toBe(22); // Including header and pagination
+  });
 });
