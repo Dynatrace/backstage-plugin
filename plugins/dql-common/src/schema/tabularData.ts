@@ -19,12 +19,12 @@ const tabularDataSchema = z.array(rowData);
  * @param data TabularData to validate
  * @returns true if all elements of the array have the same keys, false otherwise
  */
-function validate(data: TabularData): boolean {
+const validate = (data: TabularData): boolean => {
   if (data.length === 0) return true;
   // ensure all rows have the same columns
   const keys = _.keys(data[0]);
   return data.every(item => _.isEqual(_.keys(item), keys));
-}
+};
 
 export const TabularDataFactory = {
   fromString: (input: string): TabularData => {

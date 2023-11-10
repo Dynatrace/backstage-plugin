@@ -5,11 +5,11 @@ import { setupServer } from 'msw/node';
 
 const server = setupServer();
 
-function mockFetchResponse(
+const mockFetchResponse = (
   response: any,
   url: string = '*',
   queryParams: string | null = null,
-) {
+) => {
   server.use(
     rest.get(url, (req, res, ctx) => {
       if (
@@ -21,14 +21,14 @@ function mockFetchResponse(
       return res(ctx.status(404));
     }),
   );
-}
+};
 
-function mockDiscoveryApiUrl(url: string): DiscoveryApi {
+const mockDiscoveryApiUrl = (url: string): DiscoveryApi => {
   const discoveryApi = {
     getBaseUrl: jest.fn().mockResolvedValue(url),
   };
   return discoveryApi;
-}
+};
 
 describe('DQLQueryApiClient', () => {
   beforeAll(() => server.listen());

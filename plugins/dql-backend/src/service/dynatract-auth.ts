@@ -13,9 +13,9 @@ export interface TokenResponse {
   resource: string;
 }
 
-export async function getAccessToken(
+export const getAccessToken = async (
   config: DynatraceSsoConfig,
-): Promise<TokenResponse> {
+): Promise<TokenResponse> => {
   const body = new URLSearchParams({
     grant_type: 'client_credentials',
     client_id: config.clientId,
@@ -30,4 +30,4 @@ export async function getAccessToken(
     body,
   });
   return await tokenRes.json();
-}
+};

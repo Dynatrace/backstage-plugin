@@ -10,9 +10,9 @@ export interface ServerOptions {
   logger: Logger;
 }
 
-export async function startStandaloneServer(
+export const startStandaloneServer = async (
   options: ServerOptions,
-): Promise<Server> {
+): Promise<Server> => {
   const logger = options.logger.child({ service: 'dynatrace-dql-backend' });
   logger.debug('Starting application server...');
   const router = await createRouter({
@@ -31,6 +31,6 @@ export async function startStandaloneServer(
     logger.error(err);
     process.exit(1);
   });
-}
+};
 
 module.hot?.accept();

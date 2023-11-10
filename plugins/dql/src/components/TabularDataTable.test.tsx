@@ -3,15 +3,15 @@ import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 import { render } from '@testing-library/react';
 import React from 'react';
 
-function prepareComponent({
+const prepareComponent = ({
   title = 'some title',
   data = [] as TabularData,
 }: {
   title?: string;
   data?: TabularData;
-}) {
+}) => {
   return render(<TabularDataTable title={title} data={data} />);
-}
+};
 
 describe('TabularDataTable', () => {
   beforeEach(() => {

@@ -12,7 +12,7 @@ type TabularDataTableProps = {
   data: TabularData;
 };
 
-function cellRenderer(field: string) {
+const cellRenderer = (field: string) => {
   return (data: TabularDataRow): ReactNode => {
     const cellData = data[field];
 
@@ -30,7 +30,7 @@ function cellRenderer(field: string) {
 
     return JSON.stringify(cellData);
   };
-}
+};
 
 export const TabularDataTable = ({ title, data }: TabularDataTableProps) => {
   let columns: TableColumn[] = [];

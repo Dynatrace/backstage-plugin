@@ -11,9 +11,9 @@ export interface RouterOptions {
   config: Config;
 }
 
-export async function createRouter(
+export const createRouter = async (
   options: RouterOptions,
-): Promise<express.Router> {
+): Promise<express.Router> => {
   const { config } = options;
   const url: string = config.getString('dynatrace.url');
   const tokenUrl: string = config.getString('dynatrace.tokenUrl');
@@ -44,4 +44,4 @@ export async function createRouter(
 
   router.use(errorHandler());
   return router;
-}
+};
