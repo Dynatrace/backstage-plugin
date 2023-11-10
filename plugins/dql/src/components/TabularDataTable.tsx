@@ -45,7 +45,7 @@ export const TabularDataTable = ({ title, data }: TabularDataTableProps) => {
   return (
     <Table
       title={title}
-      options={{ search: false, paging: true, pageSize: 20 }}
+      options={{ search: true, paging: true, pageSize: 20 }}
       columns={columns}
       data={data}
     />

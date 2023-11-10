@@ -1,6 +1,6 @@
 import { TabularDataTable } from './TabularDataTable';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
-import { render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 
 const prepareComponent = ({
@@ -61,5 +61,38 @@ describe('TabularDataTable', () => {
     const rendered = prepareComponent({ data });
 
     expect(rendered.getAllByRole('row').length).toBe(22); // Including header and pagination
+  });
+
+  it('should include a filter option', () => {
+    const data: TabularData = [
+      {
+        Header: 'value',
+      },
+    ];
+    const rendered = prepareComponent({ data });
+
+    expect(rendered.getByLabelText('Search')).toBeInTheDocument();
+  });
+
+  it('should filter by the entered text', async () => {
+    const data: TabularData = [
+      {
+        Header: 'value',
+      },
+      {
+        Header: 'other data',
+      },
+    ];
+    const rendered = prepareComponent({ data });
+
+    const searchInput = rendered.getByLabelText('Search');
+    fireEvent.change(searchInput, { target: { value: 'other' } });
+
+    waitFor(() => {
+      expect(
+        rendered.getByText('other data').closest('td'),
+      ).toBeInTheDocument();
+      expect(rendered.queryByText('value')).not.toBeInTheDocument();
+    });
   });
 });
