@@ -1,5 +1,5 @@
+import { EntityDqlQueryCard, dqlQueryPlugin } from '../src';
 import { DqlQueryApi, dqlQueryApiRef } from '../src/api';
-import { EntityDqlQueryCard, dqlQueryPlugin } from '../src/plugin';
 import { exampleData } from './data';
 import { Entity } from '@backstage/catalog-model';
 import { createDevApp } from '@backstage/dev-utils';

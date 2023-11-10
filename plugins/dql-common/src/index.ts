@@ -1,1 +1,1 @@
-export * from './schema/tabularData';
+export * from './schema';

@@ -1,4 +1,4 @@
-import { useDqlQuery } from '../hooks/useDqlQuery';
+import { useDqlQuery } from '../hooks';
 import { TabularDataTable } from './TabularDataTable';
 import { Progress, ResponseErrorPanel } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';

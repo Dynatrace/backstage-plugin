@@ -27,7 +27,7 @@ export const EntityDqlQueryCard = dqlQueryPlugin.provide(
   createComponentExtension({
     name: 'EntityDqlQueryCard',
     component: {
-      lazy: () => import('./components/DqlQuery').then(m => m.DqlQuery),
+      lazy: () => import('./components').then(m => m.DqlQuery),
     },
   }),
 );
