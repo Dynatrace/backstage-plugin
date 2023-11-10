@@ -107,3 +107,36 @@ The optional scope should be the name of the package affected by the change.
 E.g. `fix(dql): fix a bug in the DQL plugin`.
 
 Commitlint ensures that the package is one of the known Lerna packages.
+
+### Code Style and ADRs
+
+We aim to adhere to the
+[Architecture Decision Records](https://github.com/backstage/backstage/tree/master/docs/architecture-decisions)
+compiled by the Backstage team.
+
+The ADRs with the most impact on development are:
+
+- [ADR003](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr003-avoid-default-exports.md):
+  Avoid default exports
+- [ADR004](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr004-module-export-structure.md):
+  Export components using traceable `index.ts` files.
+- [ADR006](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr006-avoid-react-fc.md):
+  Avoid `React.FC` and `React.SFC`.
+- [ADR007](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr007-use-msw-to-mock-service-requests.md):
+  Use [msw](https://mswjs.io/) to mock service requests (avoid mocking of
+  `fetch`).
+- [ADR010](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr010-luxon-date-library.md):
+  Use [Luxon](https://moment.github.io/luxon/) for date/time handling.
+- [ADR012](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr012-use-luxon-locale-and-date-presets.md):
+  Use Luxon's `toLocaleString` when formatting dates.
+- [ADR011](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr011-plugin-package-structure.md):
+  Use a specific package structure for plugins.
+- [ADR013](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr013-use-node-fetch.md):
+  Use [node-fetch](https://www.npmjs.com/package/node-fetch) in Backend
+  packages, stick to `fetchApiRef` in Frontend packages.
+
+Besides that, we aim to provide a consistent codebase, thus we add the following
+soft-rules:
+
+- Prefer `type` over `interface` for type definitions.
+- Prefer fat arrow functions over `function` keyword.
