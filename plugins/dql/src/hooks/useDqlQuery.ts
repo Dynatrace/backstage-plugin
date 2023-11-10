@@ -9,10 +9,9 @@ export const useDqlQuery = (
 ) => {
   const dqlQueryApi = useApi(dqlQueryApiRef);
 
-  const getObjects = async () =>
-    await dqlQueryApi.getData(namespace, queryName, component);
-
-  const { value, loading, error } = useAsync(getObjects);
+  const { value, loading, error } = useAsync(async () => {
+    return await dqlQueryApi.getData(namespace, queryName, component);
+  }, [dqlQueryApi, namespace, queryName, component]);
 
   return {
     error,

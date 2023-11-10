@@ -1,4 +1,6 @@
 import { dtFetch } from '../utils';
+import { DynatraceConfig } from './dynatrace-config';
+import { getAccessToken } from './dynatract-auth';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 
 export type DynatraceAccessInfo = {
@@ -73,17 +75,17 @@ const waitForQueryResult = async <RecordType>(
   return pollQueryRes.result.records;
 };
 
-export const getDeployments = async (
-  accessInfo: DynatraceAccessInfo,
-  component: string,
-): Promise<TabularData> => {
-  const query = `
-    fetch dt.entity.cloud_application
-    | fields name = entity.name, namespace.id = belongs_to[dt.entity.cloud_application_namespace], backstageComponent = cloudApplicationLabels[\`backstage.io/component\`]
-    | filter backstageComponent == "${component}"
-    | lookup [fetch dt.entity.cloud_application_namespace, from: -10m | fields id, Namespace = entity.name], sourceField:namespace.id, lookupField:id, fields:{namespace = Namespace}
-  `;
+export class DynatraceApi {
+  constructor(private readonly config: DynatraceConfig) {}
 
-  const execQueryRes = await executeQuery(accessInfo, query);
-  return await waitForQueryResult(accessInfo, execQueryRes.requestToken);
-};
+  async executeDqlQuery(query: string): Promise<TabularData> {
+    const tokenResponse = await getAccessToken(this.config);
+    const environment: DynatraceAccessInfo = {
+      url: this.config.url,
+      accessToken: tokenResponse.access_token,
+    };
+
+    const execQueryRes = await executeQuery(environment, query);
+    return await waitForQueryResult(environment, execQueryRes.requestToken);
+  }
+}

@@ -8,7 +8,7 @@ import {
   RELATION_PART_OF,
   RELATION_PROVIDES_API,
 } from '@backstage/catalog-model';
-import { EmptyState } from '@backstage/core-components';
+import { EmptyState, TabbedLayout } from '@backstage/core-components';
 import {
   EntityApiDefinitionCard,
   EntityConsumedApisCard,
@@ -176,11 +176,21 @@ const serviceEntityPage = (
       {techdocsContent}
     </EntityLayout.Route>
 
-    <EntityLayout.Route path="/dynatrace-kubernetes" title="Dynatrace">
-      <EntityDqlQueryCard
-        title="Service Deployments"
-        queryId="dynatrace.kubernetes-deployments"
-      />
+    <EntityLayout.Route path="/dynatrace" title="Dynatrace">
+      <TabbedLayout>
+        <TabbedLayout.Route path="/kubernetes" title="Kubernetes Deployments">
+          <EntityDqlQueryCard
+            title="Kubernetes Deployments"
+            queryId="dynatrace.kubernetes-deployments"
+          />
+        </TabbedLayout.Route>
+        <TabbedLayout.Route path="/davis-events" title="Davis Events">
+          <EntityDqlQueryCard
+            title="Davis Events"
+            queryId="custom.davis-events"
+          />
+        </TabbedLayout.Route>
+      </TabbedLayout>
     </EntityLayout.Route>
   </EntityLayout>
 );
@@ -210,11 +220,21 @@ const websiteEntityPage = (
       {techdocsContent}
     </EntityLayout.Route>
 
-    <EntityLayout.Route path="/dynatrace-kubernetes" title="Dynatrace">
-      <EntityDqlQueryCard
-        title="Website Deployments"
-        queryId="dynatrace.kubernetes-deployments"
-      />
+    <EntityLayout.Route path="/dynatrace" title="Dynatrace">
+      <TabbedLayout>
+        <TabbedLayout.Route path="/kubernetes" title="Kubernetes Deployments">
+          <EntityDqlQueryCard
+            title="Kubernetes Deployments"
+            queryId="dynatrace.kubernetes-deployments"
+          />
+        </TabbedLayout.Route>
+        <TabbedLayout.Route path="/davis-events" title="Davis Events">
+          <EntityDqlQueryCard
+            title="Davis Events"
+            queryId="custom.davis-events"
+          />
+        </TabbedLayout.Route>
+      </TabbedLayout>
     </EntityLayout.Route>
   </EntityLayout>
 );

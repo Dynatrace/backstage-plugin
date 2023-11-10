@@ -20,5 +20,9 @@ export type Config = {
      * @visibility frontend
      */
     url: string;
+
+    queries: {
+      [queryId: string]: string;
+    };
   };
 };

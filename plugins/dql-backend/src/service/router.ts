@@ -1,5 +1,4 @@
-import { DynatraceAccessInfo, getDeployments } from './dynatrace-dql';
-import { getAccessToken } from './dynatract-auth';
+import { DynatraceApi } from './dynatrace-api';
 import { errorHandler } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
 import express from 'express';
@@ -15,30 +14,26 @@ export const createRouter = async (
   options: RouterOptions,
 ): Promise<express.Router> => {
   const { config } = options;
-  const url: string = config.getString('dynatrace.url');
-  const tokenUrl: string = config.getString('dynatrace.tokenUrl');
-  const clientId = config.getString('dynatrace.clientId');
-  const clientSecret = config.getString('dynatrace.clientSecret');
-  const accountUrn: string = config.getString('dynatrace.accountUrn');
+  const api = new DynatraceApi(config.get('dynatrace'));
 
   const router = Router();
   router.use(express.json());
 
+  router.get('/custom/:queryId', async (req, res) => {
+    const query = config.getString(`dynatrace.queries.${req.params.queryId}`);
+    const result = await api.executeDqlQuery(query);
+    res.json(result);
+  });
+
   router.get('/dynatrace/kubernetes-deployments', async (req, res) => {
-    const tokenResponse = await getAccessToken({
-      clientId,
-      clientSecret,
-      tokenUrl,
-      accountUrn,
-    });
-    const environment: DynatraceAccessInfo = {
-      url,
-      accessToken: tokenResponse.access_token,
-    };
-    const deployments = await getDeployments(
-      environment,
-      req.query.component as string,
-    );
+    const query = `
+    fetch dt.entity.cloud_application
+    | fields name = entity.name, namespace.id = belongs_to[dt.entity.cloud_application_namespace], backstageComponent = cloudApplicationLabels[\`backstage.io/component\`]
+    | filter backstageComponent == "${req.query.component as string}"
+    | lookup [fetch dt.entity.cloud_application_namespace, from: -10m | fields id, Namespace = entity.name], sourceField:namespace.id, lookupField:id, fields:{namespace = Namespace}
+  `;
+    const deployments = await api.executeDqlQuery(query);
+
     res.json(deployments);
   });
 
