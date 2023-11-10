@@ -1,3 +1,5 @@
+import { dtFetch } from '../utils';
+
 export type DynatraceSsoConfig = {
   clientId: string;
   clientSecret: string;
@@ -22,7 +24,7 @@ export const getAccessToken = async (
     client_secret: config.clientSecret,
     resource: config.accountUrn,
   });
-  const tokenRes = await fetch(config.tokenUrl, {
+  const tokenRes = await dtFetch(config.tokenUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

@@ -1,3 +1,4 @@
+import { dtFetch } from '../utils';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 
 export type DynatraceAccessInfo = {
@@ -27,7 +28,7 @@ const executeQuery = async (
   { url, accessToken }: DynatraceAccessInfo,
   dql: string,
 ): Promise<ExecuteQueryResponse> => {
-  const queryExecRes = await fetch(
+  const queryExecRes = await dtFetch(
     `${url}/platform/storage/query/v1/query:execute`,
     {
       method: 'POST',
@@ -45,7 +46,7 @@ const pollQuery = async <T>(
   { url, accessToken }: DynatraceAccessInfo,
   requestToken: string,
 ): Promise<PollQueryResponse<T>> => {
-  const queryPollRes = await fetch(
+  const queryPollRes = await dtFetch(
     `${url}/platform/storage/query/v1/query:poll?request-token=${encodeURIComponent(
       requestToken,
     )}`,
