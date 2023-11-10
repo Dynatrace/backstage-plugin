@@ -4,11 +4,11 @@ import { ConfigReader } from '@backstage/config';
 import { Server } from 'http';
 import { Logger } from 'winston';
 
-export interface ServerOptions {
+export type ServerOptions = {
   port: number;
   enableCors: boolean;
   logger: Logger;
-}
+};
 
 export const startStandaloneServer = async (
   options: ServerOptions,

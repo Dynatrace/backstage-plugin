@@ -6,10 +6,10 @@ import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
 
-export interface RouterOptions {
+export type RouterOptions = {
   logger: Logger;
   config: Config;
-}
+};
 
 export const createRouter = async (
   options: RouterOptions,

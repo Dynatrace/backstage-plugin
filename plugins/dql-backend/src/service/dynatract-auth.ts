@@ -1,17 +1,17 @@
-export interface DynatraceSsoConfig {
+export type DynatraceSsoConfig = {
   clientId: string;
   clientSecret: string;
   accountUrn: string;
   tokenUrl: string;
-}
+};
 
-export interface TokenResponse {
+export type TokenResponse = {
   scope: string;
   token_type: string;
   expires_in: number;
   access_token: string;
   resource: string;
-}
+};
 
 export const getAccessToken = async (
   config: DynatraceSsoConfig,

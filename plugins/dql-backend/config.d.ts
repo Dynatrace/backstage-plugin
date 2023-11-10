@@ -1,4 +1,4 @@
-export interface Config {
+export type Config = {
   dynatrace: {
     /**
      * @visibility secret
@@ -21,4 +21,4 @@ export interface Config {
      */
     url: string;
   };
-}
+};

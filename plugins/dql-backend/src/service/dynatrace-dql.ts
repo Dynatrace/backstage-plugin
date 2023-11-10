@@ -1,17 +1,17 @@
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 
-export interface DynatraceAccessInfo {
+export type DynatraceAccessInfo = {
   url: string;
   accessToken: string;
-}
+};
 
-interface ExecuteQueryResponse {
+type ExecuteQueryResponse = {
   state: string;
   requestToken: string;
   ttlSeconds: number;
-}
+};
 
-interface PollQueryResponse<RecordType> {
+type PollQueryResponse<RecordType> = {
   state: string;
   progress: number;
   result: {
@@ -21,7 +21,7 @@ interface PollQueryResponse<RecordType> {
     ];
     metadata: Record<string, object>;
   };
-}
+};
 
 const executeQuery = async (
   { url, accessToken }: DynatraceAccessInfo,
