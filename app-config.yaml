@@ -28,3 +28,7 @@ catalog:
   locations:
     - type: file
       target: ../../catalog-info.yaml
+
+dynatrace:
+  queries:
+    davis-events: fetch events | filter event.kind == "DAVIS_EVENT" | fields event.kind, timestamp
