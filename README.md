@@ -28,11 +28,13 @@ connection to the Dynatrace environment:
 
 ```yaml
 dynatrace:
-  url: https://xxxxxxxx.sprint.apps.dynatracelabs.com
-  tokenUrl: https://sso-sprint.dynatracelabs.com/sso/oauth2/token
-  accountUrn: <accountUrn>
-  clientId: <clientId>
-  clientSecret: <clientSecret>
+  environments:
+    - name: xxxxxxxx
+      url: https://xxxxxxxx.sprint.apps.dynatracelabs.com
+      tokenUrl: https://sso-sprint.dynatracelabs.com/sso/oauth2/token
+      accountUrn: <accountUrn>
+      clientId: <clientId>
+      clientSecret: <clientSecret>
 ```
 
 Kubernetes pods with a `backstage.io/component` label will be listed for the
@@ -40,6 +42,26 @@ corresponding backstage component:
 
 ```yaml
 backstage.io/component: <backstage-component-name>.<backstage-namespace>
+```
+
+You can also register your own custom queries:
+
+```yaml
+dynatrace:
+  queries:
+    my-custom-query: >
+      fetch events | filter event.kind == "DAVIS_EVENT" | fields event.kind,
+      timestamp
+```
+
+To include the result table for your custom query, you would reference the query
+by its ID with the `custom.` prefix:
+
+```jsx
+<EntityDqlQueryCard
+  title="My Custom Query Results"
+  queryId="custom.my-custom-query"
+/>
 ```
 
 To start the app, run:

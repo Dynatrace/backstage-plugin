@@ -11,11 +11,16 @@ describe('createRouter', () => {
       logger: getVoidLogger(),
       config: new MockConfigApi({
         dynatrace: {
-          url: 'dynatrace-url',
-          tokenUrl: 'token-url',
-          clientId: 'dynatrace-client-id',
-          clientSecret: 'dynatrace-client-secret',
-          accountUrn: 'dynatrace-account-urn',
+          environments: [
+            {
+              name: 'dynatrace-env-name',
+              url: 'dynatrace-envurl',
+              tokenUrl: 'token-url',
+              clientId: 'dynatrace-client-id',
+              clientSecret: 'dynatrace-client-secret',
+              accountUrn: 'dynatrace-account-urn',
+            },
+          ],
         },
       }),
     });

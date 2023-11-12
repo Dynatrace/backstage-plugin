@@ -1,29 +1,33 @@
 export type Config = {
   dynatrace: {
-    /**
-     * @visibility secret
-     */
-    clientId: string;
-    /**
-     * @visibility secret
-     */
-    clientSecret: string;
-    /**
-     * @visibility secret
-     */
-    accountUrn: string;
-    /**
-     * @visibility backend
-     */
-    tokenUrl: string;
-    /**
-     * @visibility frontend
-     */
-    url: string;
-    /**
-     * @visibility frontend
-     */
-    name: string;
+    environments: [
+      {
+        /**
+         * @visibility frontend
+         */
+        url: string;
+        /**
+         * @visibility frontend
+         */
+        name: string;
+        /**
+         * @visibility secret
+         */
+        clientId: string;
+        /**
+         * @visibility secret
+         */
+        clientSecret: string;
+        /**
+         * @visibility secret
+         */
+        accountUrn: string;
+        /**
+         * @visibility backend
+         */
+        tokenUrl: string;
+      },
+    ];
 
     queries: {
       [queryId: string]: string;

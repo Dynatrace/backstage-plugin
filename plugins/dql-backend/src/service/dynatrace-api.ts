@@ -1,7 +1,8 @@
 import { dtFetch } from '../utils';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 
-export type DynatraceApiConfig = {
+export type DynatraceEnvironmentConfig = {
+  name: string;
   url: string;
   tokenUrl: string;
   clientId: string;
@@ -90,7 +91,7 @@ const waitForQueryResult = async <RecordType>(
 };
 
 const getAccessToken = async (
-  config: DynatraceApiConfig,
+  config: DynatraceEnvironmentConfig,
 ): Promise<TokenResponse> => {
   const body = new URLSearchParams({
     grant_type: 'client_credentials',
@@ -109,7 +110,15 @@ const getAccessToken = async (
 };
 
 export class DynatraceApi {
-  constructor(private readonly config: DynatraceApiConfig) {}
+  constructor(private readonly config: DynatraceEnvironmentConfig) {}
+
+  get environmenName() {
+    return this.config.name;
+  }
+
+  get environmentUrl() {
+    return this.config.url;
+  }
 
   async executeDqlQuery(query: string): Promise<TabularData> {
     const tokenResponse = await getAccessToken(this.config);

@@ -31,4 +31,5 @@ catalog:
 
 dynatrace:
   queries:
-    davis-events: fetch events | filter event.kind == "DAVIS_EVENT" | fields event.kind, timestamp
+    davis-events: >
+      fetch events | filter event.kind == "DAVIS_EVENT" | fields event.kind, timestamp

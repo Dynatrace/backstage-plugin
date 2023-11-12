@@ -1,5 +1,5 @@
-import { DynatraceApi } from './dynatrace-api';
-import { compileDqlQuery } from './query-compiler';
+import { DynatraceApi, DynatraceEnvironmentConfig } from './dynatrace-api';
+import { QueryExecutor } from './query-executor';
 import { errorHandler } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
 import express from 'express';
@@ -15,27 +15,33 @@ export const createRouter = async (
   options: RouterOptions,
 ): Promise<express.Router> => {
   const { config } = options;
-  const api = new DynatraceApi(config.get('dynatrace'));
+  const apis = config
+    .getConfigArray('dynatrace.environments')
+    .map(
+      envConfig =>
+        new DynatraceApi(envConfig.get<DynatraceEnvironmentConfig>()),
+    );
+  const queryExecutor = new QueryExecutor(
+    apis,
+    config.getOptional('dynatrace.queries') ?? {},
+  );
 
   const router = Router();
   router.use(express.json());
 
   router.get('/custom/:queryId', async (req, res) => {
-    const query = config.getString(`dynatrace.queries.${req.params.queryId}`);
-    const compiledQuery = compileDqlQuery(query, req.query);
-    const result = await api.executeDqlQuery(compiledQuery);
-    res.json(result);
+    const result = await queryExecutor.executeCustomQuery(
+      req.params.queryId,
+      req.query,
+    );
+    return res.json(result);
   });
 
   router.get('/dynatrace/kubernetes-deployments', async (req, res) => {
-    const query = `
-    fetch dt.entity.cloud_application
-    | fields name = entity.name, namespace.id = belongs_to[dt.entity.cloud_application_namespace], backstageComponent = cloudApplicationLabels[\`backstage.io/component\`]
-    | filter backstageComponent == "\${componentName}.\${componentNamespace}"
-    | lookup [fetch dt.entity.cloud_application_namespace, from: -10m | fields id, Namespace = entity.name], sourceField:namespace.id, lookupField:id, fields:{namespace = Namespace}
-  `;
-    const compiledQuery = compileDqlQuery(query, req.query);
-    const deployments = await api.executeDqlQuery(compiledQuery);
+    const deployments = await queryExecutor.executeKubernetesDeploymensQuery({
+      componentNamespace: req.query.componentNamespace as string,
+      componentName: req.query.componentName as string,
+    });
     res.json(deployments);
   });
 
