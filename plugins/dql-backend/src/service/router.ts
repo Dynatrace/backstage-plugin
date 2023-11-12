@@ -1,4 +1,5 @@
 import { DynatraceApi } from './dynatrace-api';
+import { compileDqlQuery } from './query-compiler';
 import { errorHandler } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
 import express from 'express';
@@ -21,7 +22,8 @@ export const createRouter = async (
 
   router.get('/custom/:queryId', async (req, res) => {
     const query = config.getString(`dynatrace.queries.${req.params.queryId}`);
-    const result = await api.executeDqlQuery(query);
+    const compiledQuery = compileDqlQuery(query, req.query);
+    const result = await api.executeDqlQuery(compiledQuery);
     res.json(result);
   });
 
@@ -29,11 +31,11 @@ export const createRouter = async (
     const query = `
     fetch dt.entity.cloud_application
     | fields name = entity.name, namespace.id = belongs_to[dt.entity.cloud_application_namespace], backstageComponent = cloudApplicationLabels[\`backstage.io/component\`]
-    | filter backstageComponent == "${req.query.component as string}"
+    | filter backstageComponent == "\${componentName}.\${componentNamespace}"
     | lookup [fetch dt.entity.cloud_application_namespace, from: -10m | fields id, Namespace = entity.name], sourceField:namespace.id, lookupField:id, fields:{namespace = Namespace}
   `;
-    const deployments = await api.executeDqlQuery(query);
-
+    const compiledQuery = compileDqlQuery(query, req.query);
+    const deployments = await api.executeDqlQuery(compiledQuery);
     res.json(deployments);
   });
 

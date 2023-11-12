@@ -20,6 +20,10 @@ export type Config = {
      * @visibility frontend
      */
     url: string;
+    /**
+     * @visibility frontend
+     */
+    name: string;
 
     queries: {
       [queryId: string]: string;

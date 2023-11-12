@@ -41,23 +41,34 @@ describe('DQLQueryApiClient', () => {
     const discoveryApi = mockDiscoveryApiUrl('https://discovery-api.com');
     const client = new DqlQueryApiClient({ discoveryApi });
 
-    await client.getData('namespace', 'queryName', 'component');
+    await client.getData(
+      'namespace',
+      'queryName',
+      'componentName',
+      'componentNamespace',
+    );
 
     expect(discoveryApi.getBaseUrl).toHaveBeenCalledWith('dynatrace-dql');
   });
 
   it('should encode the component parameter', async () => {
     const discoveryApiUrl = 'https://discovery-api.com';
-    const namespace = 'namespace';
+    const queryNamespace = 'namespace';
     const queryName = 'query';
-    const component = 'component^^^';
-    const url = `${discoveryApiUrl}/${namespace}/${queryName}`;
-    const queryParams = `component=component%5E%5E%5E`;
+    const componentName = 'componentName^';
+    const componentNamespace = 'componentNamespace^';
+    const url = `${discoveryApiUrl}/${queryNamespace}/${queryName}`;
+    const queryParams = `componentName=componentName%5E&componentNamespace=componentNamespace%5E`;
     mockFetchResponse([], url, queryParams);
     const discoveryApi = mockDiscoveryApiUrl(discoveryApiUrl);
     const client = new DqlQueryApiClient({ discoveryApi });
 
-    const result = await client.getData(namespace, queryName, component);
+    const result = await client.getData(
+      queryNamespace,
+      queryName,
+      componentName,
+      componentNamespace,
+    );
 
     expect(result).toEqual([]);
   });
@@ -68,7 +79,12 @@ describe('DQLQueryApiClient', () => {
     const discoveryApi = mockDiscoveryApiUrl('https://discovery-api.com');
     const client = new DqlQueryApiClient({ discoveryApi });
 
-    const result = await client.getData('namespace', 'queryName', 'component');
+    const result = await client.getData(
+      'queryNamespace',
+      'queryName',
+      'componentName',
+      'componentNamespace',
+    );
 
     expect(result).toEqual(response);
   });
@@ -84,7 +100,12 @@ describe('DQLQueryApiClient', () => {
     const client = new DqlQueryApiClient({ discoveryApi });
 
     await expect(
-      client.getData('namespace', 'queryName', 'component'),
+      client.getData(
+        'queryNamespace',
+        'queryName',
+        'componentName',
+        'componentNamespace',
+      ),
     ).rejects.toThrow('invalid json');
   });
 
@@ -94,7 +115,12 @@ describe('DQLQueryApiClient', () => {
     const client = new DqlQueryApiClient({ discoveryApi });
 
     await expect(
-      client.getData('namespace', 'queryName', 'component'),
+      client.getData(
+        'queryNamespace',
+        'queryName',
+        'componentName',
+        'componentNamespace',
+      ),
     ).rejects.toThrow();
   });
 });

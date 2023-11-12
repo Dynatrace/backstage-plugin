@@ -22,23 +22,36 @@ describe('usDqlQuery', () => {
 
   it('should delegate to dqlQueryApi and return the result of the query', async () => {
     const { result, waitForNextUpdate } = renderHook(
-      () => useDqlQuery('namespace', 'queryName', 'component'),
+      () =>
+        useDqlQuery(
+          'queryNamespace',
+          'queryName',
+          'componentName',
+          'componentNamespace',
+        ),
       { wrapper },
     );
 
     await waitForNextUpdate();
 
     expect(MockDqlQueryApi.getData).toHaveBeenCalledWith(
-      'namespace',
+      'queryNamespace',
       'queryName',
-      'component',
+      'componentName',
+      'componentNamespace',
     );
     expect(result.current.value).toEqual([]);
   });
 
   it('should return loading true while the query is running', async () => {
     const { result, waitForNextUpdate } = renderHook(
-      () => useDqlQuery('namespace', 'queryName', 'component'),
+      () =>
+        useDqlQuery(
+          'queryNamespace',
+          'queryName',
+          'componentName',
+          'componentNamespace',
+        ),
       { wrapper },
     );
 
@@ -52,7 +65,13 @@ describe('usDqlQuery', () => {
     MockDqlQueryApi.getData.mockRejectedValue(error);
 
     const { result, waitForNextUpdate } = renderHook(
-      () => useDqlQuery('namespace', 'queryName', 'component'),
+      () =>
+        useDqlQuery(
+          'queryNamespace',
+          'queryName',
+          'componentName',
+          'componentNamespace',
+        ),
       { wrapper },
     );
 

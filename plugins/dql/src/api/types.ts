@@ -2,8 +2,9 @@ import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 
 export type DqlQueryApi = {
   getData(
-    namespace: string,
+    queryNamespace: string,
     queryName: string,
-    component: string,
+    componentName: string,
+    componentNamespace: string,
   ): Promise<TabularData>;
 };

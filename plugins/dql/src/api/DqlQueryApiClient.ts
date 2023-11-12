@@ -13,13 +13,15 @@ export class DqlQueryApiClient implements DqlQueryApi {
   }
 
   async getData(
-    namespace: string,
+    queryNamespace: string,
     queryName: string,
-    component: string,
+    componentName: string,
+    componentNamespace: string,
   ): Promise<TabularData> {
     const baseUrl = await this.discoveryApi.getBaseUrl('dynatrace-dql');
-    const encodedComponent = encodeURIComponent(component);
-    const url = `${baseUrl}/${namespace}/${queryName}?component=${encodedComponent}`;
+    const encodedComponentName = encodeURIComponent(componentName);
+    const encodedComponentNamespace = encodeURIComponent(componentNamespace);
+    const url = `${baseUrl}/${queryNamespace}/${queryName}?componentName=${encodedComponentName}&componentNamespace=${encodedComponentNamespace}`;
     const response = await fetch(url, {
       method: 'GET',
     });

@@ -1,9 +1,23 @@
 import { dtFetch } from '../utils';
-import { DynatraceConfig } from './dynatrace-config';
-import { getAccessToken } from './dynatract-auth';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 
-export type DynatraceAccessInfo = {
+export type DynatraceApiConfig = {
+  url: string;
+  tokenUrl: string;
+  clientId: string;
+  clientSecret: string;
+  accountUrn: string;
+};
+
+type TokenResponse = {
+  scope: string;
+  token_type: string;
+  expires_in: number;
+  access_token: string;
+  resource: string;
+};
+
+type DynatraceAccessInfo = {
   url: string;
   accessToken: string;
 };
@@ -75,8 +89,27 @@ const waitForQueryResult = async <RecordType>(
   return pollQueryRes.result.records;
 };
 
+const getAccessToken = async (
+  config: DynatraceApiConfig,
+): Promise<TokenResponse> => {
+  const body = new URLSearchParams({
+    grant_type: 'client_credentials',
+    client_id: config.clientId,
+    client_secret: config.clientSecret,
+    resource: config.accountUrn,
+  });
+  const tokenRes = await dtFetch(config.tokenUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body,
+  });
+  return await tokenRes.json();
+};
+
 export class DynatraceApi {
-  constructor(private readonly config: DynatraceConfig) {}
+  constructor(private readonly config: DynatraceApiConfig) {}
 
   async executeDqlQuery(query: string): Promise<TabularData> {
     const tokenResponse = await getAccessToken(this.config);

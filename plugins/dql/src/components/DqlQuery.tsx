@@ -33,16 +33,16 @@ type DqlQueryProps = z.infer<typeof dqlQueryPropsSchema>;
 
 export const DqlQuery = (props: DqlQueryProps) => {
   const { title, queryId } = dqlQueryPropsSchema.parse(props);
-  const [namespace, queryName] = queryId.split('.');
+  const [queryNamespace, queryName] = queryId.split('.');
 
   const { entity } = useEntity();
-  const component = `${entity.metadata.name}.${
-    entity.metadata.namespace ?? 'default'
-  }`;
+  const componentName = entity.metadata.name;
+  const componentNamespace = entity.metadata.namespace ?? 'default';
   const { error, loading, value } = useDqlQuery(
-    namespace,
+    queryNamespace,
     queryName,
-    component,
+    componentName,
+    componentNamespace,
   );
 
   if (loading) {

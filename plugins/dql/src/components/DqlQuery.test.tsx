@@ -96,7 +96,8 @@ describe('DqlQuery', () => {
     expect(queryApi.getData).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      'component.namespace',
+      'component',
+      'namespace',
     );
   });
 
@@ -108,7 +109,8 @@ describe('DqlQuery', () => {
     expect(queryApi.getData).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      'example.default',
+      'example',
+      'default',
     );
   });
 
@@ -120,6 +122,7 @@ describe('DqlQuery', () => {
     expect(queryApi.getData).toHaveBeenCalledWith(
       'dynatrace',
       'query-id-1',
+      expect.anything(),
       expect.anything(),
     );
   });
