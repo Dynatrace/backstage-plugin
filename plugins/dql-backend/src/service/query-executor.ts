@@ -41,7 +41,7 @@ fetch dt.entity.cloud_application, from: -10m
 | fieldsAdd Problems=coalesce(Problems,0)
 | lookup [ fetch events, from: -30m | filter event.kind=="SECURITY_EVENT" | filter event.category=="VULNERABILITY_MANAGEMENT" | filter event.provider=="Dynatrace" | filter event.type=="VULNERABILITY_STATE_REPORT_EVENT" | filter in(vulnerability.stack,{"CODE_LIBRARY","SOFTWARE","CONTAINER_ORCHESTRATION"}) | filter event.level=="ENTITY" | summarize { workloadId=arrayFirst(takeFirst(related_entities.kubernetes_workloads.ids)), vulnerability.stack=takeFirst(vulnerability.stack)}, by: {vulnerability.id, affected_entity.id} | summarize { Vulnerabilities=count() }, by: {workloadId}], sourceField:id, lookupField:workloadId, fields:{Vulnerabilities}
 | fieldsAdd Vulnerabilities=coalesce(Vulnerabilities,0)
-| filter workload.labels[\`backstage.io/component\`] == "\${componentName}.\${componentNamespace}"
+| filter workload.labels[\`backstage.io/component\`] == "\${componentNamespace}.\${componentName}"
 | fieldsRemove id, deploymentVersion, podVersion, name, workload.labels, cluster.id, namespace.id
 | fieldsAdd Logs = record({type="link", text="Show logs", url="\${environmentUrl}/ui/apps/dynatrace.notebooks/intent/view-query#%7B%22dt.query%22%3A%22fetch%20logs%20%7C%20filter%20matchesValue(dt.entity.cloud_application_instance%2C%20%5C%22CLOUD_APPLICATION_INSTANCE-A414AA7D3B688EA1%5C%22)%20%7C%20sort%20timestamp%20desc%22%2C%22title%22%3A%22Logs%22%7D"})
 | fieldsAdd Environment = "\${environmentName}"
