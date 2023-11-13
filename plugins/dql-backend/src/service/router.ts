@@ -1,4 +1,4 @@
-import { DynatraceApi, DynatraceEnvironmentConfig } from './dynatrace-api';
+import { parseCustomQueries, parseEnvironments } from '../utils/config-parser';
 import { QueryExecutor } from './query-executor';
 import { errorHandler } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
@@ -11,20 +11,12 @@ export type RouterOptions = {
   config: Config;
 };
 
-export const createRouter = async (
-  options: RouterOptions,
-): Promise<express.Router> => {
-  const { config } = options;
-  const apis = config
-    .getConfigArray('dynatrace.environments')
-    .map(
-      envConfig =>
-        new DynatraceApi(envConfig.get<DynatraceEnvironmentConfig>()),
-    );
-  const queryExecutor = new QueryExecutor(
-    apis,
-    config.getOptional('dynatrace.queries') ?? {},
-  );
+export const createRouter = async ({
+  config,
+}: RouterOptions): Promise<express.Router> => {
+  const apis = parseEnvironments(config);
+  const customQueries = parseCustomQueries(config);
+  const queryExecutor = new QueryExecutor(apis, customQueries);
 
   const router = Router();
   router.use(express.json());
