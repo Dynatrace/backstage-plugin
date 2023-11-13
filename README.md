@@ -7,6 +7,7 @@ This repository contains a collection of Backstage plugins for Dynatrace.
   - [Getting Started](#getting-started)
   - [Development](#development)
     - [(Conventional) Commit Messages](#conventional-commit-messages)
+  - [Code Style and ADRs](#code-style-and-adrs)
 
 ## Plugins
 
@@ -41,7 +42,7 @@ Kubernetes pods with a `backstage.io/component` label will be listed for the
 corresponding backstage component:
 
 ```yaml
-backstage.io/component: <backstage-component-name>.<backstage-namespace>
+backstage.io/component: <backstage-namespace>.<backstage-component-name>
 ```
 
 You can also register your own custom queries:
@@ -49,9 +50,30 @@ You can also register your own custom queries:
 ```yaml
 dynatrace:
   queries:
-    my-custom-query: >
-      fetch events | filter event.kind == "DAVIS_EVENT" | fields event.kind,
-      timestamp
+    - id: my-custom-query
+      query: >
+        fetch events | filter event.kind == "DAVIS_EVENT" | fields event.kind,
+        timestamp
+```
+
+Queries can contain placeholders, which will be replaced with the values from
+the context it is executed in. The following placeholders are available:
+
+- `${componentNamespace}` the namespace of the Backstage component, as defined
+  in the Backstage catalog
+- `${componentName}` the name of the Backstage component, as defined in the
+  Backstage catalog
+- `${environmentName}` the name of the environment (e.g. `production`), as
+  defined in the Dynatrace environment configuration
+- `${environmentUrl}` the URL of the environment (e.g.
+  `https://my-environment.dynatrace.com`), as defined in the Dynatrace
+  environment configuration
+
+For example, to filter for the events of the component, you could use the
+following in your query:
+
+```dql
+filter backstageComponent == "${componentName}.${componentNamespace}"
 ```
 
 To include the result table for your custom query, you would reference the query
