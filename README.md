@@ -73,7 +73,7 @@ For example, to filter for the events of the component, you could use the
 following in your query:
 
 ```dql
-filter backstageComponent == "${componentName}.${componentNamespace}"
+filter backstageComponent == "${componentNamespace}.${componentName}"
 ```
 
 To include the result table for your custom query, you would reference the query
