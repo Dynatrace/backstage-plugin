@@ -76,6 +76,33 @@ following in your query:
 filter backstageComponent == "${componentNamespace}.${componentName}"
 ```
 
+To be able to render correctly, the DQL must return data conform to the
+following:
+
+- No `null` values; use `coalesce` to replace `null` values with a default value
+- May contain simple types:
+  - Strings (e.g. `Name: 'My Name'`)
+- May contain complex types that have a type discriminator (`type`):
+  - Links: (e.g.
+    `Logs: { type: 'link', title: 'Link to Logs', url: 'https...' }`)
+- As a fallback, other types will be rendered as JSON
+
+An example of a valid DQL result would be:
+
+```json
+[
+  {
+    "Name": "backstage",
+    "Namespace": "hardening",
+    "A Link": {
+      "type": "link",
+      "text": "https://backstage.io",
+      "url": "https://backstage.io"
+    }
+  }
+]
+```
+
 To include the result table for your custom query, you would reference the query
 by its ID with the `custom.` prefix:
 
