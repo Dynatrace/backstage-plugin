@@ -2,6 +2,7 @@ import { DqlQueryApi, dqlQueryApiRef } from '../api';
 import { InternalDqlQuery } from './InternalDqlQuery';
 import { TabularDataTable } from './TabularDataTable';
 import { Entity } from '@backstage/catalog-model';
+import { ResponseErrorPanel } from '@backstage/core-components';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { TestApiProvider, renderInTestApp } from '@backstage/test-utils';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
@@ -9,6 +10,11 @@ import React from 'react';
 
 jest.mock('./TabularDataTable', () => ({
   TabularDataTable: jest.fn(() => null),
+}));
+
+jest.mock('@backstage/core-components', () => ({
+  Progress: jest.fn(() => null),
+  ResponseErrorPanel: jest.fn(() => null),
 }));
 
 const mockEntity = (
@@ -117,6 +123,25 @@ describe('DqlQuery', () => {
       expect.anything(),
       'example',
       'default',
+    );
+  });
+
+  it('should render an error panel in case of errors', async () => {
+    const error = new Error('some error');
+    const queryApi = {
+      getData: () => {
+        throw error;
+      },
+    };
+    const entity = mockEntity('example', undefined);
+    await prepareComponent({ entity, queryApi });
+
+    expect(TabularDataTable).not.toHaveBeenCalled();
+    expect(ResponseErrorPanel).toHaveBeenCalledWith(
+      expect.objectContaining({
+        error,
+      }),
+      expect.anything(),
     );
   });
 });

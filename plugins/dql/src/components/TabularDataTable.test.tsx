@@ -54,6 +54,24 @@ describe('TabularDataTable', () => {
     expect(link?.href).toBe(href);
   });
 
+  it('should render anything else as JSON', () => {
+    const unknownObjectType = {
+      type: 'something else',
+      text: 'value',
+      url: 'https://example.com/',
+    };
+    const data = [
+      {
+        Header: unknownObjectType,
+      },
+    ] as unknown as TabularData;
+    const rendered = prepareComponent({ data });
+
+    expect(
+      rendered.getByText(JSON.stringify(data[0].Header)),
+    ).toBeInTheDocument();
+  });
+
   it('should render 20 rows per page', () => {
     const data: TabularData = Array.from({ length: 30 }).map((_, i) => ({
       Header: `value ${i}`,

@@ -49,6 +49,12 @@ class MockDqlQueryApi implements DqlQueryApi {
   }
 }
 
+class MockDqlQueryApiError implements DqlQueryApi {
+  async getData(): Promise<TabularData> {
+    throw new Error('404 Not Found');
+  }
+}
+
 type DemoCardProps = {
   mockData: Entity;
   title: string;
@@ -69,10 +75,10 @@ createDevApp()
   .registerPlugin(dqlQueryPlugin)
   .addPage({
     element: (
-      <TestApiProvider apis={[[dqlQueryApiRef, new MockDqlQueryApi()]]}>
-        <TabbedLayout>
-          <TabbedLayout.Route path="/examples" title="Examples">
-            <>
+      <TabbedLayout>
+        <TabbedLayout.Route path="/examples" title="Examples">
+          <>
+            <TestApiProvider apis={[[dqlQueryApiRef, new MockDqlQueryApi()]]}>
               <DemoCard
                 title="Some Deployments"
                 queryId="dynatrace.kubernetes-deployments"
@@ -83,19 +89,28 @@ createDevApp()
                 queryId="dynatrace.kubernetes-deployments"
                 mockData={mockComponentDefaultNamespace}
               />
-            </>
-          </TabbedLayout.Route>
-          <TabbedLayout.Route path="/errors" title="Error Cases">
-            <>
+            </TestApiProvider>
+          </>
+        </TabbedLayout.Route>
+        <TabbedLayout.Route path="/errors" title="Error Cases">
+          <>
+            <DemoCard
+              title="Misconfigured Query"
+              queryId="bad.query"
+              mockData={mockComponentWithNamespace}
+            />
+            <TestApiProvider
+              apis={[[dqlQueryApiRef, new MockDqlQueryApiError()]]}
+            >
               <DemoCard
-                title="Misconfigured Query"
-                queryId="bad.query"
+                title="404 from API"
+                queryId="dynatrace.non-existent-query"
                 mockData={mockComponentWithNamespace}
               />
-            </>
-          </TabbedLayout.Route>
-        </TabbedLayout>
-      </TestApiProvider>
+            </TestApiProvider>
+          </>
+        </TabbedLayout.Route>
+      </TabbedLayout>
     ),
     title: 'Root Page',
     path: '/catalog/hardening/component/backstage-example',
