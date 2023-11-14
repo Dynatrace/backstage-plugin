@@ -50,8 +50,6 @@ export const DqlQuery = (props: DqlQueryProps) => {
     if (e instanceof ZodError) {
       const title = `${e.issues[0].path.join('.')}: ${e.issues[0].message}`;
       return <ErrorPanel error={e} title={title} />;
-    } else if (e instanceof Error) {
-      return <ErrorPanel error={e} />;
     }
     return <ErrorPanel error={new Error(`Unknown error: ${e}`)} />;
   }
