@@ -25,6 +25,12 @@ export class DqlQueryApiClient implements DqlQueryApi {
     const response = await fetch(url, {
       method: 'GET',
     });
+    if (!response.ok) {
+      throw new Error(
+        `Query ${queryNamespace}/${queryName} does not exist. Failed to fetch DQL query data from ${url}: ${response.status} ${response.statusText}`,
+      );
+    }
+
     const jsonResponse = await response.json();
     return TabularDataFactory.fromObject(jsonResponse);
   }
