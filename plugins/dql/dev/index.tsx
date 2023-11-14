@@ -2,6 +2,7 @@ import { EntityDqlQueryCard, dqlQueryPlugin } from '../src';
 import { DqlQueryApi, dqlQueryApiRef } from '../src/api';
 import { exampleData } from './data';
 import { Entity } from '@backstage/catalog-model';
+import { TabbedLayout } from '@backstage/core-components';
 import { createDevApp } from '@backstage/dev-utils';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { TestApiProvider } from '@backstage/test-utils';
@@ -69,16 +70,31 @@ createDevApp()
   .addPage({
     element: (
       <TestApiProvider apis={[[dqlQueryApiRef, new MockDqlQueryApi()]]}>
-        <DemoCard
-          title="Some Deployments"
-          queryId="dynatrace.kubernetes-deployments"
-          mockData={mockComponentWithNamespace}
-        />
-        <DemoCard
-          title="Other Deployments"
-          queryId="dynatrace.kubernetes-deployments"
-          mockData={mockComponentDefaultNamespace}
-        />
+        <TabbedLayout>
+          <TabbedLayout.Route path="/examples" title="Examples">
+            <>
+              <DemoCard
+                title="Some Deployments"
+                queryId="dynatrace.kubernetes-deployments"
+                mockData={mockComponentWithNamespace}
+              />
+              <DemoCard
+                title="Other Deployments"
+                queryId="dynatrace.kubernetes-deployments"
+                mockData={mockComponentDefaultNamespace}
+              />
+            </>
+          </TabbedLayout.Route>
+          <TabbedLayout.Route path="/errors" title="Error Cases">
+            <>
+              <DemoCard
+                title="Misconfigured Query"
+                queryId="bad.query"
+                mockData={mockComponentWithNamespace}
+              />
+            </>
+          </TabbedLayout.Route>
+        </TabbedLayout>
       </TestApiProvider>
     ),
     title: 'Root Page',

@@ -127,7 +127,7 @@ describe('DqlQuery', () => {
     );
   });
 
-  it('should not accept invalid queryIds', async () => {
+  it('should show an informative errors for bad queryIds', async () => {
     const queryIds = [
       'dyna-trace.query',
       'custom.!@#',
@@ -135,11 +135,20 @@ describe('DqlQuery', () => {
       'invalid.1',
       'invalid.1.2',
     ];
+    const queryApi = mockDqlQueryApi();
     for (let i = 0; i < queryIds.length; i++) {
       const queryId = queryIds[i];
-      await expect(
-        async () => await prepareComponent({ queryId }),
-      ).rejects.toThrow();
+      const rendered = await prepareComponent({ queryApi, queryId });
+
+      expect(queryApi.getData).not.toHaveBeenCalled();
+
+      const alerts = rendered.getAllByRole('alert');
+      const containsInvalid = alerts.some(alert =>
+        /queryId: String must be in the format 'namespace.query-name'. Namespace must be 'dynatrace' or 'custom'. Query name may only contain alphanumerics and dashes./.test(
+          alert.textContent ?? '',
+        ),
+      );
+      expect(containsInvalid).toBe(true);
     }
   });
 });
