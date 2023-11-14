@@ -1,11 +1,5 @@
-import { useDqlQuery } from '../hooks';
-import { TabularDataTable } from './TabularDataTable';
-import {
-  ErrorPanel,
-  Progress,
-  ResponseErrorPanel,
-} from '@backstage/core-components';
-import { useEntity } from '@backstage/plugin-catalog-react';
+import { InternalDqlQuery } from './InternalDqlQuery';
+import { ErrorPanel } from '@backstage/core-components';
 import React from 'react';
 import { ZodError, z } from 'zod';
 
@@ -33,38 +27,14 @@ const dqlQueryPropsSchema = z.strictObject({
     ),
 });
 
-type InternalDqlQueryProps = {
-  title: string;
-  queryNamespace: string;
-  queryName: string;
-};
-
-const InternalDqlQuery = ({
-  title,
-  queryNamespace,
-  queryName,
-}: InternalDqlQueryProps) => {
-  const { entity } = useEntity();
-  const componentName = entity.metadata.name;
-  const componentNamespace = entity.metadata.namespace ?? 'default';
-  const { error, loading, value } = useDqlQuery(
-    queryNamespace,
-    queryName,
-    componentName,
-    componentNamespace,
-  );
-
-  if (loading) {
-    return <Progress />;
-  } else if (error) {
-    return <ResponseErrorPanel error={error} />;
-  }
-
-  return <TabularDataTable title={title} data={value || []} />;
-};
-
 export type DqlQueryProps = z.infer<typeof dqlQueryPropsSchema>;
 
+/**
+ * DqlQuery is a wrapper around InternalDqlQuery that provides error handling
+ * for invalid props.
+ * @param props DqlQueryProps
+ * @returns React.ReactElement either a InternalDqlQuery or an ErrorPanel
+ */
 export const DqlQuery = (props: DqlQueryProps) => {
   try {
     const { title, queryId } = dqlQueryPropsSchema.parse(props);
