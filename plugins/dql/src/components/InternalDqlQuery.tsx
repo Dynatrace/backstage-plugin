@@ -1,4 +1,5 @@
 import { useDqlQuery } from '../hooks';
+import { DqlEmptyState } from './DqlEmptyState';
 import { TabularDataTable } from './TabularDataTable';
 import { Progress, ResponseErrorPanel } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
@@ -31,5 +32,16 @@ export const InternalDqlQuery = ({
     return <ResponseErrorPanel error={error} />;
   }
 
-  return <TabularDataTable title={title} data={value || []} />;
+  if (!value || value.length === 0) {
+    return (
+      <DqlEmptyState
+        componentName={componentName}
+        componentNamespace={componentNamespace}
+        queryName={queryName}
+        queryNamespace={queryNamespace}
+      />
+    );
+  }
+
+  return <TabularDataTable title={title} data={value} />;
 };
