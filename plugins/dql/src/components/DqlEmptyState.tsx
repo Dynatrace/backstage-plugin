@@ -1,19 +1,13 @@
+import { EmptyStateProps } from './InternalDqlQuery';
 import { MarkdownContent } from '@backstage/core-components';
 import React from 'react';
-
-export type DqlEmptyStateProps = {
-  componentName: string;
-  componentNamespace: string;
-  queryName: string;
-  queryNamespace: string;
-};
 
 export const DqlEmptyState = ({
   componentName,
   componentNamespace,
   queryName,
   queryNamespace,
-}: DqlEmptyStateProps) => {
+}: EmptyStateProps) => {
   const message = `# We turned up empty
 
   Query \`${queryNamespace}.${queryName}\` did not return any data for
