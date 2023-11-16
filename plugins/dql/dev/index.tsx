@@ -15,7 +15,7 @@ const mockComponentWithNamespace: Entity = {
   kind: 'Component',
   metadata: {
     // This component would map to Kubernetes workloads with the label
-    // `backstage.io/component: backstage-example.hardening`.
+    // `backstage.io/component: hardening.backstage-example`.
     name: 'backstage-example',
     description: 'backstage.io/example',
     namespace: 'hardening',
@@ -46,6 +46,12 @@ const mockComponentDefaultNamespace: Entity = {
 class MockDqlQueryApi implements DqlQueryApi {
   async getData(): Promise<TabularData> {
     return exampleData;
+  }
+}
+
+class MockDqlQueryApiNoResult implements DqlQueryApi {
+  async getData(): Promise<TabularData> {
+    return [];
   }
 }
 
@@ -105,6 +111,19 @@ createDevApp()
               <DemoCard
                 title="404 from API"
                 queryId="dynatrace.non-existent-query"
+                mockData={mockComponentWithNamespace}
+              />
+            </TestApiProvider>
+          </>
+        </TabbedLayout.Route>
+        <TabbedLayout.Route path="/empty" title="Empty States">
+          <>
+            <TestApiProvider
+              apis={[[dqlQueryApiRef, new MockDqlQueryApiNoResult()]]}
+            >
+              <DemoCard
+                title="Empty State"
+                queryId="dynatrace.kubernetes-deployments"
                 mockData={mockComponentWithNamespace}
               />
             </TestApiProvider>
