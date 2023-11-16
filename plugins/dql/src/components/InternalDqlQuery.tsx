@@ -5,16 +5,25 @@ import { Progress, ResponseErrorPanel } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import React from 'react';
 
+export type EmptyStateProps = {
+  componentName: string;
+  componentNamespace: string;
+  queryName: string;
+  queryNamespace: string;
+};
+
 export type InternalDqlQueryProps = {
   title: string;
   queryNamespace: string;
   queryName: string;
+  EmptyState?: React.ComponentType<EmptyStateProps>;
 };
 
 export const InternalDqlQuery = ({
   title,
   queryNamespace,
   queryName,
+  EmptyState = DqlEmptyState,
 }: InternalDqlQueryProps) => {
   const { entity } = useEntity();
   const componentName = entity.metadata.name;
@@ -34,7 +43,7 @@ export const InternalDqlQuery = ({
 
   if (!value || value.length === 0) {
     return (
-      <DqlEmptyState
+      <EmptyState
         componentName={componentName}
         componentNamespace={componentNamespace}
         queryName={queryName}
