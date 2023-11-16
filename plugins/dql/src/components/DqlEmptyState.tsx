@@ -16,7 +16,7 @@ export const DqlEmptyState = ({
   If you recently added the component, it may take a few minutes for
   Dynatrace to start reporting data. If the component has been running
   for a while, it may not be reporting data. Please check that your
-  compoent is indeed reporting data to Dynatrace and, in case you are
+  component is indeed reporting data to Dynatrace and, in case you are
   using custom queries, that the query is correct.`;
 
   return <MarkdownContent content={message} />;
