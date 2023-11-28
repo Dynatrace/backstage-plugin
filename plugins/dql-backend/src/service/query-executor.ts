@@ -2,11 +2,22 @@ import { DynatraceApi } from './dynatrace-api';
 import { dynatraceQueries } from './queries';
 import { compileDqlQuery } from './query-compiler';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
+import { z } from 'zod';
 
-type ComponentQueryVariables = {
-  componentNamespace: string;
-  componentName: string;
-};
+const componentQueryVariablesSchema = z.object({
+  // see https://backstage.io/docs/features/software-catalog/descriptor-format#namespace-optional
+  componentNamespace: z
+    .string()
+    .max(63)
+    .regex(/^[A-Za-z1-9\-]+$/),
+  // see https://backstage.io/docs/features/software-catalog/descriptor-format#name-required
+  componentName: z
+    .string()
+    .max(63)
+    .regex(/^[A-Za-z1-9\-_\.]+$/),
+});
+
+type ComponentQueryVariables = z.infer<typeof componentQueryVariablesSchema>;
 
 export class QueryExecutor {
   constructor(
@@ -26,13 +37,16 @@ export class QueryExecutor {
     queryId: string,
     variables: ComponentQueryVariables,
   ): Promise<TabularData> {
-    return this.executeQuery(dynatraceQueries[queryId], variables);
+    const query = dynatraceQueries[queryId];
+    return this.executeQuery(query, variables);
   }
 
   private async executeQuery(
     dqlQuery: string,
     variables: ComponentQueryVariables,
   ): Promise<TabularData> {
+    componentQueryVariablesSchema.parse(variables);
+
     const results$ = this.apis.map(api => {
       const compiledQuery = compileDqlQuery(dqlQuery, {
         ...variables,
