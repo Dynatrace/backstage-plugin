@@ -12,7 +12,7 @@ export const KubernetesDeploymentsEmptyState = ({
 
   To start tracking Kubernetes deployments, you need to deploy the Dynatrace OneAgent
   Operator to your cluster. See the
-  [Dynatrace documentation](https://www.dynatrace.com/support/help/technology-support/cloud-platforms/kubernetes/deploy-oneagent-on-kubernetes/)
+  [Dynatrace documentation](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-oneagent)
   for more information.
 
   Also, make sure that the \`backstage.io/component\` label is set to
