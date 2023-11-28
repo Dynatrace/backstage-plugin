@@ -1,7 +1,8 @@
 import { DqlQueryApi, dqlQueryApiRef } from '../api';
 import { DqlEmptyState } from './DqlEmptyState';
-import { EmptyStateProps, InternalDqlQuery } from './InternalDqlQuery';
+import { InternalDqlQuery } from './InternalDqlQuery';
 import { TabularDataTable } from './TabularDataTable';
+import { EmptyStateProps } from './types';
 import { Entity } from '@backstage/catalog-model';
 import { ResponseErrorPanel } from '@backstage/core-components';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
