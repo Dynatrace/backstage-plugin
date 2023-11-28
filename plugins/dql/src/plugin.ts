@@ -31,3 +31,12 @@ export const EntityDqlQueryCard = dqlQueryPlugin.provide(
     },
   }),
 );
+
+export const EntityKubernetesDeploymentsCard = dqlQueryPlugin.provide(
+  createComponentExtension({
+    name: 'EntityKubernetesDeploymentsCard',
+    component: {
+      lazy: () => import('./components').then(m => m.KubernetesDeployments),
+    },
+  }),
+);
