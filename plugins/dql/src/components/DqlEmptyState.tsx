@@ -1,4 +1,4 @@
-import { EmptyStateProps } from './InternalDqlQuery';
+import { EmptyStateProps } from './types';
 import { MarkdownContent } from '@backstage/core-components';
 import React from 'react';
 
@@ -11,7 +11,7 @@ export const DqlEmptyState = ({
   const message = `# We turned up empty
 
   Query \`${queryNamespace}.${queryName}\` did not return any data for
-  component \`${componentNamespace}/${componentName}\`.
+  component \`${componentNamespace}.${componentName}\`.
 
   If you recently added the component, it may take a few minutes for
   Dynatrace to start reporting data. If the component has been running

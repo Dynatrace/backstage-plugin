@@ -1,4 +1,5 @@
 import { InternalDqlQuery } from './InternalDqlQuery';
+import { EmptyStateProps } from './types';
 import { ErrorPanel } from '@backstage/core-components';
 import React from 'react';
 import { ZodError, z } from 'zod';
@@ -27,7 +28,9 @@ const dqlQueryPropsSchema = z.strictObject({
     ),
 });
 
-export type DqlQueryProps = z.infer<typeof dqlQueryPropsSchema>;
+export type DqlQueryProps = {
+  emptyState?: React.ComponentType<EmptyStateProps>;
+} & z.infer<typeof dqlQueryPropsSchema>;
 
 /**
  * DqlQuery is a wrapper around InternalDqlQuery that provides error handling
@@ -44,6 +47,7 @@ export const DqlQuery = (props: DqlQueryProps) => {
         title={title}
         queryNamespace={queryNamespace}
         queryName={queryName}
+        EmptyState={props.emptyState}
       />
     );
   } catch (e) {

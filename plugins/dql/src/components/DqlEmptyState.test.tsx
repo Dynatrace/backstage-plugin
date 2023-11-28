@@ -36,7 +36,7 @@ describe('DqlEmptyState', () => {
       queryNamespace,
     });
 
-    expect(rendered.getByText(/default\/example/)).toBeInTheDocument();
+    expect(rendered.getByText(/default.example/)).toBeInTheDocument();
     expect(rendered.getByText(/dynatrace.query-id-1/)).toBeInTheDocument();
   });
 });

@@ -1,16 +1,10 @@
 import { useDqlQuery } from '../hooks';
 import { DqlEmptyState } from './DqlEmptyState';
 import { TabularDataTable } from './TabularDataTable';
+import { EmptyStateProps } from './types';
 import { Progress, ResponseErrorPanel } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import React from 'react';
-
-export type EmptyStateProps = {
-  componentName: string;
-  componentNamespace: string;
-  queryName: string;
-  queryNamespace: string;
-};
 
 export type InternalDqlQueryProps = {
   title: string;
