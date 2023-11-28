@@ -148,7 +148,7 @@ createDevApp()
             </TestApiProvider>
           </>
         </TabbedLayout.Route>
-        <TabbedLayout.Route path="/kubernetes" title="Dedicated Cards">
+        <TabbedLayout.Route path="/kubernetes" title="Kubernetes Card">
           <>
             <TestApiProvider apis={[[dqlQueryApiRef, new MockDqlQueryApi()]]}>
               <KubernetesCard mockData={mockComponentWithNamespace} />
@@ -160,6 +160,16 @@ createDevApp()
               />
             </TestApiProvider>
           </>
+        </TabbedLayout.Route>
+        <TabbedLayout.Route
+          path="/kubernetes-empty"
+          title="Kubernetes Card Empty"
+        >
+          <TestApiProvider
+            apis={[[dqlQueryApiRef, new MockDqlQueryApiNoResult()]]}
+          >
+            <KubernetesCard mockData={mockComponentWithNamespace} />
+          </TestApiProvider>
         </TabbedLayout.Route>
       </TabbedLayout>
     ),
