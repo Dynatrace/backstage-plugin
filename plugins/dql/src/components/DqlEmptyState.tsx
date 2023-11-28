@@ -1,5 +1,5 @@
+import { DynatraceMarkdownText } from './DynatraceMarkdownText';
 import { EmptyStateProps } from './types';
-import { MarkdownContent } from '@backstage/core-components';
 import React from 'react';
 
 export const DqlEmptyState = ({
@@ -19,5 +19,5 @@ export const DqlEmptyState = ({
   component is indeed reporting data to Dynatrace and, in case you are
   using custom queries, that the query is correct.`;
 
-  return <MarkdownContent content={message} />;
+  return <DynatraceMarkdownText content={message} />;
 };

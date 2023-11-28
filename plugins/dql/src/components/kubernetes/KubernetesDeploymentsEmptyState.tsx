@@ -1,5 +1,5 @@
 import { EmptyStateProps } from '..';
-import { MarkdownContent } from '@backstage/core-components';
+import { DynatraceMarkdownText } from '../DynatraceMarkdownText';
 import React from 'react';
 
 export const KubernetesDeploymentsEmptyState = ({
@@ -28,5 +28,5 @@ export const KubernetesDeploymentsEmptyState = ({
   If you recently added the component, it may take a few minutes for
   Dynatrace to start reporting data.`;
 
-  return <MarkdownContent content={message} />;
+  return <DynatraceMarkdownText content={message} />;
 };
