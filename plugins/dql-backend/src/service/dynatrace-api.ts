@@ -112,7 +112,7 @@ const getAccessToken = async (
 export class DynatraceApi {
   constructor(private readonly config: DynatraceEnvironmentConfig) {}
 
-  get environmenName() {
+  get environmentName() {
     return this.config.name;
   }
 

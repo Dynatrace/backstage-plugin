@@ -30,7 +30,7 @@ export const createRouter = async ({
   });
 
   router.get('/dynatrace/kubernetes-deployments', async (req, res) => {
-    const deployments = await queryExecutor.executeKubernetesDeploymensQuery({
+    const deployments = await queryExecutor.executeKubernetesDeploymentsQuery({
       componentNamespace: req.query.componentNamespace as string,
       componentName: req.query.componentName as string,
     });

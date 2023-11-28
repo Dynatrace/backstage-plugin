@@ -21,7 +21,7 @@ export class QueryExecutor {
     return this.executeQuery(query, variables);
   }
 
-  async executeKubernetesDeploymensQuery(
+  async executeKubernetesDeploymentsQuery(
     variables: ComponentQueryVariables,
   ): Promise<TabularData> {
     const query = `
@@ -56,7 +56,7 @@ fetch dt.entity.cloud_application, from: -10m
     const results$ = this.apis.map(api => {
       const compiledQuery = compileDqlQuery(dqlQuery, {
         ...variables,
-        environmentName: api.environmenName,
+        environmentName: api.environmentName,
         environmentUrl: api.environmentUrl,
       });
       return api.executeDqlQuery(compiledQuery);

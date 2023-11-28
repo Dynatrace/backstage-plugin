@@ -20,7 +20,7 @@ describe('config-parser', () => {
 
       expect(result).toHaveLength(1);
       const api = result[0];
-      expect(api.environmenName).toEqual(TEST_ENVIRONMENT.name);
+      expect(api.environmentName).toEqual(TEST_ENVIRONMENT.name);
       expect(api.environmentUrl).toEqual(TEST_ENVIRONMENT.url);
     });
   });
