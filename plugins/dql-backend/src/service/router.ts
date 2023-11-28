@@ -22,18 +22,21 @@ export const createRouter = async ({
   router.use(express.json());
 
   router.get('/custom/:queryId', async (req, res) => {
-    const result = await queryExecutor.executeCustomQuery(
-      req.params.queryId,
-      req.query,
-    );
-    return res.json(result);
-  });
-
-  router.get('/dynatrace/kubernetes-deployments', async (req, res) => {
-    const deployments = await queryExecutor.executeKubernetesDeploymentsQuery({
+    const result = await queryExecutor.executeCustomQuery(req.params.queryId, {
       componentNamespace: req.query.componentNamespace as string,
       componentName: req.query.componentName as string,
     });
+    return res.json(result);
+  });
+
+  router.get('/dynatrace/:queryId', async (req, res) => {
+    const deployments = await queryExecutor.executeDynatraceQuery(
+      req.params.queryId,
+      {
+        componentNamespace: req.query.componentNamespace as string,
+        componentName: req.query.componentName as string,
+      },
+    );
     res.json(deployments);
   });
 
