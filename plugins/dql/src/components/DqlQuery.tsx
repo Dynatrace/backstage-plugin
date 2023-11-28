@@ -7,7 +7,7 @@ import { ZodError, z } from 'zod';
 const namespaceSchema = z.enum(['dynatrace', 'custom']);
 const queryNameSchema = z.string().regex(/^[a-z1-9\-]+$/);
 
-const dqlQueryPropsSchema = z.strictObject({
+const dqlQueryPropsSchema = z.object({
   title: z.string().default('Query Result'),
   queryId: z
     .string()

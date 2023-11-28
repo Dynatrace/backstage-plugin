@@ -1,4 +1,8 @@
-import { EntityDqlQueryCard, dqlQueryPlugin } from '../src';
+import {
+  EntityDqlQueryCard,
+  EntityKubernetesDeploymentsCard,
+  dqlQueryPlugin,
+} from '../src';
 import { DqlQueryApi, dqlQueryApiRef } from '../src/api';
 import { exampleData } from './data';
 import { Entity } from '@backstage/catalog-model';
@@ -61,17 +65,32 @@ class MockDqlQueryApiError implements DqlQueryApi {
   }
 }
 
-type DemoCardProps = {
+type DqlCardProps = {
   mockData: Entity;
   title: string;
   queryId: string;
 };
 
-const DemoCard = ({ mockData, title, queryId }: DemoCardProps) => {
+const DqlCard = ({ mockData, title, queryId }: DqlCardProps) => {
   return (
     <Box m={4}>
       <EntityProvider entity={mockData}>
         <EntityDqlQueryCard title={title} queryId={queryId} />
+      </EntityProvider>
+    </Box>
+  );
+};
+
+type KubernetesCardProps = {
+  mockData: Entity;
+  title?: string;
+};
+
+const KubernetesCard = ({ mockData, title }: KubernetesCardProps) => {
+  return (
+    <Box m={4}>
+      <EntityProvider entity={mockData}>
+        <EntityKubernetesDeploymentsCard title={title} />
       </EntityProvider>
     </Box>
   );
@@ -85,12 +104,12 @@ createDevApp()
         <TabbedLayout.Route path="/examples" title="Examples">
           <>
             <TestApiProvider apis={[[dqlQueryApiRef, new MockDqlQueryApi()]]}>
-              <DemoCard
+              <DqlCard
                 title="Some Deployments"
                 queryId="dynatrace.kubernetes-deployments"
                 mockData={mockComponentWithNamespace}
               />
-              <DemoCard
+              <DqlCard
                 title="Other Deployments"
                 queryId="dynatrace.kubernetes-deployments"
                 mockData={mockComponentDefaultNamespace}
@@ -100,7 +119,7 @@ createDevApp()
         </TabbedLayout.Route>
         <TabbedLayout.Route path="/errors" title="Error Cases">
           <>
-            <DemoCard
+            <DqlCard
               title="Misconfigured Query"
               queryId="bad.query"
               mockData={mockComponentWithNamespace}
@@ -108,7 +127,7 @@ createDevApp()
             <TestApiProvider
               apis={[[dqlQueryApiRef, new MockDqlQueryApiError()]]}
             >
-              <DemoCard
+              <DqlCard
                 title="404 from API"
                 queryId="dynatrace.non-existent-query"
                 mockData={mockComponentWithNamespace}
@@ -121,9 +140,22 @@ createDevApp()
             <TestApiProvider
               apis={[[dqlQueryApiRef, new MockDqlQueryApiNoResult()]]}
             >
-              <DemoCard
+              <DqlCard
                 title="Empty State"
                 queryId="dynatrace.kubernetes-deployments"
+                mockData={mockComponentWithNamespace}
+              />
+            </TestApiProvider>
+          </>
+        </TabbedLayout.Route>
+        <TabbedLayout.Route path="/kubernetes" title="Dedicated Cards">
+          <>
+            <TestApiProvider apis={[[dqlQueryApiRef, new MockDqlQueryApi()]]}>
+              <KubernetesCard mockData={mockComponentWithNamespace} />
+            </TestApiProvider>
+            <TestApiProvider apis={[[dqlQueryApiRef, new MockDqlQueryApi()]]}>
+              <KubernetesCard
+                title="Another list of deployments"
                 mockData={mockComponentWithNamespace}
               />
             </TestApiProvider>
