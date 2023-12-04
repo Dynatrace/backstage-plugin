@@ -1,4 +1,5 @@
 import { dtFetch } from '../utils';
+import { getRootLogger } from '@backstage/backend-common';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 
 export type DynatraceEnvironmentConfig = {
@@ -40,6 +41,8 @@ type PollQueryResponse<RecordType> = {
     metadata: Record<string, object>;
   };
 };
+
+const logger = getRootLogger().child({ plugin: 'dql-backend' });
 
 const executeQuery = async (
   { url, accessToken }: DynatraceAccessInfo,
@@ -106,6 +109,14 @@ const getAccessToken = async (
     },
     body,
   });
+  if (tokenRes.status !== 200) {
+    logger.error(
+      `Failed to get access token for environment ${config.name} (${config.url})`,
+    );
+    throw new Error(
+      `Failed to get access token for environment ${config.name} (${config.url})`,
+    );
+  }
   return await tokenRes.json();
 };
 
