@@ -76,6 +76,14 @@ const pollQuery = async <T>(
       },
     },
   );
+  if (queryPollRes.status !== 200) {
+    logger.error(
+      `Failed to poll query results for request token ${requestToken}`,
+    );
+    throw new Error(
+      `Failed to poll query results for request token ${requestToken}`,
+    );
+  }
   return await queryPollRes.json();
 };
 
