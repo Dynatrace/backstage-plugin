@@ -29,3 +29,6 @@ jobs:
 
       - name: Run Tests
         run: yarn test:all
+
+      - name: Run Audit
+        run: yarn audit
