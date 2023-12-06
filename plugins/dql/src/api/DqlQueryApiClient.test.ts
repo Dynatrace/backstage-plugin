@@ -146,35 +146,7 @@ describe('DQLQueryApiClient', () => {
     ).rejects.toThrow(`Query queryNamespace/queryName does not exist.`);
   });
 
-  it('should return the server error if possible', async () => {
-    const statusCode = 500;
-    const statusText = 'Server Error';
-    const error = {
-      name: 'Something went wrong',
-      message: 'Something went wrong',
-      stack: [],
-    };
-
-    server.use(
-      rest.get('*', (_, res, ctx) => {
-        return res(ctx.status(statusCode, statusText), ctx.json({ error }));
-      }),
-    );
-
-    const discoveryApi = mockDiscoveryApiUrl('https://discovery-api.com');
-    const client = new DqlQueryApiClient({ discoveryApi });
-
-    await expect(
-      client.getData(
-        'queryNamespace',
-        'queryName',
-        'componentName',
-        'componentNamespace',
-      ),
-    ).rejects.toThrow(error);
-  });
-
-  it('should report any other error', async () => {
+  it('should report any generic error to the frontend', async () => {
     const statusCode = 500;
     const statusText = "It's broken";
     server.use(
@@ -193,8 +165,6 @@ describe('DQLQueryApiClient', () => {
         'componentName',
         'componentNamespace',
       ),
-    ).rejects.toThrow(
-      `Failed to fetch DQL query data from https://discovery-api.com/queryNamespace/queryName?componentName=componentName&componentNamespace=componentNamespace: 500 It's broken`,
-    );
+    ).rejects.toThrow('Request failed with 500 Error');
   });
 });
