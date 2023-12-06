@@ -146,7 +146,7 @@ describe('DQLQueryApiClient', () => {
     ).rejects.toThrow(`Query queryNamespace/queryName does not exist.`);
   });
 
-  it('should report any other error', async () => {
+  it('should report any generic error to the frontend', async () => {
     const statusCode = 500;
     const statusText = "It's broken";
     server.use(
@@ -165,8 +165,6 @@ describe('DQLQueryApiClient', () => {
         'componentName',
         'componentNamespace',
       ),
-    ).rejects.toThrow(
-      `Failed to fetch DQL query data from https://discovery-api.com/queryNamespace/queryName?componentName=componentName&componentNamespace=componentNamespace: 500 It's broken`,
-    );
+    ).rejects.toThrow('Request failed with 500 Error');
   });
 });

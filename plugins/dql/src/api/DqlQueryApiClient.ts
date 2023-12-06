@@ -1,5 +1,6 @@
 import { DqlQueryApi } from './types';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
+import { ResponseError } from '@backstage/errors';
 import {
   TabularData,
   TabularDataFactory,
@@ -29,9 +30,7 @@ export class DqlQueryApiClient implements DqlQueryApi {
     if (response.status === 404) {
       throw new Error(`Query ${queryNamespace}/${queryName} does not exist.`);
     } else if (response.status !== 200) {
-      throw new Error(
-        `Failed to fetch DQL query data from ${url}: ${response.status} ${response.statusText}`,
-      );
+      throw await ResponseError.fromResponse(response);
     }
 
     const jsonResponse = await response.json();
