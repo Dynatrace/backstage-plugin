@@ -211,3 +211,4 @@ soft-rules:
 
 - Prefer `type` over `interface` for type definitions.
 - Prefer fat arrow functions over `function` keyword.
+- Use camel case for module (file) names.
