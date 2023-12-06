@@ -37,9 +37,9 @@
   },
   "devDependencies": {
     "@backstage/cli": "^0.22.14",
-    "@commitlint/cli": "^17.8.0",
-    "@commitlint/config-conventional": "^17.8.0",
-    "@commitlint/config-lerna-scopes": "^17.7.0",
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "@commitlint/config-lerna-scopes": "^18.4.3",
     "@spotify/prettier-config": "^12.0.0",
     "@trivago/prettier-plugin-sort-imports": "^4.2.1",
     "concurrently": "^8.0.0",
