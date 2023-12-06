@@ -1,4 +1,4 @@
-import { parseCustomQueries, parseEnvironments } from './config-parser';
+import { parseCustomQueries, parseEnvironments } from './configParser';
 import { MockConfigApi } from '@backstage/test-utils';
 
 const TEST_ENVIRONMENT = {

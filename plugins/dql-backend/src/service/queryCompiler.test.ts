@@ -1,4 +1,4 @@
-import { compileDqlQuery } from './query-compiler';
+import { compileDqlQuery } from './queryCompiler';
 
 describe('query-compiler', () => {
   test('compileDqlQuery replaces placeholders with variables', () => {

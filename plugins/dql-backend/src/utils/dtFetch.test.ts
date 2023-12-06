@@ -25,7 +25,7 @@ describe('dtFetch', () => {
       }),
     );
 
-    const dtFetchModule = await import('./dt-fetch');
+    const dtFetchModule = await import('./dtFetch');
     const dtFetch = dtFetchModule.dtFetch;
 
     const resp = await dtFetch('http://localhost:3000');

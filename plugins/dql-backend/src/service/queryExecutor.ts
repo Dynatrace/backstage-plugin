@@ -1,6 +1,6 @@
-import { DynatraceApi } from './dynatrace-api';
+import { DynatraceApi } from './dynatraceApi';
 import { dynatraceQueries } from './queries';
-import { compileDqlQuery } from './query-compiler';
+import { compileDqlQuery } from './queryCompiler';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 import { z } from 'zod';
 

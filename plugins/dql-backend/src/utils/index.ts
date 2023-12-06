@@ -1,1 +1,1 @@
-export { dtFetch } from './dt-fetch';
+export { dtFetch } from './dtFetch';

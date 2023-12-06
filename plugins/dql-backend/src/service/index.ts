@@ -1,2 +1,2 @@
-export * from './dynatrace-api';
+export * from './dynatraceApi';
 export * from './router';

@@ -1,5 +1,5 @@
-import { parseCustomQueries, parseEnvironments } from '../utils/config-parser';
-import { QueryExecutor } from './query-executor';
+import { parseCustomQueries, parseEnvironments } from '../utils/configParser';
+import { QueryExecutor } from './queryExecutor';
 import { errorHandler } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
 import express from 'express';

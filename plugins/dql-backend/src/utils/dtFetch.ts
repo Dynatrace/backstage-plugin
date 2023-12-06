@@ -1,4 +1,4 @@
-import { getUserAgent } from './user-agent';
+import { getUserAgent } from './userAgent';
 import fetch, { RequestInfo, RequestInit, Response } from 'node-fetch';
 
 const userAgent: string = getUserAgent();
