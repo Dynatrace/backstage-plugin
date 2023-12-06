@@ -72,7 +72,7 @@ const pollQuery = async <T>(
     )}`,
     {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer x${accessToken}`,
       },
     },
   );

@@ -146,6 +146,34 @@ describe('DQLQueryApiClient', () => {
     ).rejects.toThrow(`Query queryNamespace/queryName does not exist.`);
   });
 
+  it('should return the server error if possible', async () => {
+    const statusCode = 500;
+    const statusText = 'Server Error';
+    const error = {
+      name: 'Something went wrong',
+      message: 'Something went wrong',
+      stack: [],
+    };
+
+    server.use(
+      rest.get('*', (_, res, ctx) => {
+        return res(ctx.status(statusCode, statusText), ctx.json({ error }));
+      }),
+    );
+
+    const discoveryApi = mockDiscoveryApiUrl('https://discovery-api.com');
+    const client = new DqlQueryApiClient({ discoveryApi });
+
+    await expect(
+      client.getData(
+        'queryNamespace',
+        'queryName',
+        'componentName',
+        'componentNamespace',
+      ),
+    ).rejects.toThrow(error);
+  });
+
   it('should report any other error', async () => {
     const statusCode = 500;
     const statusText = "It's broken";
