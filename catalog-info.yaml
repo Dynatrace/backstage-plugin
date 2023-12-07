@@ -47,7 +47,7 @@ apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: integrations
-  description: Dynatrae integrations for other systems.
+  description: Dynatrace integrations for other systems.
 spec:
   owner: user:default/mjakl
   type: service

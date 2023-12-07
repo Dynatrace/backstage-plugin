@@ -126,9 +126,9 @@ yarn install
 yarn dev
 ```
 
-Backstage is configured to be self documenting, it includes the catalog
-information for the plugins. You can see the catalog at
-[http://localhost:3000/catalog](http://localhost:3000/catalog).
+Backstage is pre configured but relies on appropriate data to be available in
+the demo Dynatrace environment. See [catalog-info.yaml](./catalog-info.yaml) for
+details.
 
 ## Development
 
