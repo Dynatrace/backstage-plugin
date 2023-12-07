@@ -25,7 +25,7 @@ export type Config = {
         /**
          * @visibility backend
          */
-        tokenUrl: string;
+        tokenUrl?: string;
       },
     ];
 

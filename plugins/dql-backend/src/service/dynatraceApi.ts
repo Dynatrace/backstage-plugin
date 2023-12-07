@@ -43,6 +43,7 @@ type PollQueryResponse<RecordType> = {
 };
 
 const logger = getRootLogger().child({ plugin: 'dql-backend' });
+const DEFAULT_TOKEN_URL = 'https://sso.dynatrace.com/sso/oauth2/token';
 
 const executeQuery = async (
   { url, accessToken }: DynatraceAccessInfo,
@@ -110,7 +111,7 @@ const getAccessToken = async (
     client_secret: config.clientSecret,
     resource: config.accountUrn,
   });
-  const tokenRes = await dtFetch(config.tokenUrl, {
+  const tokenRes = await dtFetch(config.tokenUrl ?? DEFAULT_TOKEN_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
