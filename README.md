@@ -38,14 +38,20 @@ dynatrace:
       clientSecret: <clientSecret>
 ```
 
+Using the `EntityKubernetesDeploymentsCard` (or the
+`dynatrace.kubernetes-workload` query directly), you can see the Kubernetes
+deployments in your Dynatrace environment:
+
 Kubernetes pods with a `backstage.io/component` label will be listed for the
-corresponding backstage component:
+corresponding backstage component if they are properly annotated in the
+deployment descriptor:
 
 ```yaml
 backstage.io/component: <backstage-namespace>.<backstage-component-name>
 ```
 
-You can also register your own custom queries:
+You can also register your own custom queries and use them with
+`EntityDqlQueryCard`:
 
 ```yaml
 dynatrace:
