@@ -9,12 +9,12 @@ const componentQueryVariablesSchema = z.object({
   componentNamespace: z
     .string()
     .max(63)
-    .regex(/^[A-Za-z1-9\-]+$/),
+    .regex(/^[A-Za-z0-9\-]+$/),
   // see https://backstage.io/docs/features/software-catalog/descriptor-format#name-required
   componentName: z
     .string()
     .max(63)
-    .regex(/^[A-Za-z1-9\-_\.]+$/),
+    .regex(/^[A-Za-z0-9\-_\.]+$/),
 });
 
 type ComponentQueryVariables = z.infer<typeof componentQueryVariablesSchema>;
