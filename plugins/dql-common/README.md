@@ -1,4 +1,4 @@
-# Dynatrace Kubernetes Commons
+# Dynatrace DQL Plugin Commons
 
 Package name: `@dynatrace/backstage-plugin-dql-common`
 

@@ -1,4 +1,4 @@
-# Dynatrace Kubernetes Backend
+# Dynatrace DQL Plugin Backend
 
 Package name: `@dynatrace/backstage-plugin-dql-backend`
 
