@@ -6,11 +6,15 @@ import React from 'react';
 const prepareComponent = ({
   title = 'some title',
   data = [] as TabularData,
+  pageSize,
 }: {
   title?: string;
   data?: TabularData;
+  pageSize?: number;
 }) => {
-  return render(<TabularDataTable title={title} data={data} />);
+  return render(
+    <TabularDataTable title={title} data={data} pageSize={pageSize} />,
+  );
 };
 
 describe('TabularDataTable', () => {
@@ -72,13 +76,22 @@ describe('TabularDataTable', () => {
     ).toBeInTheDocument();
   });
 
-  it('should render 20 rows per page', () => {
+  it('should render 10 rows per page', () => {
     const data: TabularData = Array.from({ length: 30 }).map((_, i) => ({
       Header: `value ${i}`,
     }));
     const rendered = prepareComponent({ data });
 
-    expect(rendered.getAllByRole('row').length).toBe(22); // Including header and pagination
+    expect(rendered.getAllByRole('row').length).toBe(12); // Including header and pagination
+  });
+
+  it('should render the given rows per page', () => {
+    const data: TabularData = Array.from({ length: 30 }).map((_, i) => ({
+      Header: `value ${i}`,
+    }));
+    const rendered = prepareComponent({ data, pageSize: 5 });
+
+    expect(rendered.getAllByRole('row').length).toBe(7); // Including header and pagination
   });
 
   it('should include a filter option', () => {
