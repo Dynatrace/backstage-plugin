@@ -10,6 +10,7 @@ import React, { ReactNode } from 'react';
 type TabularDataTableProps = {
   title: string;
   data: TabularData;
+  pageSize?: number;
 };
 
 const cellRenderer = (field: string) => {
@@ -32,7 +33,11 @@ const cellRenderer = (field: string) => {
   };
 };
 
-export const TabularDataTable = ({ title, data }: TabularDataTableProps) => {
+export const TabularDataTable = ({
+  title,
+  data,
+  pageSize = 10,
+}: TabularDataTableProps) => {
   let columns: TableColumn[] = [];
 
   if (data.length !== 0) {
@@ -45,7 +50,7 @@ export const TabularDataTable = ({ title, data }: TabularDataTableProps) => {
   return (
     <Table
       title={title}
-      options={{ search: true, paging: true, pageSize: 20 }}
+      options={{ search: true, paging: true, pageSize: pageSize }}
       columns={columns}
       data={data}
     />
