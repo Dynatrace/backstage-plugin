@@ -22,7 +22,7 @@ type ComponentQueryVariables = z.infer<typeof componentQueryVariablesSchema>;
 export class QueryExecutor {
   constructor(
     private readonly apis: DynatraceApi[],
-    private readonly queries: Record<string, string>,
+    private readonly queries: Record<string, string | undefined>,
   ) {}
 
   async executeCustomQuery(
@@ -30,6 +30,9 @@ export class QueryExecutor {
     variables: ComponentQueryVariables,
   ): Promise<TabularData> {
     const query = this.queries[queryId];
+    if (!query) {
+      throw new Error(`No custom query to the given id "${queryId}" found`);
+    }
     return this.executeQuery(query, variables);
   }
 
@@ -38,6 +41,9 @@ export class QueryExecutor {
     variables: ComponentQueryVariables,
   ): Promise<TabularData> {
     const query = dynatraceQueries[queryId];
+    if (!query) {
+      throw new Error(`No Dynatrace query to the given id "${queryId}" found`);
+    }
     return this.executeQuery(query, variables);
   }
 
@@ -56,6 +62,6 @@ export class QueryExecutor {
       return api.executeDqlQuery(compiledQuery);
     });
     const results = await Promise.all(results$);
-    return results.reduce((result1, result2) => result1.concat(result2));
+    return results.flatMap(result => result);
   }
 }

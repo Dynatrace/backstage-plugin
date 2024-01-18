@@ -1,4 +1,4 @@
-export const dynatraceQueries: Record<string, string> = {
+export const dynatraceQueries: Record<string, string | undefined> = {
   'kubernetes-deployments': `
     fetch dt.entity.cloud_application, from: -10m
     | fields id,

@@ -10,7 +10,9 @@ export const parseEnvironments = (config: Config): DynatraceApi[] => {
     );
 };
 
-export const parseCustomQueries = (config: Config): Record<string, string> => {
+export const parseCustomQueries = (
+  config: Config,
+): Record<string, string | undefined> => {
   const queryObjects = config.getOptionalConfigArray('dynatrace.queries') ?? [];
   return queryObjects.reduce((acc, queryObject) => {
     const queryId = queryObject.getOptionalString('id');
@@ -19,5 +21,5 @@ export const parseCustomQueries = (config: Config): Record<string, string> => {
       acc[queryId] = query;
     }
     return acc;
-  }, {} as Record<string, string>);
+  }, {} as Record<string, string | undefined>);
 };
