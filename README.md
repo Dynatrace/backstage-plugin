@@ -66,7 +66,7 @@ Queries can contain placeholders, which will be replaced with the values from
 the context it is executed in. These placeholders are prefixed with `$$` in
 order to escape the
 [environment variable substitution](https://backstage.io/docs/conf/writing/#environment-variable-substitution)
-of backstage. The following placeholders are available:
+of Backstage. The following placeholders are available:
 
 - `$${componentNamespace}` the namespace of the Backstage component, as defined
   in the Backstage catalog
