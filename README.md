@@ -63,15 +63,18 @@ dynatrace:
 ```
 
 Queries can contain placeholders, which will be replaced with the values from
-the context it is executed in. The following placeholders are available:
+the context it is executed in. These placeholders are prefixed with `$$` in
+order to escape the
+[environment variable substitution](https://backstage.io/docs/conf/writing/#environment-variable-substitution)
+of Backstage. The following placeholders are available:
 
-- `${componentNamespace}` the namespace of the Backstage component, as defined
+- `$${componentNamespace}` the namespace of the Backstage component, as defined
   in the Backstage catalog
-- `${componentName}` the name of the Backstage component, as defined in the
+- `$${componentName}` the name of the Backstage component, as defined in the
   Backstage catalog
-- `${environmentName}` the name of the environment (e.g. `production`), as
+- `$${environmentName}` the name of the environment (e.g. `production`), as
   defined in the Dynatrace environment configuration
-- `${environmentUrl}` the URL of the environment (e.g.
+- `$${environmentUrl}` the URL of the environment (e.g.
   `https://my-environment.dynatrace.com`), as defined in the Dynatrace
   environment configuration
 
@@ -79,7 +82,7 @@ For example, to filter for the events of the component, you could use the
 following in your query:
 
 ```dql
-filter backstageComponent == "${componentNamespace}.${componentName}"
+filter backstageComponent == "$${componentNamespace}.$${componentName}"
 ```
 
 To be able to render correctly, the DQL must return data conform to the
