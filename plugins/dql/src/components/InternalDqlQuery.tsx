@@ -11,6 +11,7 @@ export type InternalDqlQueryProps = {
   queryNamespace: string;
   queryName: string;
   EmptyState?: React.ComponentType<EmptyStateProps>;
+  pageSize?: number;
 };
 
 export const InternalDqlQuery = ({
@@ -18,6 +19,7 @@ export const InternalDqlQuery = ({
   queryNamespace,
   queryName,
   EmptyState = DqlEmptyState,
+  pageSize,
 }: InternalDqlQueryProps) => {
   const { entity } = useEntity();
   const componentName = entity.metadata.name;
@@ -46,5 +48,5 @@ export const InternalDqlQuery = ({
     );
   }
 
-  return <TabularDataTable title={title} data={value} />;
+  return <TabularDataTable title={title} data={value} pageSize={pageSize} />;
 };

@@ -30,6 +30,7 @@ const dqlQueryPropsSchema = z.object({
 
 export type DqlQueryProps = {
   emptyState?: React.ComponentType<EmptyStateProps>;
+  pageSize?: number;
 } & z.infer<typeof dqlQueryPropsSchema>;
 
 /**
@@ -48,6 +49,7 @@ export const DqlQuery = (props: DqlQueryProps) => {
         queryNamespace={queryNamespace}
         queryName={queryName}
         EmptyState={props.emptyState}
+        pageSize={props.pageSize}
       />
     );
   } catch (e) {
