@@ -1,4 +1,36 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"]
+  "extends": ["config:base"],
+  "ignorePaths": [
+    "**/node_modules/**",
+    ".vscode",
+    "**/__tests__/**",
+    "**/__test__/**"
+  ],
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 3,
+  "recreateWhen": "never",
+  "dependencyDashboard": true,
+  "major": {
+    "enabled": true
+  },
+  "commitMessagePrefix": "chore:",
+  "packageRules": [
+    {
+      "groupName": "all patch dependency updates",
+      "groupSlug": "all-patch",
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["patch"]
+    },
+    {
+      "groupName": "all minor dependency updates",
+      "groupSlug": "all-minor",
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["minor"]
+    },
+    {
+      "matchUpdateTypes": ["major", "minor"],
+      "minimumReleaseAge": "7 days"
+    }
+  ]
 }
