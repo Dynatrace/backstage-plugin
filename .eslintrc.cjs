@@ -35,7 +35,6 @@ module.exports = {
         '\t See the License for the specific language governing permissions and',
         '\t limitations under the License.',
       ],
-      2,
     ],
   },
 };
