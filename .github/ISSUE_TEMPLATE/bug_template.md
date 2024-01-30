@@ -39,7 +39,5 @@ labels: kind/bug
 
 ## Your Environment
 
-- `@backstage/plugin-catalog-react` version:
-- `@backstage/integration` version:
 - `@dynatrace/backstage-plugin-dql-backend` version:
 - `@dynatrace/backstage-plugin-dql` version:
