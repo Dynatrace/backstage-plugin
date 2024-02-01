@@ -1,0 +1,16 @@
+#################################################################################
+# Lines starting with '#' are comments.
+# Each line is a file pattern followed by one or more owners.
+# These owners will be the default owners for everything in the repo.
+#################################################################################
+# Learn about CODEOWNERS file format:
+# https://help.github.com/en/articles/about-code-owners
+#################################################################################
+# FYI: Owners will be auto-assigned for code reviews as well
+#################################################################################
+
+# Maintainers own everything:
+* @dynatrace/backstage-plugin-maintainers
+
+# Issue templates, workflows and Code Owners
+.github/* - @agrimmer, @MrManny, @heinzburgstaller
