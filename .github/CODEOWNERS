@@ -13,4 +13,4 @@
 * @dynatrace/backstage-plugin-maintainers
 
 # Issue templates, workflows and Code Owners
-.github/* - @agrimmer, @MrManny, @heinzburgstaller
+.github/* @agrimmer, @MrManny, @heinzburgstaller
