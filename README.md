@@ -133,91 +133,9 @@ Backstage is pre configured but relies on appropriate data to be available in
 the demo Dynatrace environment. See [catalog-info.yaml](./catalog-info.yaml) for
 details.
 
-## Development
+# Contributing
 
-After your initial checkout, run `yarn install` to get the project set up. This
-also installs Husky hooks, which will run on every commit. If the Husky
-installation fails, use `yarn prepare` to install the hooks manually.
-
-We use a small set of tools to keep the repository tidy and promote best
-practices:
-
-- [Prettier](https://prettier.io/) - Code formatter
-- [ESLint](https://eslint.org/) - Linter
-- [Lerna](https://lerna.js.org/) - Monorepo management
-- [Lint Staged](https://github.com/lint-staged/lint-staged#readme) - Run linters
-  on staged files
-- [Husky](https://typicode.github.io/husky/#/) - Git hooks
-- [Commitlint](https://commitlint.js.org/#/) - Commit message linting
-- [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) -
-  Commit message format
-- Automated versioning and changelog generation (pending, either using
-  [Commitizen](https://github.com/commitizen/cz-cli) or
-  [Semantic Release](https://github.com/semantic-release/semantic-release) or
-  even just Lerna)
-
-### (Conventional) Commit Messages
-
-To simplify semantic versioning and changelog generation, we use
-[conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). This
-means that commit messages should follow a specific format:
-
-```commit
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
-```
-
-To keep it simple, we recommend a reduced set of allowed types (though, all
-[conventional commit types](https://www.conventionalcommits.org/en/v1.0.0/#summary)
-are allowed):
-
-- `fix` or `fix!`: A (breaking) bug fix; influences the patch version (resp.
-  major version, if breaking)
-- `feat` or `feat!`: A (breaking) new feature; influences the minor version
-  (resp. major version, if breaking)
-- `refactor`: A code change that neither fixes a bug nor adds a feature
-- `test`: Adding missing tests or correcting existing tests
-- `docs`: Documentation only changes
-- `chore`: Anything else
-
-The optional scope should be the name of the package affected by the change.
-E.g. `fix(dql): fix a bug in the DQL plugin`.
-
-Commitlint ensures that the package is one of the known Lerna packages.
-
-### Code Style and ADRs
-
-We aim to adhere to the
-[Architecture Decision Records](https://github.com/backstage/backstage/tree/master/docs/architecture-decisions)
-compiled by the Backstage team.
-
-The ADRs with the most impact on development are:
-
-- [ADR003](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr003-avoid-default-exports.md):
-  Avoid default exports
-- [ADR004](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr004-module-export-structure.md):
-  Export components using traceable `index.ts` files.
-- [ADR006](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr006-avoid-react-fc.md):
-  Avoid `React.FC` and `React.SFC`.
-- [ADR007](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr007-use-msw-to-mock-service-requests.md):
-  Use [msw](https://mswjs.io/) to mock service requests (avoid mocking of
-  `fetch`).
-- [ADR010](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr010-luxon-date-library.md):
-  Use [Luxon](https://moment.github.io/luxon/) for date/time handling.
-- [ADR012](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr012-use-luxon-locale-and-date-presets.md):
-  Use Luxon's `toLocaleString` when formatting dates.
-- [ADR011](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr011-plugin-package-structure.md):
-  Use a specific package structure for plugins.
-- [ADR013](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr013-use-node-fetch.md):
-  Use [node-fetch](https://www.npmjs.com/package/node-fetch) in Backend
-  packages, stick to `fetchApiRef` in Frontend packages.
-
-Besides that, we aim to provide a consistent codebase, thus we add the following
-soft-rules:
-
-- Prefer `type` over `interface` for type definitions.
-- Prefer fat arrow functions over `function` keyword.
-- Use camel case for module (file) names.
+Everyone is welcome to contribute to this repository. See our
+[contributing guidelines](./CONTRIBUTING.md), raise
+[issues](https://github.com/Dynatrace/backstage-plugin/issues) or to submit a
+[pull requests](https://github.com/Dynatrace/backstage-plugin/pulls).
