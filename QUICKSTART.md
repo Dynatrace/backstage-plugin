@@ -1,4 +1,4 @@
-# Quick-start guide to install the Dynatrace DQL Plugin
+# (obsolete) Quick-start guide to install the Dynatrace DQL Plugin
 
 1. If you haven't already,
    [install Backstage](https://backstage.io/docs/getting-started/create-an-app).

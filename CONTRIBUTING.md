@@ -24,7 +24,7 @@ information on using pull requests.
 ## Prerequisites and installation
 
 Please find the getting started guide, installation detail, and more in the
-[README](README.md) and [QUICKSTART](QUICKSTART.md) of the repository.
+[README](README.md) of the repository.
 
 ## Development
 

@@ -1,14 +1,27 @@
 # Dynatrace Backstage Plugins
 
-This repository contains a collection of Backstage plugins for Dynatrace.
+_Observability and security insights at hand_ - The Dynatrace Backstage plugins
+allow you to fetch observability and security data from Dynatrace. to be
+displayed at components managed in the
+[Backstage Software Catalog](https://backstage.io/docs/features/software-catalog/).
+Kubernetes monitoring is supported by default. The support comes with a
+pre-configured query for Kubernetes deployments and a dedicated component for
+data representation.
+
+The repository contains a complete Backstage installation at its root, with the
+individual plugins in the `plugins` directory. Backstage is configured to
+include the plugins so you can start the app and see them in action.
 
 **Table of contents:**
 
 - [Overview](#overview)
 - [Getting Started](#getting-started)
+- [Additional Features](#additional-features)
 - [Contributing](#contributing)
 
 ## Overview
+
+Three plugins are required to fetch and visualize the data from Dynatrace:
 
 - [DQL](./plugins/dql/README.md) - A plugin showing DQL query results from
   Dynatrace in Backstage.
@@ -17,13 +30,14 @@ This repository contains a collection of Backstage plugins for Dynatrace.
 - [DQL Common](./plugins/dql-common/README.md) - Common functionality shared
   between the DQL frontend and backend plugin.
 
+<!-- screenshot comes here -->
+
 ## Getting Started
 
-The repository contains a full Backstage installation at its root, with the
-individual plugins in the `plugins` directory. Backstage is configured to
-include the plugins, so you can start the app and see them in action.
+Next are the instructions to install, integrate, configure, and run the
+Dyantrace Backstage plugins.
 
-### Install plugin
+### Install plugins
 
 Install the DQL plugins into Backstage:
 
@@ -42,10 +56,10 @@ cd packages/backend
 yarn add @dynatrace/backstage-plugin-dql-common
 ```
 
-### Integrate the plugin in EntityPage and Backstage backend
+### Integrate the `EntityDqlQueryCard`
 
-- Add the DQL plugin to the respective component type pages in your
-  `packages/app/src/components/catalog/EntityPage.tsx`:
+Add the DQL plugin to the respective component type pages in your
+`packages/app/src/components/catalog/EntityPage.tsx`:
 
 ```tsx
 <EntityDqlQueryCard
@@ -57,7 +71,7 @@ yarn add @dynatrace/backstage-plugin-dql-common
 See the `EntityPage.tsx` file in this repository
 (`packages/app/src/components/catalog/EntityPage.tsx`) for a full example.
 
-- Add the DQL plugin to the Backstage backend
+### Integrate the DQL plugin
 
 Add a `dynatrace-dql.ts` file to your `packages/backend/src/plugins` folder. For
 example:
@@ -91,10 +105,10 @@ apiRouter.use('/dynatrace-dql', await dql(dynatraceDqlEnv));
 See the `index.ts` file in this repository (`packages/backend/src/index.ts`) for
 a full example.
 
-### Add environment connection(s)
+### Add Dynatrace environment connection
 
-Create a `app-config.local.yaml` file (excluded by .gitignore) configuring the
-connection to the Dynatrace environment:
+Create or update the `app-config.local.yaml` file (excluded by .gitignore)
+configuring the connection to the Dynatrace environment:
 
 ```yaml
 dynatrace:
@@ -107,7 +121,47 @@ dynatrace:
       clientSecret: <clientSecret>
 ```
 
-### Kubernetes observability
+> Note: See below how to configure multiple Dynatrace environment connections.
+
+### Run Backstage with plugins
+
+To start the app, run:
+
+```sh
+yarn install
+yarn dev
+```
+
+Backstage is pre-configured but relies on appropriate data to be available in
+the demo Dynatrace environment. See [catalog-info.yaml](./catalog-info.yaml) for
+details.
+
+## Additional Features
+
+### Multi-environment support
+
+If data from multiple Dynatrace environments should be fetched, each Dynatrace
+environment can be added to `dynatrace.environments` list in the
+`app-config.local.yaml` file.
+
+```yaml
+dynatrace:
+  environments:
+    - name: xxxxxxxx
+      url: https://xxxxxxxx.apps.dynatrace.com
+      tokenUrl: https://sso.dynatrace.com/sso/oauth2/token
+      accountUrn: <accountUrn>
+      clientId: <clientId>
+      clientSecret: <clientSecret>
+    - name: yyyyyyyy
+      url: https://yyyyyyyy.apps.dynatrace.com
+      tokenUrl: https://sso.dynatrace.com/sso/oauth2/token
+      accountUrn: <accountUrn>
+      clientId: <clientId>
+      clientSecret: <clientSecret>
+```
+
+### Kubernetes use case
 
 Using the `EntityKubernetesDeploymentsCard` (or the
 `dynatrace.kubernetes-workload` query directly), you can see the Kubernetes
@@ -121,9 +175,9 @@ deployment descriptor:
 backstage.io/component: <backstage-namespace>.<backstage-component-name>
 ```
 
-### Custom DQL queries
+### Custom queries
 
-You can also register your own custom queries and use them with
+You can also register your custom queries and use them with
 `EntityDqlQueryCard`:
 
 ```yaml
@@ -136,8 +190,8 @@ dynatrace:
 ```
 
 Queries can contain placeholders, which will be replaced with the values from
-the context it is executed in. These placeholders are prefixed with `$$` in
-order to escape the
+the context in which it is executed. These placeholders are prefixed with `$$`
+in order to escape the
 [environment variable substitution](https://backstage.io/docs/conf/writing/#environment-variable-substitution)
 of Backstage. The following placeholders are available:
 
@@ -158,7 +212,7 @@ following in your query:
 filter backstageComponent == "$${componentNamespace}.$${componentName}"
 ```
 
-To be able to render correctly, the DQL must return data conform to the
+To be able to render correctly, the DQL must return data conforming to the
 following:
 
 - No `null` values; use `coalesce` to replace `null` values with a default value
@@ -194,19 +248,6 @@ by its ID with the `custom.` prefix:
   queryId="custom.my-custom-query"
 />
 ```
-
-### Run Backstage and plugins
-
-To start the app, run:
-
-```sh
-yarn install
-yarn dev
-```
-
-Backstage is pre configured but relies on appropriate data to be available in
-the demo Dynatrace environment. See [catalog-info.yaml](./catalog-info.yaml) for
-details.
 
 ## Contributing
 
