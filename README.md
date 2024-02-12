@@ -2,14 +2,13 @@
 
 This repository contains a collection of Backstage plugins for Dynatrace.
 
-- [Dynatrace Backstage Plugins](#dynatrace-backstage-plugins)
-  - [Plugins](#plugins)
-  - [Getting Started](#getting-started)
-  - [Development](#development)
-    - [(Conventional) Commit Messages](#conventional-commit-messages)
-  - [Code Style and ADRs](#code-style-and-adrs)
+**Table of contents:**
 
-## Plugins
+- [Overview](#overview)
+- [Getting Started](#getting-started)
+- [Contributing](#contributing)
+
+## Overview
 
 - [DQL](./plugins/dql/README.md) - A plugin showing DQL query results from
   Dynatrace in Backstage.
@@ -23,6 +22,76 @@ This repository contains a collection of Backstage plugins for Dynatrace.
 The repository contains a full Backstage installation at its root, with the
 individual plugins in the `plugins` directory. Backstage is configured to
 include the plugins, so you can start the app and see them in action.
+
+### Install plugin
+
+Install the DQL plugins into Backstage:
+
+```bash
+cd packages/app
+yarn add @dynatrace/backstage-plugin-dql
+```
+
+```bash
+cd packages/backend
+yarn add @dynatrace/backstage-plugin-dql-backend
+```
+
+```bash
+cd packages/backend
+yarn add @dynatrace/backstage-plugin-dql-common
+```
+
+### Integrate the plugin in EntityPage and Backstage backend
+
+- Add the DQL plugin to the respective component type pages in your
+  `packages/app/src/components/catalog/EntityPage.tsx`:
+
+```tsx
+<EntityDqlQueryCard
+  title="Kubernetes Deployments"
+  queryId="dynatrace.kubernetes-deployments"
+/>
+```
+
+See the `EntityPage.tsx` file in this repository
+(`packages/app/src/components/catalog/EntityPage.tsx`) for a full example.
+
+- Add the DQL plugin to the Backstage backend
+
+Add a `dynatrace-dql.ts` file to your `packages/backend/src/plugins` folder. For
+example:
+
+```ts
+import { PluginEnvironment } from '../types';
+import { createRouter } from '@dynatrace/backstage-plugin-dql-backend';
+import { Router } from 'express';
+
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
+  return await createRouter({
+    logger: env.logger,
+    config: env.config,
+  });
+}
+```
+
+Add the DQL backend plugin to your `main()` in
+`packages/backend/src/plugins/catalog.ts`:
+
+```ts
+import dql from './plugins/dynatrace-dql';
+
+const dynatraceDqlEnv = useHotMemoize(module, () => createEnv('dynatrace-dql'));
+
+apiRouter.use('/dynatrace-dql', await dql(dynatraceDqlEnv));
+```
+
+See the `index.ts` file in this repository (`packages/backend/src/index.ts`) for
+a full example.
+
+### Add environment connection(s)
 
 Create a `app-config.local.yaml` file (excluded by .gitignore) configuring the
 connection to the Dynatrace environment:
@@ -38,6 +107,8 @@ dynatrace:
       clientSecret: <clientSecret>
 ```
 
+### Kubernetes observability
+
 Using the `EntityKubernetesDeploymentsCard` (or the
 `dynatrace.kubernetes-workload` query directly), you can see the Kubernetes
 deployments in your Dynatrace environment:
@@ -49,6 +120,8 @@ deployment descriptor:
 ```yaml
 backstage.io/component: <backstage-namespace>.<backstage-component-name>
 ```
+
+### Custom DQL queries
 
 You can also register your own custom queries and use them with
 `EntityDqlQueryCard`:
@@ -122,6 +195,8 @@ by its ID with the `custom.` prefix:
 />
 ```
 
+### Run Backstage and plugins
+
 To start the app, run:
 
 ```sh
@@ -133,9 +208,9 @@ Backstage is pre configured but relies on appropriate data to be available in
 the demo Dynatrace environment. See [catalog-info.yaml](./catalog-info.yaml) for
 details.
 
-# Contributing
+## Contributing
 
 Everyone is welcome to contribute to this repository. See our
 [contributing guidelines](./CONTRIBUTING.md), raise
-[issues](https://github.com/Dynatrace/backstage-plugin/issues) or to submit a
+[issues](https://github.com/Dynatrace/backstage-plugin/issues) or submit a
 [pull requests](https://github.com/Dynatrace/backstage-plugin/pulls).
