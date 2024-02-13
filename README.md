@@ -306,8 +306,8 @@ The query returns a result of:
 
 ## Help & Support
 
-The Backstage plugin is an open source project. The features are fully supported
-by [Dynatrace](https://www.dynatrace.com).
+This Backstage integration is an open source project. The features are fully
+supported by [Dynatrace](https://www.dynatrace.com).
 
 **Get help:**
 
@@ -319,6 +319,7 @@ by [Dynatrace](https://www.dynatrace.com).
 - Report minor defects, minor items, or typos
 - Ask for improvements or changes
 - Ask any questions related to the community effort
+- Contribute as per our [Contribution guidelines](#contributing)
 
 SLAs don't apply for GitHub tickets.
 
