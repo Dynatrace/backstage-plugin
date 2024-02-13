@@ -1,8 +1,9 @@
 # Dynatrace Backstage Plugins
 
 _Observability and security insights at hand_ - The Dynatrace Backstage plugins
-enables you to fetch observability and security data from Dynatrace to be
-displayed at software components managed in the
+enables you to fetch observability and security data from
+[Dynatrace](https://www.dynatrace.com/) to be displayed at software components
+managed in your
 [Backstage Software Catalog](https://backstage.io/docs/features/software-catalog/).
 The data is represented in tabular format with smart links to Dynatrace app for
 deeper analysis and root cause investigation in case of a related problem or
