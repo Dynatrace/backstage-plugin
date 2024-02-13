@@ -8,7 +8,7 @@ The data is represented in tabular format with smart links to Dynatrace app for
 deeper analysis and root cause investigation in case of a related problem or
 security vulnerability.
 
-Kubernetes entities are supported by default. This means that the plugin comes
+The plugins support Kubernetes entities by default. This means that it comes
 with a pre-configured query for Kubernetes deployments and a dedicated component
 for data representation.
 
@@ -37,8 +37,8 @@ Three plugins are required to fetch and visualize the data from Dynatrace:
 With the Backstage plugins, the Backstage Software Catalog component can be
 associated with real-time monitoring data. The screenshot shows three Kubernetes
 deployments of the `easytrade-frontend` component running in different
-namespaces, i.e., `development`, `hardening`, and `production`. Smart links are
-provided for more details about the workload and logs in Dynatrace.
+namespaces, i.e., `development`, `hardening`, and `production`. he table
+provides smart links for more details about the workload and logs in Dynatrace.
 
 ![Kubernetes deployments monitored by Dynatrace](/docs/images/backstage_dynatrace_plugin.png 'Kubernetes deployments monitored by Dynatrace')
 
@@ -155,9 +155,9 @@ details.
 
 ### Multi-environment support
 
-If data from multiple Dynatrace environments should be fetched, each Dynatrace
-environment must be added to the `dynatrace.environments` list in the
-`app-config.local.yaml` file.
+If the component in Backstage should display data from multiple Dynatrace
+environments, add each Dynatrace environment to the `dynatrace.environments`
+list in the `app-config.local.yaml` file.
 
 ```yaml
 dynatrace:
@@ -178,17 +178,28 @@ dynatrace:
 
 ### Kubernetes use case
 
-Using the `EntityKubernetesDeploymentsCard` (or the
-`dynatrace.kubernetes-workload` query directly), you can see the Kubernetes
-deployments in your Dynatrace environment:
+Using the `EntityKubernetesDeploymentsCard`, you can see the Kubernetes
+deployments in your Dynatrace environment.
 
-Kubernetes pods with a `backstage.io/component` label will be listed for the
-corresponding backstage component if they are properly annotated in the
-deployment descriptor:
+```jsx
+<EntityKubernetesDeploymentsCard
+  title="Show me my Kubernetes deployments"
+  queryId="dynatrace.kubernetes-deployments"
+/>
+```
+
+_Convention:_ Kubernetes pods with a `backstage.io/component` label will be
+listed for the corresponding backstage component if they are properly annotated
+in the deployment descriptor:
 
 ```yaml
 backstage.io/component: <backstage-namespace>.<backstage-component-name>
 ```
+
+The query for fetching the monitoring data for Kubernetes deployments is defined
+here:
+[`dynatrace.kubernetes-deployments`](plugins/dql-backend/src/service/queries.ts).
+You can change this query for all cards or override it using a custom query.
 
 ### Custom queries
 
@@ -245,9 +256,9 @@ An example of a valid DQL result would be:
   {
     "Name": "backstage",
     "Namespace": "hardening",
-    "A Link": {
+    "Link": {
       "type": "link",
-      "text": "https://backstage.io",
+      "text": "Click me",
       "url": "https://backstage.io"
     }
   }
@@ -264,9 +275,34 @@ by its ID with the `custom.` prefix:
 />
 ```
 
+### Backlink to Dynatrace
+
+To link from a table cell to a Dynatrace app, the DQL query must contain a
+record with the proper `type`, `text`, and `url`. This is an example to link to
+the Dynatrace Kubernetes app filtered by Kubernetes pods:
+
+```
+fetch dt.entity.cloud_application, from: -10m
+| fieldsAdd Workload = record({type="link", text=entity.name, url=concat("\${environmentUrl}/ui/apps/dynatrace.kubernetes/resources/pod?entityId=", id)})
+```
+
+The query returns a result of:
+
+```json
+[
+  {
+    "Workload": {
+      "type": "link",
+      "text": "<ENTITY_NAME>",
+      "url": "https://<ENVIRONMENT_URL>/ui/apps/dynatrace.kubernetes/resources/pod?entityId=<ENTITY_ID>"
+    }
+  }
+]
+```
+
 ## Contributing
 
 Everyone is welcome to contribute to this repository. See our
 [contributing guidelines](./CONTRIBUTING.md), raise
-[issues](https://github.com/Dynatrace/backstage-plugin/issues) or submit a
+[issues](https://github.com/Dynatrace/backstage-plugin/issues) or submit
 [pull requests](https://github.com/Dynatrace/backstage-plugin/pulls).
