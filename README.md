@@ -153,6 +153,9 @@ details.
 
 ## Additional Features
 
+Find here additional features to customize the plugin for different
+requirements.
+
 ### Multi-environment support
 
 If the component in Backstage should display data from multiple Dynatrace
@@ -189,7 +192,7 @@ deployments in your Dynatrace environment.
 ```
 
 _Convention:_ Kubernetes pods with a `backstage.io/component` label will be
-listed for the corresponding backstage component if they are properly annotated
+listed for the corresponding Backstage component if they are properly annotated
 in the deployment descriptor:
 
 ```yaml
