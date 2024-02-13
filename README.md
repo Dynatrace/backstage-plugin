@@ -2,7 +2,7 @@
 
 _Observability and security insights at hand_ - The Dynatrace Backstage plugins
 enables you to fetch observability and security data from
-[Dynatrace](https://www.dynatrace.com/) to be displayed at software components
+[Dynatrace](https://dynatrace.com/) to be displayed at software components
 managed in your
 [Backstage Software Catalog](https://backstage.io/docs/features/software-catalog/).
 The data is represented in tabular format with smart links to Dynatrace app for
@@ -52,7 +52,7 @@ provides smart links for more details about the workload and logs in Dynatrace.
 Next are the instructions to install, integrate, configure, and run the
 Dyantrace Backstage plugins.
 
-### Install plugins
+### Install Plugins
 
 Install the DQL plugins into Backstage:
 
@@ -86,7 +86,7 @@ Add the DQL plugin to the respective component type pages in your
 See the `EntityPage.tsx` file in this repository
 (`packages/app/src/components/catalog/EntityPage.tsx`) for a full example.
 
-### Integrate the DQL plugin
+### Integrate the DQL Plugin
 
 Add a `dynatrace-dql.ts` file to your `packages/backend/src/plugins` folder. For
 example:
@@ -120,9 +120,9 @@ apiRouter.use('/dynatrace-dql', await dql(dynatraceDqlEnv));
 See the `index.ts` file in this repository (`packages/backend/src/index.ts`) for
 a full example.
 
-### Add Dynatrace environment connection
+### Add Dynatrace Environment Connection
 
-Create or update the `app-config.local.yaml` file (excluded by .gitignore)
+Create or update the `app-config.local.yaml` file (excluded by `.gitignore`)
 configuring the connection to the Dynatrace environment:
 
 ```yaml
@@ -139,7 +139,7 @@ dynatrace:
 > See below how to configure
 > [multiple Dynatrace environments](#multi-environment-support).
 
-### Run Backstage with plugins
+### Run Backstage with Dynatrace Plugins
 
 To start the app, run:
 
@@ -157,7 +157,7 @@ details.
 Find here additional features to customize the plugin for different
 requirements.
 
-### Multi-environment support
+### Multi-environment Support
 
 If the component in Backstage should display data from multiple Dynatrace
 environments, add each Dynatrace environment to the `dynatrace.environments`
@@ -180,7 +180,7 @@ dynatrace:
       clientSecret: <clientSecret>
 ```
 
-### Kubernetes use case
+### Kubernetes Use Case
 
 Using the `EntityKubernetesDeploymentsCard`, you can see the Kubernetes
 deployments in your Dynatrace environment.
@@ -205,7 +205,7 @@ here:
 [`dynatrace.kubernetes-deployments`](plugins/dql-backend/src/service/queries.ts).
 You can change this query for all cards or override it using a custom query.
 
-### Custom queries
+### Custom Queries
 
 You can also register your custom queries and use them with
 `EntityDqlQueryCard`:

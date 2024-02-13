@@ -23,7 +23,7 @@ information on using pull requests.
 
 ## Prerequisites and installation
 
-Please find the getting started guide, installation detail, and more in the
+Please find the getting started guide, installation details, and more in the
 [README](README.md) of the repository.
 
 - If you haven't already,
