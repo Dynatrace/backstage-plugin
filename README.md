@@ -1,15 +1,32 @@
 # Dynatrace Backstage Plugins
 
-This repository contains a collection of Backstage plugins for Dynatrace.
+_Observability and security insights at hand_ - The Dynatrace Backstage plugins
+enables you to fetch observability and security data from
+[Dynatrace](https://dynatrace.com/) to be displayed at software components
+managed in your
+[Backstage Software Catalog](https://backstage.io/docs/features/software-catalog/).
+The data is represented in tabular format with smart links to Dynatrace app for
+deeper analysis and root cause investigation in case of a related problem or
+security vulnerability.
 
-- [Dynatrace Backstage Plugins](#dynatrace-backstage-plugins)
-  - [Plugins](#plugins)
-  - [Getting Started](#getting-started)
-  - [Development](#development)
-    - [(Conventional) Commit Messages](#conventional-commit-messages)
-  - [Code Style and ADRs](#code-style-and-adrs)
+The plugins support Kubernetes entities by default. This means that it comes
+with a pre-configured query for Kubernetes deployments and a dedicated component
+for data representation.
 
-## Plugins
+This repository contains a complete Backstage installation at its root, with the
+individual plugins in the `plugins` directory. Backstage is configured to
+include the plugins so you can start the app and see them in action.
+
+**Table of contents:**
+
+- [Overview](#overview)
+- [Getting Started](#getting-started)
+- [Additional Features](#additional-features)
+- [Contributing](#contributing)
+
+## Overview
+
+Three plugins are required to fetch and visualize the data from Dynatrace:
 
 - [DQL](./plugins/dql/README.md) - A plugin showing DQL query results from
   Dynatrace in Backstage.
@@ -18,14 +35,95 @@ This repository contains a collection of Backstage plugins for Dynatrace.
 - [DQL Common](./plugins/dql-common/README.md) - Common functionality shared
   between the DQL frontend and backend plugin.
 
+With the Backstage plugins, the Backstage Software Catalog component can be
+associated with real-time monitoring data. The screenshot shows three Kubernetes
+deployments of the `easytrade-frontend` component running in different
+namespaces, i.e., `development`, `hardening`, and `production`. he table
+provides smart links for more details about the workload and logs in Dynatrace.
+
+![Kubernetes deployments monitored by Dynatrace](/docs/images/backstage_dynatrace_plugin.png 'Kubernetes deployments monitored by Dynatrace')
+
+> While Kubernetes deployments are supported by default, any data can be fetched
+> from Dynatrace and displayed in Backstage. See below how to configure
+> [custom queries](#custom-queries).
+
 ## Getting Started
 
-The repository contains a full Backstage installation at its root, with the
-individual plugins in the `plugins` directory. Backstage is configured to
-include the plugins, so you can start the app and see them in action.
+Next are the instructions to install, integrate, configure, and run the
+Dyantrace Backstage plugins.
 
-Create a `app-config.local.yaml` file (excluded by .gitignore) configuring the
-connection to the Dynatrace environment:
+### Install Plugins
+
+Install the DQL plugins into Backstage:
+
+```bash
+cd packages/app
+yarn add @dynatrace/backstage-plugin-dql
+```
+
+```bash
+cd packages/backend
+yarn add @dynatrace/backstage-plugin-dql-backend
+```
+
+```bash
+cd packages/backend
+yarn add @dynatrace/backstage-plugin-dql-common
+```
+
+### Integrate the `EntityDqlQueryCard`
+
+Add the DQL plugin to the respective component type pages in your
+`packages/app/src/components/catalog/EntityPage.tsx`:
+
+```tsx
+<EntityDqlQueryCard
+  title="Kubernetes Deployments"
+  queryId="dynatrace.kubernetes-deployments"
+/>
+```
+
+See the `EntityPage.tsx` file in this repository
+(`packages/app/src/components/catalog/EntityPage.tsx`) for a full example.
+
+### Integrate the DQL Plugin
+
+Add a `dynatrace-dql.ts` file to your `packages/backend/src/plugins` folder. For
+example:
+
+```ts
+import { PluginEnvironment } from '../types';
+import { createRouter } from '@dynatrace/backstage-plugin-dql-backend';
+import { Router } from 'express';
+
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
+  return await createRouter({
+    logger: env.logger,
+    config: env.config,
+  });
+}
+```
+
+Add the DQL backend plugin to your `main()` in
+`packages/backend/src/plugins/catalog.ts`:
+
+```ts
+import dql from './plugins/dynatrace-dql';
+
+const dynatraceDqlEnv = useHotMemoize(module, () => createEnv('dynatrace-dql'));
+
+apiRouter.use('/dynatrace-dql', await dql(dynatraceDqlEnv));
+```
+
+See the `index.ts` file in this repository (`packages/backend/src/index.ts`) for
+a full example.
+
+### Add Dynatrace Environment Connection
+
+Create or update the `app-config.local.yaml` file (excluded by `.gitignore`)
+configuring the connection to the Dynatrace environment:
 
 ```yaml
 dynatrace:
@@ -38,19 +136,78 @@ dynatrace:
       clientSecret: <clientSecret>
 ```
 
-Using the `EntityKubernetesDeploymentsCard` (or the
-`dynatrace.kubernetes-workload` query directly), you can see the Kubernetes
-deployments in your Dynatrace environment:
+> See below how to configure
+> [multiple Dynatrace environments](#multi-environment-support).
 
-Kubernetes pods with a `backstage.io/component` label will be listed for the
-corresponding backstage component if they are properly annotated in the
-deployment descriptor:
+### Run Backstage with Dynatrace Plugins
+
+To start the app, run:
+
+```sh
+yarn install
+yarn dev
+```
+
+Backstage is pre-configured but relies on appropriate data to be available in
+the demo Dynatrace environment. See [catalog-info.yaml](./catalog-info.yaml) for
+details.
+
+## Additional Features
+
+Find here additional features to customize the plugin for different
+requirements.
+
+### Multi-environment Support
+
+If the component in Backstage should display data from multiple Dynatrace
+environments, add each Dynatrace environment to the `dynatrace.environments`
+list in the `app-config.local.yaml` file.
+
+```yaml
+dynatrace:
+  environments:
+    - name: xxxxxxxx
+      url: https://xxxxxxxx.apps.dynatrace.com
+      tokenUrl: https://sso.dynatrace.com/sso/oauth2/token
+      accountUrn: <accountUrn>
+      clientId: <clientId>
+      clientSecret: <clientSecret>
+    - name: yyyyyyyy
+      url: https://yyyyyyyy.apps.dynatrace.com
+      tokenUrl: https://sso.dynatrace.com/sso/oauth2/token
+      accountUrn: <accountUrn>
+      clientId: <clientId>
+      clientSecret: <clientSecret>
+```
+
+### Kubernetes Use Case
+
+Using the `EntityKubernetesDeploymentsCard`, you can see the Kubernetes
+deployments in your Dynatrace environment.
+
+```jsx
+<EntityKubernetesDeploymentsCard
+  title="Show me my Kubernetes deployments"
+  queryId="dynatrace.kubernetes-deployments"
+/>
+```
+
+_Convention:_ Kubernetes pods with a `backstage.io/component` label will be
+listed for the corresponding Backstage component if they are properly annotated
+in the deployment descriptor:
 
 ```yaml
 backstage.io/component: <backstage-namespace>.<backstage-component-name>
 ```
 
-You can also register your own custom queries and use them with
+The query for fetching the monitoring data for Kubernetes deployments is defined
+here:
+[`dynatrace.kubernetes-deployments`](plugins/dql-backend/src/service/queries.ts).
+You can change this query for all cards or override it using a custom query.
+
+### Custom Queries
+
+You can also register your custom queries and use them with
 `EntityDqlQueryCard`:
 
 ```yaml
@@ -63,8 +220,8 @@ dynatrace:
 ```
 
 Queries can contain placeholders, which will be replaced with the values from
-the context it is executed in. These placeholders are prefixed with `$$` in
-order to escape the
+the context in which it is executed. These placeholders are prefixed with `$$`
+in order to escape the
 [environment variable substitution](https://backstage.io/docs/conf/writing/#environment-variable-substitution)
 of Backstage. The following placeholders are available:
 
@@ -85,7 +242,7 @@ following in your query:
 filter backstageComponent == "$${componentNamespace}.$${componentName}"
 ```
 
-To be able to render correctly, the DQL must return data conform to the
+To be able to render correctly, the DQL must return data conforming to the
 following:
 
 - No `null` values; use `coalesce` to replace `null` values with a default value
@@ -103,9 +260,9 @@ An example of a valid DQL result would be:
   {
     "Name": "backstage",
     "Namespace": "hardening",
-    "A Link": {
+    "Link": {
       "type": "link",
-      "text": "https://backstage.io",
+      "text": "Click me",
       "url": "https://backstage.io"
     }
   }
@@ -122,102 +279,34 @@ by its ID with the `custom.` prefix:
 />
 ```
 
-To start the app, run:
+### Backlink to Dynatrace
 
-```sh
-yarn install
-yarn dev
+To link from a table cell to a Dynatrace app, the DQL query must contain a
+record with the proper `type`, `text`, and `url`. This is an example to link to
+the Dynatrace Kubernetes app filtered by Kubernetes pods:
+
+```
+fetch dt.entity.cloud_application, from: -10m
+| fieldsAdd Workload = record({type="link", text=entity.name, url=concat("\${environmentUrl}/ui/apps/dynatrace.kubernetes/resources/pod?entityId=", id)})
 ```
 
-Backstage is pre configured but relies on appropriate data to be available in
-the demo Dynatrace environment. See [catalog-info.yaml](./catalog-info.yaml) for
-details.
+The query returns a result of:
 
-## Development
-
-After your initial checkout, run `yarn install` to get the project set up. This
-also installs Husky hooks, which will run on every commit. If the Husky
-installation fails, use `yarn prepare` to install the hooks manually.
-
-We use a small set of tools to keep the repository tidy and promote best
-practices:
-
-- [Prettier](https://prettier.io/) - Code formatter
-- [ESLint](https://eslint.org/) - Linter
-- [Lerna](https://lerna.js.org/) - Monorepo management
-- [Lint Staged](https://github.com/lint-staged/lint-staged#readme) - Run linters
-  on staged files
-- [Husky](https://typicode.github.io/husky/#/) - Git hooks
-- [Commitlint](https://commitlint.js.org/#/) - Commit message linting
-- [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) -
-  Commit message format
-- Automated versioning and changelog generation (pending, either using
-  [Commitizen](https://github.com/commitizen/cz-cli) or
-  [Semantic Release](https://github.com/semantic-release/semantic-release) or
-  even just Lerna)
-
-### (Conventional) Commit Messages
-
-To simplify semantic versioning and changelog generation, we use
-[conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). This
-means that commit messages should follow a specific format:
-
-```commit
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
+```json
+[
+  {
+    "Workload": {
+      "type": "link",
+      "text": "<ENTITY_NAME>",
+      "url": "https://<ENVIRONMENT_URL>/ui/apps/dynatrace.kubernetes/resources/pod?entityId=<ENTITY_ID>"
+    }
+  }
+]
 ```
 
-To keep it simple, we recommend a reduced set of allowed types (though, all
-[conventional commit types](https://www.conventionalcommits.org/en/v1.0.0/#summary)
-are allowed):
+## Contributing
 
-- `fix` or `fix!`: A (breaking) bug fix; influences the patch version (resp.
-  major version, if breaking)
-- `feat` or `feat!`: A (breaking) new feature; influences the minor version
-  (resp. major version, if breaking)
-- `refactor`: A code change that neither fixes a bug nor adds a feature
-- `test`: Adding missing tests or correcting existing tests
-- `docs`: Documentation only changes
-- `chore`: Anything else
-
-The optional scope should be the name of the package affected by the change.
-E.g. `fix(dql): fix a bug in the DQL plugin`.
-
-Commitlint ensures that the package is one of the known Lerna packages.
-
-### Code Style and ADRs
-
-We aim to adhere to the
-[Architecture Decision Records](https://github.com/backstage/backstage/tree/master/docs/architecture-decisions)
-compiled by the Backstage team.
-
-The ADRs with the most impact on development are:
-
-- [ADR003](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr003-avoid-default-exports.md):
-  Avoid default exports
-- [ADR004](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr004-module-export-structure.md):
-  Export components using traceable `index.ts` files.
-- [ADR006](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr006-avoid-react-fc.md):
-  Avoid `React.FC` and `React.SFC`.
-- [ADR007](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr007-use-msw-to-mock-service-requests.md):
-  Use [msw](https://mswjs.io/) to mock service requests (avoid mocking of
-  `fetch`).
-- [ADR010](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr010-luxon-date-library.md):
-  Use [Luxon](https://moment.github.io/luxon/) for date/time handling.
-- [ADR012](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr012-use-luxon-locale-and-date-presets.md):
-  Use Luxon's `toLocaleString` when formatting dates.
-- [ADR011](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr011-plugin-package-structure.md):
-  Use a specific package structure for plugins.
-- [ADR013](https://github.com/backstage/backstage/blob/master/docs/architecture-decisions/adr013-use-node-fetch.md):
-  Use [node-fetch](https://www.npmjs.com/package/node-fetch) in Backend
-  packages, stick to `fetchApiRef` in Frontend packages.
-
-Besides that, we aim to provide a consistent codebase, thus we add the following
-soft-rules:
-
-- Prefer `type` over `interface` for type definitions.
-- Prefer fat arrow functions over `function` keyword.
-- Use camel case for module (file) names.
+Everyone is welcome to contribute to this repository. See our
+[contributing guidelines](./CONTRIBUTING.md), raise
+[issues](https://github.com/Dynatrace/backstage-plugin/issues) or submit
+[pull requests](https://github.com/Dynatrace/backstage-plugin/pulls).
