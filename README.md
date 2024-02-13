@@ -1,14 +1,18 @@
 # Dynatrace Backstage Plugins
 
 _Observability and security insights at hand_ - The Dynatrace Backstage plugins
-allow you to fetch observability and security data from Dynatrace. to be
-displayed at components managed in the
+enables you to fetch observability and security data from Dynatrace to be
+displayed at software components managed in the
 [Backstage Software Catalog](https://backstage.io/docs/features/software-catalog/).
-Kubernetes monitoring is supported by default. The support comes with a
-pre-configured query for Kubernetes deployments and a dedicated component for
-data representation.
+The data is represented in tabular format with smart links to Dynatrace app for
+deeper analysis and root cause investigation in case of a related problem or
+security vulnerability.
 
-The repository contains a complete Backstage installation at its root, with the
+Kubernetes entities are supported by default. This means that the plugin comes
+with a pre-configured query for Kubernetes deployments and a dedicated component
+for data representation.
+
+This repository contains a complete Backstage installation at its root, with the
 individual plugins in the `plugins` directory. Backstage is configured to
 include the plugins so you can start the app and see them in action.
 
@@ -30,7 +34,17 @@ Three plugins are required to fetch and visualize the data from Dynatrace:
 - [DQL Common](./plugins/dql-common/README.md) - Common functionality shared
   between the DQL frontend and backend plugin.
 
-<!-- screenshot comes here -->
+With the Backstage plugins, the Backstage Software Catalog component can be
+associated with real-time monitoring data. The screenshot shows three Kubernetes
+deployments of the `easytrade-frontend` component running in different
+namespaces, i.e., `development`, `hardening`, and `production`. Smart links are
+provided for more details about the workload and logs in Dynatrace.
+
+![Kubernetes deployments monitored by Dynatrace](/docs/images/backstage_dynatrace_plugin.png 'Kubernetes deployments monitored by Dynatrace')
+
+> While Kubernetes deployments are supported by default, any data can be fetched
+> from Dynatrace and displayed in Backstage. See below how to configure
+> [custom queries](#custom-queries).
 
 ## Getting Started
 
@@ -121,7 +135,8 @@ dynatrace:
       clientSecret: <clientSecret>
 ```
 
-> Note: See below how to configure multiple Dynatrace environment connections.
+> See below how to configure
+> [multiple Dynatrace environments](#multi-environment-support).
 
 ### Run Backstage with plugins
 
@@ -141,7 +156,7 @@ details.
 ### Multi-environment support
 
 If data from multiple Dynatrace environments should be fetched, each Dynatrace
-environment can be added to `dynatrace.environments` list in the
+environment must be added to the `dynatrace.environments` list in the
 `app-config.local.yaml` file.
 
 ```yaml
