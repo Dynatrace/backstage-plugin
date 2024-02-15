@@ -1,13 +1,13 @@
 # Dynatrace Backstage Plugins
 
-_Observability and security insights at hand_ - The Dynatrace Backstage plugins
-enables you to fetch observability and security data from
+_Context-rich observability and security insights at hand_ - The Dynatrace
+Backstage plugins enable you to fetch observability and security data from
 [Dynatrace](https://dynatrace.com/) to be displayed at software components
 managed in your
 [Backstage Software Catalog](https://backstage.io/docs/features/software-catalog/).
-The data is represented in tabular format with smart links to Dynatrace app for
-deeper analysis and root cause investigation in case of a related problem or
-security vulnerability.
+The data is in tabular format with smart links to Dynatrace Apps for deeper
+analysis and root cause investigation in case of a related problem or security
+vulnerability.
 
 The plugins support Kubernetes entities by default. This means that it comes
 with a pre-configured query for Kubernetes deployments and a dedicated component
@@ -38,7 +38,7 @@ Three plugins are required to fetch and visualize the data from Dynatrace:
 With the Backstage plugins, the Backstage Software Catalog component can be
 associated with real-time monitoring data. The screenshot shows three Kubernetes
 deployments of the `easytrade-frontend` component running in different
-namespaces, i.e., `development`, `hardening`, and `production`. he table
+namespaces, i.e., `development`, `hardening`, and `production`. The table
 provides smart links for more details about the workload and logs in Dynatrace.
 
 ![Kubernetes deployments monitored by Dynatrace](/docs/images/backstage_dynatrace_plugin.png 'Kubernetes deployments monitored by Dynatrace')
