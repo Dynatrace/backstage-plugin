@@ -26,6 +26,7 @@ export const dtFetch = (
   options.headers = {
     ...options.headers,
     'User-Agent': userAgent,
+    Referer: 'backstage-plugin',
   };
 
   return fetch(url, options);
