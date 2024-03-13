@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { parseCustomQueries, parseEnvironments } from '../utils/configParser';
+import { generateKubernetesSelectorFilter } from '../utils/labelSelectorParser';
 import { QueryExecutor } from './queryExecutor';
 import { errorHandler } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
@@ -45,11 +46,26 @@ export const createRouter = async ({
   });
 
   router.get('/dynatrace/:queryId', async (req, res) => {
+    const { kubernetesId, labelSelector, componentNamespace, componentName } =
+      req.query;
+    const filters: string[] = [];
+    if (kubernetesId && typeof kubernetesId === 'string') {
+      filters.push(
+        `| filter workload.labels[\`backstage.io/kubernetes-id\`] == ${kubernetesId}`,
+      );
+    }
+    if (labelSelector && typeof labelSelector === 'string') {
+      filters.push(generateKubernetesSelectorFilter(labelSelector));
+    }
+    if (componentNamespace && typeof componentNamespace === 'string') {
+      filters.push(`| filter namespace.id == ${componentNamespace}`);
+    }
     const deployments = await queryExecutor.executeDynatraceQuery(
       req.params.queryId,
       {
-        componentNamespace: req.query.componentNamespace as string,
-        componentName: req.query.componentName as string,
+        componentName: componentName as string,
+        componentNamespace: componentNamespace as string,
+        additionalFilter: filters.join('\n'),
       },
     );
     res.json(deployments);

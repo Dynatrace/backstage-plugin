@@ -21,5 +21,7 @@ export type DqlQueryApi = {
     queryName: string,
     componentName: string,
     componentNamespace: string,
+    kubernetesId?: string,
+    labelSelector?: string,
   ): Promise<TabularData>;
 };

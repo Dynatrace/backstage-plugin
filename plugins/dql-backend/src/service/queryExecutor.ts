@@ -30,9 +30,13 @@ const componentQueryVariablesSchema = z.object({
     .string()
     .max(63)
     .regex(/^[A-Za-z0-9\-_\.]+$/),
+  additionalFilter: z
+    .string()
+    .optional()
+    .transform(filter => filter ?? ''),
 });
 
-type ComponentQueryVariables = z.infer<typeof componentQueryVariablesSchema>;
+type ComponentQueryVariables = z.input<typeof componentQueryVariablesSchema>;
 
 export class QueryExecutor {
   constructor(
@@ -66,11 +70,11 @@ export class QueryExecutor {
     dqlQuery: string,
     variables: ComponentQueryVariables,
   ): Promise<TabularData> {
-    componentQueryVariablesSchema.parse(variables);
+    const parsedVariables = componentQueryVariablesSchema.parse(variables);
 
     const results$ = this.apis.map(api => {
       const compiledQuery = compileDqlQuery(dqlQuery, {
-        ...variables,
+        ...parsedVariables,
         environmentName: api.environmentName,
         environmentUrl: api.environmentUrl,
       });

@@ -22,6 +22,7 @@ export const useDqlQuery = (
   queryName: string,
   componentName: string,
   componentNamespace: string,
+  annotations?: Record<string, string | undefined>,
 ) => {
   const dqlQueryApi = useApi(dqlQueryApiRef);
 
@@ -31,6 +32,8 @@ export const useDqlQuery = (
       queryName,
       componentName,
       componentNamespace,
+      annotations?.['backstage.io/kubernetes-id'],
+      annotations?.['backstage.io/kubernetes-label-selector'],
     );
   }, [dqlQueryApi, namespace, queryName, componentName, componentNamespace]);
 
