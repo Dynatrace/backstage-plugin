@@ -27,14 +27,14 @@ export const generateComplexFilter = (
   const filters: string[] = [];
   if (kubernetesId && typeof kubernetesId === 'string') {
     filters.push(
-      `| filter workload.labels[\`backstage.io/kubernetes-id\`] == "${kubernetesId}"`, // component annotation backstage.io/kubernetes-id
+      `| filter workload.labels[\`backstage.io/kubernetes-id\`] == "${kubernetesId}"`, // component annotation "backstage.io/kubernetes-id"
     );
   }
   if (labelSelector && typeof labelSelector === 'string') {
-    filters.push(generateKubernetesSelectorFilter(labelSelector));
+    filters.push(generateKubernetesSelectorFilter(labelSelector)); // component annotation "backstage.io/kubernetes-label-selector"
   }
   if (componentNamespace && typeof componentNamespace === 'string') {
-    filters.push(`| filter namespace.id == "${componentNamespace}"`); // component annotation backstage.io/kubernetes-namespace || component.metadata.namespace || 'default'
+    filters.push(`| filter namespace.id == "${componentNamespace}"`); // component annotation "backstage.io/kubernetes-namespace" || component.metadata.namespace || 'default'
   }
   return filters.join('\n');
 };
