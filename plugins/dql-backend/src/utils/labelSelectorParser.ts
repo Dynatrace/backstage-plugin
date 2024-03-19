@@ -23,12 +23,21 @@ function parseKubernetesSelector(labelSelector: string): LabelKeyValue[] {
   return statements
     .map<LabelKeyValue | undefined>(statement => {
       const keyValue = statement.split('=');
+
       if (keyValue.length < 2) {
         return undefined;
       }
+
+      const key = keyValue[0].trim();
+      const value = keyValue[1].trim();
+
+      if (!key || !value) {
+        return undefined;
+      }
+
       return {
-        key: keyValue[0].trim(),
-        value: keyValue[1].trim(),
+        key,
+        value,
       };
     })
     .filter((label): label is LabelKeyValue => !!label);
@@ -48,8 +57,8 @@ export function generateKubernetesSelectorFilter(
     return '';
   }
   const labelMap = labels
-    .map(label => `workload.labels[\`${label.key}\`] == ${label.value}`)
+    .map(label => `workload.labels[\`${label.key}\`] == "${label.value}"`)
     .join(' AND ');
 
-  return `| filter ${labelMap}`;
+  return labelMap ? `| filter ${labelMap}` : '';
 }

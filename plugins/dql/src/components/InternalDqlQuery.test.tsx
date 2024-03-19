@@ -41,6 +41,7 @@ jest.mock('@backstage/core-components', () => ({
 const mockEntity = (
   name: string = 'example',
   namespace: string | undefined = undefined,
+  annotations?: Record<string, string>,
 ): Entity => {
   return {
     apiVersion: 'backstage.io/v1alpha1',
@@ -49,6 +50,7 @@ const mockEntity = (
       name,
       description: 'backstage.io/example',
       namespace,
+      annotations,
     },
     spec: {
       lifecycle: 'production',
@@ -134,6 +136,8 @@ describe('DqlQuery', () => {
       expect.anything(),
       'component',
       'namespace',
+      undefined,
+      undefined,
     );
   });
 
@@ -147,6 +151,25 @@ describe('DqlQuery', () => {
       expect.anything(),
       'example',
       'default',
+      undefined,
+      undefined,
+    );
+  });
+
+  it('should fill in "backstage.io/kubernetes-namespace" annotation to namespace', async () => {
+    const queryApi = mockDqlQueryApi();
+    const entity = mockEntity('example', undefined, {
+      'backstage.io/kubernetes-namespace': 'annotationNamespace',
+    });
+    await prepareComponent({ entity, queryApi });
+
+    expect(queryApi.getData).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      'example',
+      'annotationNamespace',
+      undefined,
+      undefined,
     );
   });
 
