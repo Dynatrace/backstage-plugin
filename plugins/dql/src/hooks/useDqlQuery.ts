@@ -32,7 +32,6 @@ export const useDqlQuery = (
       queryName,
       componentName,
       componentNamespace,
-      annotations?.['backstage.io/kubernetes-namespace'],
       annotations?.['backstage.io/kubernetes-id'],
       annotations?.['backstage.io/kubernetes-label-selector'],
     );

@@ -34,7 +34,7 @@ export const generateComplexFilter = (
     filters.push(generateKubernetesSelectorFilter(labelSelector)); // component annotation "backstage.io/kubernetes-label-selector"
   }
   if (namespace && typeof namespace === 'string') {
-    filters.push(`| filter namespace.id == "${namespace}"`); // component annotation "backstage.io/kubernetes-namespace" || component.metadata.namespace || 'default'
+    filters.push(`| filter Namespace == "${namespace}"`); // component annotation "backstage.io/kubernetes-namespace" || component.metadata.namespace || 'default'
   }
   return filters.join('\n');
 };
