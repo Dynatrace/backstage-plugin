@@ -30,10 +30,7 @@ const componentQueryVariablesSchema = z.object({
     .string()
     .max(63)
     .regex(/^[A-Za-z0-9\-_\.]+$/),
-  additionalFilter: z
-    .string()
-    .optional()
-    .transform(filter => filter ?? ''),
+  additionalFilter: z.string().default(''),
 });
 
 type ComponentQueryVariables = z.input<typeof componentQueryVariablesSchema>;
