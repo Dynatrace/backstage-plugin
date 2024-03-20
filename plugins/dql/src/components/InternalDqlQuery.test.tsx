@@ -138,6 +138,7 @@ describe('DqlQuery', () => {
       'namespace',
       undefined,
       undefined,
+      undefined,
     );
   });
 
@@ -153,13 +154,16 @@ describe('DqlQuery', () => {
       'default',
       undefined,
       undefined,
+      undefined,
     );
   });
 
-  it('should fill in "backstage.io/kubernetes-namespace" annotation to namespace', async () => {
+  it('should fill in annotations', async () => {
     const queryApi = mockDqlQueryApi();
     const entity = mockEntity('example', undefined, {
       'backstage.io/kubernetes-namespace': 'annotationNamespace',
+      'backstage.io/kubernetes-id': 'kubernetesId',
+      'backstage.io/kubernetes-label-selector': 'label=selector',
     });
     await prepareComponent({ entity, queryApi });
 
@@ -167,9 +171,10 @@ describe('DqlQuery', () => {
       expect.anything(),
       expect.anything(),
       'example',
+      'default',
       'annotationNamespace',
-      undefined,
-      undefined,
+      'kubernetesId',
+      'label=selector',
     );
   });
 

@@ -22,7 +22,7 @@ type QueryValue = ValueOf<ParsedQs>;
 export const generateComplexFilter = (
   kubernetesId: QueryValue,
   labelSelector: QueryValue,
-  componentNamespace: QueryValue,
+  namespace: QueryValue,
 ) => {
   const filters: string[] = [];
   if (kubernetesId && typeof kubernetesId === 'string') {
@@ -33,8 +33,8 @@ export const generateComplexFilter = (
   if (labelSelector && typeof labelSelector === 'string') {
     filters.push(generateKubernetesSelectorFilter(labelSelector)); // component annotation "backstage.io/kubernetes-label-selector"
   }
-  if (componentNamespace && typeof componentNamespace === 'string') {
-    filters.push(`| filter namespace.id == "${componentNamespace}"`); // component annotation "backstage.io/kubernetes-namespace" || component.metadata.namespace || 'default'
+  if (namespace && typeof namespace === 'string') {
+    filters.push(`| filter namespace.id == "${namespace}"`); // component annotation "backstage.io/kubernetes-namespace" || component.metadata.namespace || 'default'
   }
   return filters.join('\n');
 };

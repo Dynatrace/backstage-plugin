@@ -33,6 +33,7 @@ export class DqlQueryApiClient implements DqlQueryApi {
     queryName: string,
     componentName: string,
     componentNamespace: string,
+    namespaceSelector?: string,
     kubernetesId?: string,
     labelSelector?: string,
   ): Promise<TabularData> {
@@ -40,6 +41,7 @@ export class DqlQueryApiClient implements DqlQueryApi {
     const searchParams = new URLSearchParams({
       componentName,
       componentNamespace,
+      ...(namespaceSelector && { namespaceSelector }),
       ...(labelSelector && { labelSelector }),
       ...(kubernetesId && { kubernetesId }),
     });

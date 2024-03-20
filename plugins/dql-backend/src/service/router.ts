@@ -46,8 +46,13 @@ export const createRouter = async ({
   });
 
   router.get('/dynatrace/:queryId', async (req, res) => {
-    const { kubernetesId, labelSelector, componentNamespace, componentName } =
-      req.query;
+    const {
+      kubernetesId,
+      labelSelector,
+      namespaceSelector,
+      componentNamespace,
+      componentName,
+    } = req.query;
     const deployments = await queryExecutor.executeDynatraceQuery(
       req.params.queryId,
       {
@@ -56,7 +61,7 @@ export const createRouter = async ({
         additionalFilter: generateComplexFilter(
           kubernetesId,
           labelSelector,
-          componentNamespace,
+          namespaceSelector,
         ),
       },
     );

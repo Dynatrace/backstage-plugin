@@ -56,6 +56,7 @@ describe('usDqlQuery', () => {
       'componentNamespace',
       undefined,
       undefined,
+      undefined,
     );
     expect(result.current.value).toEqual([]);
   });

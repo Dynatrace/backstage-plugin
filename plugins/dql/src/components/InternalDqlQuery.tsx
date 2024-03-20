@@ -38,10 +38,7 @@ export const InternalDqlQuery = ({
 }: InternalDqlQueryProps) => {
   const { entity } = useEntity();
   const componentName = entity.metadata.name;
-  const componentNamespace =
-    entity.metadata.annotations?.['backstage.io/kubernetes-namespace'] ??
-    entity.metadata.namespace ??
-    'default';
+  const componentNamespace = entity.metadata.namespace ?? 'default';
   const { error, loading, value } = useDqlQuery(
     queryNamespace,
     queryName,
