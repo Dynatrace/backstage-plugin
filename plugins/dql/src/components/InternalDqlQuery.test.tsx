@@ -40,7 +40,6 @@ jest.mock('@backstage/core-components', () => ({
 
 const mockEntity = (
   name: string = 'example',
-  namespace: string | undefined = undefined,
   annotations?: Record<string, string>,
 ): Entity => {
   return {
@@ -49,7 +48,6 @@ const mockEntity = (
     metadata: {
       name,
       description: 'backstage.io/example',
-      namespace,
       annotations,
     },
     spec: {
@@ -126,33 +124,18 @@ describe('DqlQuery', () => {
     );
   });
 
-  it('should call the api with the component and namespace', async () => {
-    const queryApi = mockDqlQueryApi();
-    const entity = mockEntity('component', 'namespace');
-    await prepareComponent({ entity, queryApi });
-
-    expect(queryApi.getData).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      'component',
-      'namespace',
-      undefined,
-      undefined,
-      undefined,
-    );
-  });
-
   it('should fill in empty namespaces with default', async () => {
     const queryApi = mockDqlQueryApi();
-    const entity = mockEntity('example', undefined);
+    const entity = mockEntity('example');
     await prepareComponent({ entity, queryApi });
 
-    expect(queryApi.getData).toHaveBeenCalledWith(
+    expect(queryApi.getData).toHaveBeenCalledWith<
+      Parameters<DqlQueryApi['getData']>
+    >(
       expect.anything(),
       expect.anything(),
       'example',
       'default',
-      undefined,
       undefined,
       undefined,
     );
@@ -160,18 +143,19 @@ describe('DqlQuery', () => {
 
   it('should fill in annotations', async () => {
     const queryApi = mockDqlQueryApi();
-    const entity = mockEntity('example', undefined, {
+    const entity = mockEntity('example', {
       'backstage.io/kubernetes-namespace': 'annotationNamespace',
       'backstage.io/kubernetes-id': 'kubernetesId',
       'backstage.io/kubernetes-label-selector': 'label=selector',
     });
     await prepareComponent({ entity, queryApi });
 
-    expect(queryApi.getData).toHaveBeenCalledWith(
+    expect(queryApi.getData).toHaveBeenCalledWith<
+      Parameters<DqlQueryApi['getData']>
+    >(
       expect.anything(),
       expect.anything(),
       'example',
-      'default',
       'annotationNamespace',
       'kubernetesId',
       'label=selector',
@@ -204,7 +188,7 @@ describe('DqlQuery', () => {
     const queryNamespace = 'dynatrace';
 
     const queryApi = mockDqlQueryApi();
-    const entity = mockEntity(componentName, componentNamespace);
+    const entity = mockEntity(componentName);
     await prepareComponent({ entity, queryApi, queryName, queryNamespace });
 
     expect(TabularDataTable).not.toHaveBeenCalled();
@@ -227,7 +211,7 @@ describe('DqlQuery', () => {
     const queryNamespace = 'dynatrace';
 
     const queryApi = mockDqlQueryApi();
-    const entity = mockEntity(componentName, componentNamespace);
+    const entity = mockEntity(componentName);
     const EmptyState = jest.fn(() => null);
     await prepareComponent({
       entity,

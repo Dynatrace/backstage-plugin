@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { dqlQueryApiRef } from '../api';
+import { DqlQueryApi, dqlQueryApiRef } from '../api';
 import { useDqlQuery } from './useDqlQuery';
 import { TestApiProvider } from '@backstage/test-utils';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
@@ -49,12 +49,13 @@ describe('usDqlQuery', () => {
 
     await waitForNextUpdate();
 
-    expect(MockDqlQueryApi.getData).toHaveBeenCalledWith(
+    expect(MockDqlQueryApi.getData).toHaveBeenCalledWith<
+      Parameters<DqlQueryApi['getData']>
+    >(
       'queryNamespace',
       'queryName',
       'componentName',
       'componentNamespace',
-      undefined,
       undefined,
       undefined,
     );
