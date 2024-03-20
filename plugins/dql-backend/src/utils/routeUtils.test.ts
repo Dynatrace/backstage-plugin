@@ -19,7 +19,7 @@ describe('routeUtils', () => {
   const kubernetesFilter =
     '| filter workload.labels[`backstage.io/kubernetes-id`] == "kubernetesId"';
   const labelFilter = '| filter workload.labels[`label1`] == "value1"';
-  const namespaceFilter = '| filter namespace.id == "namespace"';
+  const namespaceFilter = '| filter Namespace == "namespace"';
 
   it('should return a filter for all given values', () => {
     // act
