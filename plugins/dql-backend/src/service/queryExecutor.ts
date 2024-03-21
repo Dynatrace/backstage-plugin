@@ -24,7 +24,8 @@ const componentQueryVariablesSchema = z.object({
   componentNamespace: z
     .string()
     .max(63)
-    .regex(/^[A-Za-z0-9\-]+$/),
+    .regex(/^[A-Za-z0-9\-]+$/)
+    .optional(), // optional because kubernetes query does not need a namespace (may query several namespaces)
   // see https://backstage.io/docs/features/software-catalog/descriptor-format#name-required
   componentName: z
     .string()

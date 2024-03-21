@@ -41,6 +41,7 @@ jest.mock('@backstage/core-components', () => ({
 const mockEntity = (
   name: string = 'example',
   annotations?: Record<string, string>,
+  namespace?: string,
 ): Entity => {
   return {
     apiVersion: 'backstage.io/v1alpha1',
@@ -49,6 +50,7 @@ const mockEntity = (
       name,
       description: 'backstage.io/example',
       annotations,
+      namespace,
     },
     spec: {
       lifecycle: 'production',
@@ -124,9 +126,9 @@ describe('DqlQuery', () => {
     );
   });
 
-  it('should fill in empty namespaces with default', async () => {
+  it('should fill in metadata namespace', async () => {
     const queryApi = mockDqlQueryApi();
-    const entity = mockEntity('example');
+    const entity = mockEntity('example', undefined, 'metadata-namespace');
     await prepareComponent({ entity, queryApi });
 
     expect(queryApi.getData).toHaveBeenCalledWith<
@@ -135,7 +137,7 @@ describe('DqlQuery', () => {
       expect.anything(),
       expect.anything(),
       'example',
-      'default',
+      'metadata-namespace',
       undefined,
       undefined,
     );
@@ -183,7 +185,6 @@ describe('DqlQuery', () => {
 
   it('should render an default empty state if no data is returned', async () => {
     const componentName = 'example';
-    const componentNamespace = 'default';
     const queryName = 'query-id-1';
     const queryNamespace = 'dynatrace';
 
@@ -193,12 +194,11 @@ describe('DqlQuery', () => {
 
     expect(TabularDataTable).not.toHaveBeenCalled();
     expect(ResponseErrorPanel).not.toHaveBeenCalled();
-    expect(DqlEmptyState).toHaveBeenCalledWith(
-      expect.objectContaining({
+    expect(DqlEmptyState).toHaveBeenCalledWith<[EmptyStateProps, unknown]>(
+      expect.objectContaining<Partial<EmptyStateProps>>({
         queryNamespace,
         queryName,
         componentName,
-        componentNamespace,
       }),
       expect.anything(),
     );
@@ -206,7 +206,6 @@ describe('DqlQuery', () => {
 
   it('should render a custom empty state if no data is returned', async () => {
     const componentName = 'example';
-    const componentNamespace = 'default';
     const queryName = 'query-id-1';
     const queryNamespace = 'dynatrace';
 
@@ -224,12 +223,11 @@ describe('DqlQuery', () => {
     expect(TabularDataTable).not.toHaveBeenCalled();
     expect(ResponseErrorPanel).not.toHaveBeenCalled();
     expect(DqlEmptyState).not.toHaveBeenCalled();
-    expect(EmptyState).toHaveBeenCalledWith(
-      expect.objectContaining({
+    expect(EmptyState).toHaveBeenCalledWith<[EmptyStateProps, unknown]>(
+      expect.objectContaining<Partial<EmptyStateProps>>({
         queryNamespace,
         queryName,
         componentName,
-        componentNamespace,
       }),
       expect.anything(),
     );

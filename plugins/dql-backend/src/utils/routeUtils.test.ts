@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { generateComplexFilter } from './routeUtils';
+import { generateComplexFilter, validateQueryParameters } from './routeUtils';
 
 describe('routeUtils', () => {
   const kubernetesFilter =
@@ -21,61 +21,82 @@ describe('routeUtils', () => {
   const labelFilter = '| filter workload.labels[`label1`] == "value1"';
   const namespaceFilter = '| filter Namespace == "namespace"';
 
-  it('should return a filter for all given values', () => {
-    // act
-    const filter = generateComplexFilter(
-      'kubernetesId',
-      'label1=value1',
-      'namespace',
-    );
+  describe('generateComplexFilter', () => {
+    it('should return a filter for all given values', () => {
+      // act
+      const filter = generateComplexFilter(
+        'kubernetesId',
+        'label1=value1',
+        'namespace',
+      );
 
-    // assert
-    expect(filter).toBe(
-      `${kubernetesFilter}\n${labelFilter}\n${namespaceFilter}`,
-    );
+      // assert
+      expect(filter).toBe(
+        `${kubernetesFilter}\n${labelFilter}\n${namespaceFilter}`,
+      );
+    });
+
+    it('should not return kubernetesId filter if not given', () => {
+      // act
+      const filter = generateComplexFilter(
+        undefined,
+        'label1=value1',
+        'namespace',
+      );
+
+      // assert
+      expect(filter).toBe(`${labelFilter}\n${namespaceFilter}`);
+    });
+
+    it('should not return label filter if not given', () => {
+      // act
+      const filter = generateComplexFilter(
+        'kubernetesId',
+        undefined,
+        'namespace',
+      );
+
+      // assert
+      expect(filter).toBe(`${kubernetesFilter}\n${namespaceFilter}`);
+    });
+
+    it('should not return namespace filter if not given', () => {
+      // act
+      const filter = generateComplexFilter(
+        'kubernetesId',
+        'label1=value1',
+        undefined,
+      );
+
+      // assert
+      expect(filter).toBe(`${kubernetesFilter}\n${labelFilter}`);
+    });
+
+    it('should not return any filter if none is given', () => {
+      // act
+      const filter = generateComplexFilter(undefined, undefined, undefined);
+
+      // assert
+      expect(filter).toBe('');
+    });
   });
 
-  it('should not return kubernetesId filter if not given', () => {
-    // act
-    const filter = generateComplexFilter(
-      undefined,
-      'label1=value1',
-      'namespace',
-    );
+  describe('validateQueryParameters', () => {
+    describe('kubernetes-deployments', () => {
+      it('should fail if kubernetesId is not given', () => {
+        expect(() =>
+          validateQueryParameters({}, 'kubernetes-deployments'),
+        ).toThrow();
+      });
 
-    // assert
-    expect(filter).toBe(`${labelFilter}\n${namespaceFilter}`);
-  });
-
-  it('should not return label filter if not given', () => {
-    // act
-    const filter = generateComplexFilter(
-      'kubernetesId',
-      undefined,
-      'namespace',
-    );
-
-    // assert
-    expect(filter).toBe(`${kubernetesFilter}\n${namespaceFilter}`);
-  });
-
-  it('should not return namespace filter if not given', () => {
-    // act
-    const filter = generateComplexFilter(
-      'kubernetesId',
-      'label1=value1',
-      undefined,
-    );
-
-    // assert
-    expect(filter).toBe(`${kubernetesFilter}\n${labelFilter}`);
-  });
-
-  it('should not return any filter if none is given', () => {
-    // act
-    const filter = generateComplexFilter(undefined, undefined, undefined);
-
-    // assert
-    expect(filter).toBe('');
+      it('should not fail if kubernetesId is given', () => {
+        expect(() =>
+          validateQueryParameters(
+            { kubernetesId: 'my-id' },
+            'kubernetes-deployments',
+          ),
+        ).not.toThrow();
+      });
+    });
   });
 });

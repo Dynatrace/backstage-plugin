@@ -21,7 +21,7 @@ export const useDqlQuery = (
   namespace: string,
   queryName: string,
   componentName: string,
-  componentNamespace: string,
+  componentNamespace?: string,
   annotations?: Record<string, string | undefined>,
 ) => {
   const dqlQueryApi = useApi(dqlQueryApiRef);

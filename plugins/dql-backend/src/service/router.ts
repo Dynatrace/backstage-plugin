@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 import { parseCustomQueries, parseEnvironments } from '../utils/configParser';
-import { generateComplexFilter } from '../utils/routeUtils';
+import {
+  generateComplexFilter,
+  validateQueryParameters,
+} from '../utils/routeUtils';
 import { QueryExecutor } from './queryExecutor';
 import { errorHandler } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
@@ -39,7 +42,8 @@ export const createRouter = async ({
 
   router.get('/custom/:queryId', async (req, res) => {
     const result = await queryExecutor.executeCustomQuery(req.params.queryId, {
-      componentNamespace: req.query.componentNamespace as string,
+      componentNamespace:
+        (req.query.componentNamespace as string | undefined) ?? 'default',
       componentName: req.query.componentName as string,
     });
     return res.json(result);
@@ -48,11 +52,12 @@ export const createRouter = async ({
   router.get('/dynatrace/:queryId', async (req, res) => {
     const { kubernetesId, labelSelector, componentNamespace, componentName } =
       req.query;
+    validateQueryParameters(req.query, req.params.queryId);
     const deployments = await queryExecutor.executeDynatraceQuery(
       req.params.queryId,
       {
         componentName: componentName as string,
-        componentNamespace: componentNamespace as string,
+        componentNamespace: componentNamespace as string | undefined,
         additionalFilter: generateComplexFilter(
           kubernetesId,
           labelSelector,

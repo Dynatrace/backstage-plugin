@@ -19,14 +19,13 @@ import React from 'react';
 
 export const DqlEmptyState = ({
   componentName,
-  componentNamespace,
   queryName,
   queryNamespace,
 }: EmptyStateProps) => {
   const message = `# We turned up empty
 
   Query \`${queryNamespace}.${queryName}\` did not return any data for
-  component \`${componentNamespace}.${componentName}\`.
+  component \`${componentName}\`.
 
   If you recently added the component, it may take a few minutes for
   Dynatrace to start reporting data. If the component has been running

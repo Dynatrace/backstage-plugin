@@ -19,6 +19,33 @@ import { ParsedQs } from 'qs';
 type ValueOf<T> = T[keyof T];
 type QueryValue = ValueOf<ParsedQs>;
 
+const validateKubernetesQueryParams = (queryParams: ParsedQs) => {
+  const { kubernetesId } = queryParams;
+  if (!kubernetesId) {
+    throw new Error('Missing query parameter "kubernetesId"');
+  }
+};
+
+const queryValidators: Record<
+  string,
+  (queryParams: ParsedQs) => void | undefined
+> = {
+  'kubernetes-deployments': validateKubernetesQueryParams,
+};
+
+/**
+ * Validates if all required query params are set for a specific query.
+ * Throws an error if some are missing
+ * @param queryParams
+ * @param queryId
+ */
+export const validateQueryParameters = (
+  queryParams: ParsedQs,
+  queryId: string,
+): void => {
+  queryValidators[queryId]?.(queryParams);
+};
+
 export const generateComplexFilter = (
   kubernetesId: QueryValue,
   labelSelector: QueryValue,
