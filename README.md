@@ -193,7 +193,8 @@ deployments in your Dynatrace environment.
 ```
 
 _Convention:_ Kubernetes pods will be listed for the corresponding Backstage
-component if they are properly annotated in the deployment descriptor.
+component if they are properly annotated in the deployment descriptor. See
+[annotations](https://backstage.io/docs/features/software-catalog/descriptor-format/#annotations-optional).
 
 Example:
 
@@ -208,9 +209,10 @@ backstage.io/kubernetes-label-selector: stage=hardening,name=frontend
 - The annotation `backstage.io/kubernetes-namespace` will look for the
   kubernetes namespace.
 - The annotation `backstage.io/kubernetes-label-selector` will look for the
-  labels defined in it. So `stage=hardening,name=frontend` will look for a
-  kubernetes label `stage` with the value `hardening` and a label `name` with
-  the value `frontend`.
+  labels defined in it. So
+  `backstage.io/kubernetes-label-selector: stage=hardening,name=frontend` will
+  look for a kubernetes label `stage` with the value `hardening` and a label
+  `name` with the value `frontend`.
 
 If a `backstage.io/kubernetes-label-selector` is given,
 `backstage.io/kubernetes-id` is ignored.
