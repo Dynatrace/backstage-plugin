@@ -42,8 +42,7 @@ export const createRouter = async ({
 
   router.get('/custom/:queryId', async (req, res) => {
     const result = await queryExecutor.executeCustomQuery(req.params.queryId, {
-      componentNamespace:
-        (req.query.componentNamespace as string | undefined) ?? 'default',
+      componentNamespace: req.query.componentNamespace as string,
       componentName: req.query.componentName as string,
     });
     return res.json(result);

@@ -32,6 +32,7 @@ export const KubernetesDeployments = ({
       queryId="dynatrace.kubernetes-deployments"
       emptyState={KubernetesDeploymentsEmptyState}
       pageSize={pageSize}
+      isKubernetes
     />
   );
 };

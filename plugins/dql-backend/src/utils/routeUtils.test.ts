@@ -22,7 +22,7 @@ describe('routeUtils', () => {
   const namespaceFilter = '| filter Namespace == "namespace"';
 
   describe('generateComplexFilter', () => {
-    it('should return a filter for all given values', () => {
+    it('should return a filter for all given values with the exception that the label-selector overrides the kubernetes id', () => {
       // act
       const filter = generateComplexFilter(
         'kubernetesId',
@@ -31,9 +31,7 @@ describe('routeUtils', () => {
       );
 
       // assert
-      expect(filter).toBe(
-        `${kubernetesFilter}\n${labelFilter}\n${namespaceFilter}`,
-      );
+      expect(filter).toBe(`${labelFilter}\n${namespaceFilter}`);
     });
 
     it('should not return kubernetesId filter if not given', () => {
@@ -69,7 +67,7 @@ describe('routeUtils', () => {
       );
 
       // assert
-      expect(filter).toBe(`${kubernetesFilter}\n${labelFilter}`);
+      expect(filter).toBe(`${labelFilter}`);
     });
 
     it('should not return any filter if none is given', () => {
@@ -83,10 +81,19 @@ describe('routeUtils', () => {
 
   describe('validateQueryParameters', () => {
     describe('kubernetes-deployments', () => {
-      it('should fail if kubernetesId is not given', () => {
+      it('should fail if kubernetesId and label selector is not given', () => {
         expect(() =>
           validateQueryParameters({}, 'kubernetes-deployments'),
         ).toThrow();
+      });
+
+      it('should not fail if kubernetes-label-selector is given', () => {
+        expect(() =>
+          validateQueryParameters(
+            { labelSelector: 'stage=hardening' },
+            'kubernetes-deployments',
+          ),
+        ).not.toThrow();
       });
 
       it('should not fail if kubernetesId is given', () => {
