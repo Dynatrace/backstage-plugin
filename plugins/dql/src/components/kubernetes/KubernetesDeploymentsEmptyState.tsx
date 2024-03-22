@@ -29,14 +29,13 @@ export const KubernetesDeploymentsEmptyState = ({
   [Dynatrace documentation](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-oneagent)
   for more information.
 
-  Also, make sure that the \`backstage.io/component\` label is set to
-  \`${componentName}\` on your Kubernetes deployments:
+  Also, make sure that the annotation \`backstage.io/kubernetes-id\` or \`backstage.io/kubernetes-label-selector\` is set on your Backstage component:
 
   \`\`\`yaml
   metadata:
-    name: ${componentName}-deployment
-    labels:
-      backstage.io/component: "${componentName}"
+    name: ${componentName}
+    annotations:
+      backstage.io/kubernetes-id: "yourid"
   \`\`\`
 
   If you recently added the component, it may take a few minutes for

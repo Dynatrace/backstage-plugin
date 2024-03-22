@@ -204,14 +204,14 @@ backstage.io/kubernetes-namespace: namespace
 backstage.io/kubernetes-label-selector: stage=hardening,name=frontend
 ```
 
-- The annotation `backstage.io/kubernetes-id` will look for the kubernetes label
+- The annotation `backstage.io/kubernetes-id` will look for the Kubernetes label
   `backstage.io/kubernetes-id`.
 - The annotation `backstage.io/kubernetes-namespace` will look for the
-  kubernetes namespace.
+  Kubernetes namespace.
 - The annotation `backstage.io/kubernetes-label-selector` will look for the
   labels defined in it. So
   `backstage.io/kubernetes-label-selector: stage=hardening,name=frontend` will
-  look for a kubernetes label `stage` with the value `hardening` and a label
+  look for a Kubernetes label `stage` with the value `hardening` and a label
   `name` with the value `frontend`.
 
 If a `backstage.io/kubernetes-label-selector` is given,

@@ -16,11 +16,11 @@
 
 export function compileDqlQuery(
   queryToCompile: string,
-  variables: Record<string, unknown>,
+  variables: Record<string, string | undefined>,
 ): string {
   return Array.from(Object.entries(variables)).reduce(
     (query: string, [variable, value]) =>
-      query.replaceAll(`\${${variable}}`, String(value)),
+      query.replaceAll(`\${${variable}}`, String(value ?? '')),
     queryToCompile,
   );
 }

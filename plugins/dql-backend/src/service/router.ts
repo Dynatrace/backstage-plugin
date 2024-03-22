@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 import { parseCustomQueries, parseEnvironments } from '../utils/configParser';
-import {
-  generateComplexFilter,
-  validateQueryParameters,
-} from '../utils/routeUtils';
+import { generateKubernetesSelectorFilter } from '../utils/labelSelectorParser';
+import { validateQueryParameters } from '../utils/routeUtils';
 import { QueryExecutor } from './queryExecutor';
 import { errorHandler } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
@@ -57,11 +55,11 @@ export const createRouter = async ({
       {
         componentName: componentName as string,
         componentNamespace: componentNamespace as string | undefined,
-        additionalFilter: generateComplexFilter(
-          kubernetesId,
-          labelSelector,
-          componentNamespace,
-        ),
+        kubernetesId: kubernetesId as string | undefined,
+        labelFilter:
+          labelSelector && typeof labelSelector === 'string'
+            ? generateKubernetesSelectorFilter(labelSelector)
+            : undefined,
       },
     );
     res.json(deployments);

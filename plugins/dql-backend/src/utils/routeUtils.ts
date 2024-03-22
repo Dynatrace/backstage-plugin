@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { generateKubernetesSelectorFilter } from './labelSelectorParser';
 import { ParsedQs } from 'qs';
-
-type ValueOf<T> = T[keyof T];
-type QueryValue = ValueOf<ParsedQs>;
 
 const validateKubernetesQueryParams = (queryParams: ParsedQs) => {
   const { kubernetesId, labelSelector } = queryParams;
@@ -46,25 +42,4 @@ export const validateQueryParameters = (
   queryId: string,
 ): void => {
   queryValidators[queryId]?.(queryParams);
-};
-
-export const generateComplexFilter = (
-  kubernetesId: QueryValue,
-  labelSelector: QueryValue,
-  namespace: QueryValue,
-) => {
-  const filters: string[] = [];
-  if (labelSelector && typeof labelSelector === 'string') {
-    filters.push(generateKubernetesSelectorFilter(labelSelector)); // component annotation "backstage.io/kubernetes-label-selector"
-  }
-  // only if labelSelector is not given. "Label selector takes precedence over the kubernetes-id"
-  if (kubernetesId && typeof kubernetesId === 'string' && !labelSelector) {
-    filters.push(
-      `| filter workload.labels[\`backstage.io/kubernetes-id\`] == "${kubernetesId}"`, // component annotation "backstage.io/kubernetes-id"
-    );
-  }
-  if (namespace && typeof namespace === 'string') {
-    filters.push(`| filter Namespace == "${namespace}"`); // component annotation "backstage.io/kubernetes-namespace" || component.metadata.namespace || 'default'
-  }
-  return filters.join('\n');
 };

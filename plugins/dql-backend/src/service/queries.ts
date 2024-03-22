@@ -32,7 +32,9 @@ export const dynatraceQueries: Record<string, string | undefined> = {
     | fieldsAdd Problems=coalesce(Problems,0)
     | lookup [ fetch events, from: -30m | filter event.kind=="SECURITY_EVENT" | filter event.category=="VULNERABILITY_MANAGEMENT" | filter event.provider=="Dynatrace" | filter event.type=="VULNERABILITY_STATE_REPORT_EVENT" | filter in(vulnerability.stack,{"CODE_LIBRARY","SOFTWARE","CONTAINER_ORCHESTRATION"}) | filter event.level=="ENTITY" | summarize { workloadId=arrayFirst(takeFirst(related_entities.kubernetes_workloads.ids)), vulnerability.stack=takeFirst(vulnerability.stack)}, by: {vulnerability.id, affected_entity.id} | summarize { Vulnerabilities=count() }, by: {workloadId}], sourceField:id, lookupField:workloadId, fields:{Vulnerabilities}
     | fieldsAdd Vulnerabilities=coalesce(Vulnerabilities,0)
-    \${additionalFilter}
+    | filter "\${labelFilter}" == "" AND workload.labels[\`backstage.io/kubernetes-id\`] == "\${kubernetesId}" OR "\${kubernetesId}" == "" 
+    | filter Namespace == "\${componentNamespace}" OR "\${componentNamespace}" == ""
+    \${labelFilter}
     | fieldsAdd Logs = record({type="link", text="Show logs", url=concat(
       "\${environmentUrl}",
       "/ui/apps/dynatrace.notebooks/intent/view-query#%7B%22dt.query%22%3A%22fetch%20logs%20%7C%20filter%20matchesValue(dt.entity.cloud_application%2C%5C%22",

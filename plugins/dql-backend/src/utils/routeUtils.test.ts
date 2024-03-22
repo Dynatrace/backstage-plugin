@@ -13,72 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { generateComplexFilter, validateQueryParameters } from './routeUtils';
+import { validateQueryParameters } from './routeUtils';
 
 describe('routeUtils', () => {
-  const kubernetesFilter =
-    '| filter workload.labels[`backstage.io/kubernetes-id`] == "kubernetesId"';
-  const labelFilter = '| filter workload.labels[`label1`] == "value1"';
-  const namespaceFilter = '| filter Namespace == "namespace"';
-
-  describe('generateComplexFilter', () => {
-    it('should return a filter for all given values with the exception that the label-selector overrides the kubernetes id', () => {
-      // act
-      const filter = generateComplexFilter(
-        'kubernetesId',
-        'label1=value1',
-        'namespace',
-      );
-
-      // assert
-      expect(filter).toBe(`${labelFilter}\n${namespaceFilter}`);
-    });
-
-    it('should not return kubernetesId filter if not given', () => {
-      // act
-      const filter = generateComplexFilter(
-        undefined,
-        'label1=value1',
-        'namespace',
-      );
-
-      // assert
-      expect(filter).toBe(`${labelFilter}\n${namespaceFilter}`);
-    });
-
-    it('should not return label filter if not given', () => {
-      // act
-      const filter = generateComplexFilter(
-        'kubernetesId',
-        undefined,
-        'namespace',
-      );
-
-      // assert
-      expect(filter).toBe(`${kubernetesFilter}\n${namespaceFilter}`);
-    });
-
-    it('should not return namespace filter if not given', () => {
-      // act
-      const filter = generateComplexFilter(
-        'kubernetesId',
-        'label1=value1',
-        undefined,
-      );
-
-      // assert
-      expect(filter).toBe(`${labelFilter}`);
-    });
-
-    it('should not return any filter if none is given', () => {
-      // act
-      const filter = generateComplexFilter(undefined, undefined, undefined);
-
-      // assert
-      expect(filter).toBe('');
-    });
-  });
-
   describe('validateQueryParameters', () => {
     describe('kubernetes-deployments', () => {
       it('should fail if kubernetesId and label selector is not given', () => {
