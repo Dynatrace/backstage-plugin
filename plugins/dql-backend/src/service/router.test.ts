@@ -16,6 +16,7 @@
 import { createRouter } from './router';
 import { getVoidLogger } from '@backstage/backend-common';
 import { MockConfigApi } from '@backstage/test-utils';
+import { PluginEnvironment } from 'backend/src/types';
 import express from 'express';
 
 describe('createRouter', () => {
@@ -24,6 +25,14 @@ describe('createRouter', () => {
   beforeAll(async () => {
     const router = await createRouter({
       logger: getVoidLogger(),
+      discovery: {
+        async getBaseUrl(): Promise<string> {
+          return '';
+        },
+        async getExternalBaseUrl(): Promise<string> {
+          return '';
+        },
+      },
       config: new MockConfigApi({
         dynatrace: {
           environments: [
@@ -38,7 +47,7 @@ describe('createRouter', () => {
           ],
         },
       }),
-    });
+    } as unknown as PluginEnvironment);
     app = express().use(router);
   });
 
