@@ -19,9 +19,6 @@ export type DqlQueryApi = {
   getData(
     queryNamespace: string,
     queryName: string,
-    componentName: string,
-    componentNamespace?: string,
-    kubernetesId?: string,
-    labelSelector?: string,
+    entityRef: string,
   ): Promise<TabularData>;
 };

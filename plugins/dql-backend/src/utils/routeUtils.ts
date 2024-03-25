@@ -13,33 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ParsedQs } from 'qs';
+import { CatalogClient } from '@backstage/catalog-client';
+import { Entity } from '@backstage/catalog-model';
+import { Request } from 'express';
 
-const validateKubernetesQueryParams = (queryParams: ParsedQs) => {
-  const { kubernetesId, labelSelector } = queryParams;
-  if (!kubernetesId && !labelSelector) {
-    throw new Error(
-      'One of the query parameters is required: "kubernetesId" or "labelSelector"',
-    );
+export const getEntityFromRequest = async (
+  req: Request,
+  client: CatalogClient,
+): Promise<Entity> => {
+  const entityRef = req.query?.entityRef;
+  if (typeof entityRef !== 'string' || !entityRef) {
+    throw new Error('Invalid entity ref');
   }
-};
-
-const queryValidators: Record<
-  string,
-  (queryParams: ParsedQs) => void | undefined
-> = {
-  'kubernetes-deployments': validateKubernetesQueryParams,
-};
-
-/**
- * Validates if all required query params are set for a specific query.
- * Throws an error if some are missing
- * @param queryParams
- * @param queryId
- */
-export const validateQueryParameters = (
-  queryParams: ParsedQs,
-  queryId: string,
-): void => {
-  queryValidators[queryId]?.(queryParams);
+  const entity = await client.getEntityByRef(entityRef);
+  if (!entity) {
+    throw new Error(`Entity ref "${entityRef}" not found`);
+  }
+  return entity;
 };

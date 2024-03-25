@@ -17,6 +17,7 @@ import { useDqlQuery } from '../hooks';
 import { DqlEmptyState } from './DqlEmptyState';
 import { TabularDataTable } from './TabularDataTable';
 import { EmptyStateProps } from './types';
+import { stringifyEntityRef } from '@backstage/catalog-model';
 import { Progress, ResponseErrorPanel } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import React from 'react';
@@ -27,7 +28,6 @@ export type InternalDqlQueryProps = {
   queryName: string;
   EmptyState?: React.ComponentType<EmptyStateProps>;
   pageSize?: number;
-  isKubernetes?: boolean;
 };
 
 export const InternalDqlQuery = ({
@@ -36,21 +36,13 @@ export const InternalDqlQuery = ({
   queryName,
   EmptyState = DqlEmptyState,
   pageSize,
-  isKubernetes,
 }: InternalDqlQueryProps) => {
   const { entity } = useEntity();
   const componentName = entity.metadata.name;
-  // Observation: if metadata->namespace is not defined in the catalog, entity.metadata.namespace already sets a fallback value "default"
-  // either kubernetes annotation or metadata (kubernetes query vs rest)
-  const componentNamespace = isKubernetes
-    ? entity.metadata.annotations?.['backstage.io/kubernetes-namespace']
-    : entity.metadata.namespace ?? 'default';
   const { error, loading, value } = useDqlQuery(
     queryNamespace,
     queryName,
-    componentName,
-    componentNamespace,
-    entity.metadata.annotations,
+    stringifyEntityRef(entity),
   );
 
   if (loading) {

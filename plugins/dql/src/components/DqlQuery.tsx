@@ -46,7 +46,6 @@ const dqlQueryPropsSchema = z.object({
 export type DqlQueryProps = {
   emptyState?: React.ComponentType<EmptyStateProps>;
   pageSize?: number;
-  isKubernetes?: boolean;
 } & z.infer<typeof dqlQueryPropsSchema>;
 
 /**
@@ -66,7 +65,6 @@ export const DqlQuery = (props: DqlQueryProps) => {
         queryName={queryName}
         EmptyState={props.emptyState}
         pageSize={props.pageSize}
-        isKubernetes={props.isKubernetes}
       />
     );
   } catch (e) {

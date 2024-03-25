@@ -31,18 +31,10 @@ export class DqlQueryApiClient implements DqlQueryApi {
   async getData(
     queryNamespace: string,
     queryName: string,
-    componentName: string,
-    componentNamespace?: string,
-    kubernetesId?: string,
-    labelSelector?: string,
+    entityRef: string,
   ): Promise<TabularData> {
     const baseUrl = await this.discoveryApi.getBaseUrl('dynatrace-dql');
-    const searchParams = new URLSearchParams({
-      componentName,
-      ...(componentNamespace && { componentNamespace }),
-      ...(labelSelector && { labelSelector }),
-      ...(kubernetesId && { kubernetesId }),
-    });
+    const searchParams = new URLSearchParams({ entityRef });
     const url = `${baseUrl}/${queryNamespace}/${queryName}?${searchParams}`;
     const response = await fetch(url, {
       method: 'GET',

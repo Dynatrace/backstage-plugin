@@ -13,33 +13,69 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { validateQueryParameters } from './routeUtils';
+import { getEntityFromRequest } from './routeUtils';
+import { CatalogClient, CatalogApi } from '@backstage/catalog-client';
+import { Entity } from '@backstage/catalog-model';
+import { Request } from 'express';
+
+const mockedEntityRef = 'component:default/example';
 
 describe('routeUtils', () => {
-  describe('validateQueryParameters', () => {
-    describe('kubernetes-deployments', () => {
-      it('should fail if kubernetesId and label selector is not given', () => {
-        expect(() =>
-          validateQueryParameters({}, 'kubernetes-deployments'),
-        ).toThrow();
-      });
+  const getRequest = (ref: string) => {
+    return { query: { entityRef: ref } } as unknown as Request;
+  };
+  const getEntityByRefMock: jest.Mock<
+    ReturnType<CatalogApi['getEntityByRef']>,
+    Parameters<CatalogApi['getEntityByRef']>
+  > = jest.fn();
+  const mockedClient = {
+    getEntityByRef: getEntityByRefMock,
+  } as unknown as CatalogClient;
 
-      it('should not fail if kubernetes-label-selector is given', () => {
-        expect(() =>
-          validateQueryParameters(
-            { labelSelector: 'stage=hardening' },
-            'kubernetes-deployments',
-          ),
-        ).not.toThrow();
-      });
+  beforeEach(() => {
+    getEntityByRefMock.mockReset();
 
-      it('should not fail if kubernetesId is given', () => {
-        expect(() =>
-          validateQueryParameters(
-            { kubernetesId: 'my-id' },
-            'kubernetes-deployments',
-          ),
-        ).not.toThrow();
+    getEntityByRefMock.mockResolvedValue({
+      kind: 'component',
+      apiVersion: '1.0.0',
+      metadata: {
+        name: 'myComp',
+      },
+    });
+  });
+
+  describe('getEntityFromRequest', () => {
+    it('should fail the request if the entityRef is invalid', async () => {
+      // act, assert
+      await expect(() =>
+        getEntityFromRequest(getRequest(''), mockedClient),
+      ).rejects.toThrow('Invalid entity ref');
+    });
+
+    it('should fail the request returns undefined', async () => {
+      // arrange
+      getEntityByRefMock.mockResolvedValue(undefined);
+
+      // act, assert
+      await expect(() =>
+        getEntityFromRequest(getRequest(mockedEntityRef), mockedClient),
+      ).rejects.toThrow('Entity ref "component:default/example" not found');
+    });
+
+    it('should return the entity', async () => {
+      // act
+      const entity = await getEntityFromRequest(
+        getRequest(mockedEntityRef),
+        mockedClient,
+      );
+
+      // assert
+      expect(entity).toEqual<Entity>({
+        kind: 'component',
+        apiVersion: '1.0.0',
+        metadata: {
+          name: 'myComp',
+        },
       });
     });
   });

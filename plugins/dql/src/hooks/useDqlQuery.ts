@@ -20,22 +20,13 @@ import useAsync from 'react-use/lib/useAsync';
 export const useDqlQuery = (
   namespace: string,
   queryName: string,
-  componentName: string,
-  componentNamespace?: string,
-  annotations?: Record<string, string | undefined>,
+  entityRef: string,
 ) => {
   const dqlQueryApi = useApi(dqlQueryApiRef);
 
   const { value, loading, error } = useAsync(async () => {
-    return await dqlQueryApi.getData(
-      namespace,
-      queryName,
-      componentName,
-      componentNamespace,
-      annotations?.['backstage.io/kubernetes-id'],
-      annotations?.['backstage.io/kubernetes-label-selector'],
-    );
-  }, [dqlQueryApi, namespace, queryName, componentName, componentNamespace]);
+    return await dqlQueryApi.getData(namespace, queryName, entityRef);
+  }, [dqlQueryApi, namespace, queryName, entityRef]);
 
   return {
     error,

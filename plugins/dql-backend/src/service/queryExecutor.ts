@@ -14,29 +14,26 @@
  * limitations under the License.
  */
 import { DynatraceApi } from './dynatraceApi';
-import { dynatraceQueries } from './queries';
+import { dynatraceQueries, isValidDynatraceQueryKey } from './queries';
 import { compileDqlQuery } from './queryCompiler';
+import { Entity } from '@backstage/catalog-model';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 import { z } from 'zod';
 
-const componentQueryVariablesSchema = z
-  .object({
-    // see https://backstage.io/docs/features/software-catalog/descriptor-format#namespace-optional
-    componentNamespace: z
-      .string()
-      .max(63)
-      .regex(/^[A-Za-z0-9\-]+$/)
-      .optional(), // optional because kubernetes query does not need a namespace (may query several namespaces)
-    // see https://backstage.io/docs/features/software-catalog/descriptor-format#name-required
-    componentName: z
-      .string()
-      .max(63)
-      .regex(/^[A-Za-z0-9\-_\.]+$/),
-    additionalFilter: z.string().default(''),
-  })
-  .catchall(z.string().or(z.undefined())); // catchall is basically [key: string]: string | undefined
+const componentQueryVariablesSchema = z.object({
+  // see https://backstage.io/docs/features/software-catalog/descriptor-format#namespace-optional
+  componentNamespace: z
+    .string()
+    .max(63)
+    .regex(/^[A-Za-z0-9\-]+$/),
+  // see https://backstage.io/docs/features/software-catalog/descriptor-format#name-required
+  componentName: z
+    .string()
+    .max(63)
+    .regex(/^[A-Za-z0-9\-_\.]+$/),
+});
 
-type ComponentQueryVariables = z.input<typeof componentQueryVariablesSchema>;
+type ComponentQueryVariables = z.infer<typeof componentQueryVariablesSchema>;
 
 export class QueryExecutor {
   constructor(
@@ -48,38 +45,34 @@ export class QueryExecutor {
     queryId: string,
     variables: ComponentQueryVariables,
   ): Promise<TabularData> {
-    const query = this.queries[queryId];
-    if (!query) {
+    const dqlQuery = this.queries[queryId];
+    if (!dqlQuery) {
       throw new Error(`No custom query to the given id "${queryId}" found`);
     }
-    return this.executeQuery(query, variables);
-  }
 
-  async executeDynatraceQuery(
-    queryId: string,
-    variables: ComponentQueryVariables,
-  ): Promise<TabularData> {
-    const query = dynatraceQueries[queryId];
-    if (!query) {
-      throw new Error(`No Dynatrace query to the given id "${queryId}" found`);
-    }
-    return this.executeQuery(query, variables);
-  }
-
-  private async executeQuery(
-    dqlQuery: string,
-    variables: ComponentQueryVariables,
-  ): Promise<TabularData> {
-    const parsedVariables = componentQueryVariablesSchema.parse(variables);
-
+    componentQueryVariablesSchema.parse(variables);
     const results$ = this.apis.map(api => {
       const compiledQuery = compileDqlQuery(dqlQuery, {
-        ...parsedVariables,
+        ...variables,
         environmentName: api.environmentName,
         environmentUrl: api.environmentUrl,
       });
       return api.executeDqlQuery(compiledQuery);
     });
+    const results = await Promise.all(results$);
+    return results.flatMap(result => result);
+  }
+
+  async executeDynatraceQuery(
+    queryId: string,
+    entity: Entity,
+  ): Promise<TabularData> {
+    if (!isValidDynatraceQueryKey(queryId)) {
+      throw new Error(`No Dynatrace query to the given id "${queryId}" found`);
+    }
+    const results$ = this.apis.map(api =>
+      api.executeDqlQuery(dynatraceQueries[queryId](entity, api)),
+    );
     const results = await Promise.all(results$);
     return results.flatMap(result => result);
   }

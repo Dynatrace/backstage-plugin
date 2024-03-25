@@ -45,6 +45,8 @@ const mockDiscoveryApiUrl = (url: string): DiscoveryApi => {
   return discoveryApi;
 };
 
+const mockedEntityRef = 'component:default/example';
+
 describe('DQLQueryApiClient', () => {
   beforeAll(() => server.listen());
   beforeEach(() => jest.resetAllMocks());
@@ -56,12 +58,7 @@ describe('DQLQueryApiClient', () => {
     const discoveryApi = mockDiscoveryApiUrl('https://discovery-api.com');
     const client = new DqlQueryApiClient({ discoveryApi });
 
-    await client.getData(
-      'namespace',
-      'queryName',
-      'componentName',
-      'componentNamespace',
-    );
+    await client.getData('namespace', 'queryName', mockedEntityRef);
 
     expect(discoveryApi.getBaseUrl).toHaveBeenCalledWith('dynatrace-dql');
   });
@@ -70,10 +67,8 @@ describe('DQLQueryApiClient', () => {
     const discoveryApiUrl = 'https://discovery-api.com';
     const queryNamespace = 'namespace';
     const queryName = 'query';
-    const componentName = 'componentName^';
-    const componentNamespace = 'componentNamespace^';
     const url = `${discoveryApiUrl}/${queryNamespace}/${queryName}`;
-    const queryParams = `componentName=componentName%5E&componentNamespace=componentNamespace%5E`;
+    const queryParams = `entityRef=component%3Adefault%2Fexample`;
     mockFetchResponse([], url, queryParams);
     const discoveryApi = mockDiscoveryApiUrl(discoveryApiUrl);
     const client = new DqlQueryApiClient({ discoveryApi });
@@ -81,8 +76,7 @@ describe('DQLQueryApiClient', () => {
     const result = await client.getData(
       queryNamespace,
       queryName,
-      componentName,
-      componentNamespace,
+      mockedEntityRef,
     );
 
     expect(result).toEqual([]);
@@ -97,8 +91,7 @@ describe('DQLQueryApiClient', () => {
     const result = await client.getData(
       'queryNamespace',
       'queryName',
-      'componentName',
-      'componentNamespace',
+      mockedEntityRef,
     );
 
     expect(result).toEqual(response);
@@ -115,12 +108,7 @@ describe('DQLQueryApiClient', () => {
     const client = new DqlQueryApiClient({ discoveryApi });
 
     await expect(
-      client.getData(
-        'queryNamespace',
-        'queryName',
-        'componentName',
-        'componentNamespace',
-      ),
+      client.getData('queryNamespace', 'queryName', mockedEntityRef),
     ).rejects.toThrow('invalid json');
   });
 
@@ -130,12 +118,7 @@ describe('DQLQueryApiClient', () => {
     const client = new DqlQueryApiClient({ discoveryApi });
 
     await expect(
-      client.getData(
-        'queryNamespace',
-        'queryName',
-        'componentName',
-        'componentNamespace',
-      ),
+      client.getData('queryNamespace', 'queryName', mockedEntityRef),
     ).rejects.toThrow();
   });
 
@@ -152,12 +135,7 @@ describe('DQLQueryApiClient', () => {
     const client = new DqlQueryApiClient({ discoveryApi });
 
     await expect(
-      client.getData(
-        'queryNamespace',
-        'queryName',
-        'componentName',
-        'componentNamespace',
-      ),
+      client.getData('queryNamespace', 'queryName', mockedEntityRef),
     ).rejects.toThrow(`Query queryNamespace/queryName does not exist.`);
   });
 
@@ -174,12 +152,7 @@ describe('DQLQueryApiClient', () => {
     const client = new DqlQueryApiClient({ discoveryApi });
 
     await expect(
-      client.getData(
-        'queryNamespace',
-        'queryName',
-        'componentName',
-        'componentNamespace',
-      ),
+      client.getData('queryNamespace', 'queryName', mockedEntityRef),
     ).rejects.toThrow('Request failed with 500 Error');
   });
 });

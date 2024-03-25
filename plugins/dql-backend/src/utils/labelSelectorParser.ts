@@ -46,7 +46,7 @@ function parseKubernetesSelector(labelSelector: string): LabelKeyValue[] {
 /**
  * Parses a kubernetes label selector to a DQL filter
  * @example
- * 'backstage.io/kubernetes-label-selector': 'label1=value1,label2=value2' to "| filter workload.labels[`label1`] == value1 AND workload.labels[`label2`] == value2"
+ * 'backstage.io/kubernetes-label-selector': 'label1=value1,label2=value2' to "| filter workload.labels[`label1`] == "value1" AND workload.labels[`label2`] == "value2""
  * @param labelSelector
  */
 export function generateKubernetesSelectorFilter(
