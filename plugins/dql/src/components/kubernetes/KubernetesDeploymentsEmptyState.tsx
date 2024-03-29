@@ -20,26 +20,8 @@ import React from 'react';
 export const KubernetesDeploymentsEmptyState = ({
   componentName,
 }: EmptyStateProps) => {
-  const message = `# We could not find any Kubernetes deployments
-
-  Dynatrace does not have any data for component \`${componentName}\`.
-
-  To start tracking Kubernetes deployments, you need to deploy the Dynatrace OneAgent
-  Operator to your cluster. See the
-  [Dynatrace documentation](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-oneagent)
-  for more information.
-
-  Also, make sure that the annotation \`backstage.io/kubernetes-id\` or \`backstage.io/kubernetes-label-selector\` is set on your Backstage component:
-
-  \`\`\`yaml
-  metadata:
-    name: ${componentName}
-    annotations:
-      backstage.io/kubernetes-id: "yourid"
-  \`\`\`
-
-  If you recently added the component, it may take a few minutes for
-  Dynatrace to start reporting data.`;
+  const message = `# No Kubernetes resources
+  No resources on any known cluster for ${componentName}`;
 
   return <DynatraceMarkdownText content={message} />;
 };
