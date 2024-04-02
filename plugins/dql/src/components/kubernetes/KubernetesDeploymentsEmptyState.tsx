@@ -21,7 +21,7 @@ export const KubernetesDeploymentsEmptyState = ({
   componentName,
 }: EmptyStateProps) => {
   const message = `# No Kubernetes resources
-  No resources on any known cluster for ${componentName}`;
+  No resources on any monitored Kubernetes cluster for ${componentName} found.`;
 
   return <DynatraceMarkdownText content={message} />;
 };
