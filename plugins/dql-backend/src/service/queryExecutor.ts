@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 import { DynatraceApi } from './dynatraceApi';
-import { dynatraceQueries } from './queries';
+import { dynatraceQueries, isValidDynatraceQueryKey } from './queries';
 import { compileDqlQuery } from './queryCompiler';
+import { Entity } from '@backstage/catalog-model';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 import { z } from 'zod';
 
@@ -44,30 +45,12 @@ export class QueryExecutor {
     queryId: string,
     variables: ComponentQueryVariables,
   ): Promise<TabularData> {
-    const query = this.queries[queryId];
-    if (!query) {
+    const dqlQuery = this.queries[queryId];
+    if (!dqlQuery) {
       throw new Error(`No custom query to the given id "${queryId}" found`);
     }
-    return this.executeQuery(query, variables);
-  }
 
-  async executeDynatraceQuery(
-    queryId: string,
-    variables: ComponentQueryVariables,
-  ): Promise<TabularData> {
-    const query = dynatraceQueries[queryId];
-    if (!query) {
-      throw new Error(`No Dynatrace query to the given id "${queryId}" found`);
-    }
-    return this.executeQuery(query, variables);
-  }
-
-  private async executeQuery(
-    dqlQuery: string,
-    variables: ComponentQueryVariables,
-  ): Promise<TabularData> {
     componentQueryVariablesSchema.parse(variables);
-
     const results$ = this.apis.map(api => {
       const compiledQuery = compileDqlQuery(dqlQuery, {
         ...variables,
@@ -76,6 +59,20 @@ export class QueryExecutor {
       });
       return api.executeDqlQuery(compiledQuery);
     });
+    const results = await Promise.all(results$);
+    return results.flatMap(result => result);
+  }
+
+  async executeDynatraceQuery(
+    queryId: string,
+    entity: Entity,
+  ): Promise<TabularData> {
+    if (!isValidDynatraceQueryKey(queryId)) {
+      throw new Error(`No Dynatrace query to the given id "${queryId}" found`);
+    }
+    const results$ = this.apis.map(api =>
+      api.executeDqlQuery(dynatraceQueries[queryId](entity, api)),
+    );
     const results = await Promise.all(results$);
     return results.flatMap(result => result);
   }

@@ -192,13 +192,33 @@ deployments in your Dynatrace environment.
 />
 ```
 
-_Convention:_ Kubernetes pods with a `backstage.io/component` label will be
-listed for the corresponding Backstage component if they are properly annotated
-in the deployment descriptor:
+_Convention:_ Kubernetes pods will be listed for the corresponding Backstage
+component if they are properly annotated in the deployment descriptor. See
+[annotations](https://backstage.io/docs/features/software-catalog/descriptor-format/#annotations-optional).
+
+Example:
 
 ```yaml
-backstage.io/component: <backstage-namespace>.<backstage-component-name>
+backstage.io/kubernetes-id: kubernetesid
+backstage.io/kubernetes-namespace: namespace
+backstage.io/kubernetes-label-selector: stage=hardening,name=frontend
 ```
+
+- The annotation `backstage.io/kubernetes-id` will look for the Kubernetes label
+  `backstage.io/kubernetes-id`.
+- The annotation `backstage.io/kubernetes-namespace` will look for the
+  Kubernetes namespace.
+- The annotation `backstage.io/kubernetes-label-selector` will look for the
+  labels defined in it. So
+  `backstage.io/kubernetes-label-selector: stage=hardening,name=frontend` will
+  look for a Kubernetes label `stage` with the value `hardening` and a label
+  `name` with the value `frontend`.
+
+If a `backstage.io/kubernetes-label-selector` is given,
+`backstage.io/kubernetes-id` is ignored.
+
+If no namespace is given, it looks for all namespaces. There is no fallback to
+`default`.
 
 The query for fetching the monitoring data for Kubernetes deployments is defined
 here:

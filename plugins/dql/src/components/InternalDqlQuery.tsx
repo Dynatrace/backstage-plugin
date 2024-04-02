@@ -17,6 +17,7 @@ import { useDqlQuery } from '../hooks';
 import { DqlEmptyState } from './DqlEmptyState';
 import { TabularDataTable } from './TabularDataTable';
 import { EmptyStateProps } from './types';
+import { stringifyEntityRef } from '@backstage/catalog-model';
 import { Progress, ResponseErrorPanel } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import React from 'react';
@@ -38,12 +39,10 @@ export const InternalDqlQuery = ({
 }: InternalDqlQueryProps) => {
   const { entity } = useEntity();
   const componentName = entity.metadata.name;
-  const componentNamespace = entity.metadata.namespace ?? 'default';
   const { error, loading, value } = useDqlQuery(
     queryNamespace,
     queryName,
-    componentName,
-    componentNamespace,
+    stringifyEntityRef(entity),
   );
 
   if (loading) {
@@ -56,7 +55,6 @@ export const InternalDqlQuery = ({
     return (
       <EmptyState
         componentName={componentName}
-        componentNamespace={componentNamespace}
         queryName={queryName}
         queryNamespace={queryNamespace}
       />

@@ -13,12 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PluginEnvironment } from '../types';
-import { createRouter } from '@dynatrace/backstage-plugin-dql-backend';
-import { Router } from 'express';
+import { CatalogClient } from '@backstage/catalog-client';
+import { Entity } from '@backstage/catalog-model';
+import { Request } from 'express';
 
-export default async function createPlugin(
-  env: PluginEnvironment,
-): Promise<Router> {
-  return await createRouter(env);
-}
+export const getEntityFromRequest = async (
+  req: Request,
+  client: CatalogClient,
+): Promise<Entity> => {
+  const entityRef = req.query?.entityRef;
+  if (typeof entityRef !== 'string' || !entityRef) {
+    throw new Error('Invalid entity ref');
+  }
+  const entity = await client.getEntityByRef(entityRef);
+  if (!entity) {
+    throw new Error(`Entity ref "${entityRef}" not found`);
+  }
+  return entity;
+};

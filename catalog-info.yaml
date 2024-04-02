@@ -3,6 +3,8 @@ kind: Component
 metadata:
   name: demo-backstage
   description: Backstage Demo instance.
+  annotations:
+    backstage.io/kubernetes-id: kubernetescustom
 spec:
   type: website
   owner: user:default/mjakl

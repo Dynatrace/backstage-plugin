@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { dqlQueryApiRef } from '../api';
+import { DqlQueryApi, dqlQueryApiRef } from '../api';
 import { useDqlQuery } from './useDqlQuery';
 import { TestApiProvider } from '@backstage/test-utils';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
@@ -29,6 +29,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
     {children}
   </TestApiProvider>
 );
+const mockedEntityRef = 'component:default/example';
 
 describe('usDqlQuery', () => {
   beforeEach(() => {
@@ -37,36 +38,21 @@ describe('usDqlQuery', () => {
 
   it('should delegate to dqlQueryApi and return the result of the query', async () => {
     const { result, waitForNextUpdate } = renderHook(
-      () =>
-        useDqlQuery(
-          'queryNamespace',
-          'queryName',
-          'componentName',
-          'componentNamespace',
-        ),
+      () => useDqlQuery('queryNamespace', 'queryName', mockedEntityRef),
       { wrapper },
     );
 
     await waitForNextUpdate();
 
-    expect(MockDqlQueryApi.getData).toHaveBeenCalledWith(
-      'queryNamespace',
-      'queryName',
-      'componentName',
-      'componentNamespace',
-    );
+    expect(MockDqlQueryApi.getData).toHaveBeenCalledWith<
+      Parameters<DqlQueryApi['getData']>
+    >('queryNamespace', 'queryName', mockedEntityRef);
     expect(result.current.value).toEqual([]);
   });
 
   it('should return loading true while the query is running', async () => {
     const { result, waitForNextUpdate } = renderHook(
-      () =>
-        useDqlQuery(
-          'queryNamespace',
-          'queryName',
-          'componentName',
-          'componentNamespace',
-        ),
+      () => useDqlQuery('queryNamespace', 'queryName', mockedEntityRef),
       { wrapper },
     );
 
@@ -80,13 +66,7 @@ describe('usDqlQuery', () => {
     MockDqlQueryApi.getData.mockRejectedValue(error);
 
     const { result, waitForNextUpdate } = renderHook(
-      () =>
-        useDqlQuery(
-          'queryNamespace',
-          'queryName',
-          'componentName',
-          'componentNamespace',
-        ),
+      () => useDqlQuery('queryNamespace', 'queryName', mockedEntityRef),
       { wrapper },
     );
 
