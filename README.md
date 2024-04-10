@@ -99,10 +99,7 @@ import { Router } from 'express';
 export default async function createPlugin(
   env: PluginEnvironment,
 ): Promise<Router> {
-  return await createRouter({
-    logger: env.logger,
-    config: env.config,
-  });
+  return await createRouter(env);
 }
 ```
 
@@ -199,13 +196,15 @@ component if they are properly annotated in the deployment descriptor. See
 Example:
 
 ```yaml
-backstage.io/kubernetes-id: kubernetesid
+backstage.io/kubernetes-id: <backstage-namespace>.<backstage-component-name> *)
 backstage.io/kubernetes-namespace: namespace
 backstage.io/kubernetes-label-selector: stage=hardening,name=frontend
 ```
+*) While any value can be defined, it is recommended to set the backstage 
+  namespace followed by the component name. 
 
-- The annotation `backstage.io/kubernetes-id` will look for the Kubernetes label
-  `backstage.io/kubernetes-id`.
+- The annotation `backstage.io/kubernetes-id` 
+  will look for the Kubernetes label `backstage.io/kubernetes-id`.
 - The annotation `backstage.io/kubernetes-namespace` will look for the
   Kubernetes namespace.
 - The annotation `backstage.io/kubernetes-label-selector` will look for the
