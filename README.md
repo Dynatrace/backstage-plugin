@@ -119,6 +119,24 @@ a full example.
 
 ### Add Dynatrace Environment Connection
 
+Before configuring a Dynatrace connection, an OAuth 2.0 client is required. 
+
+<details>
+  <summary>How to create an OAuth 2.0 client</summary>
+
+  1. In Dynatrace, go to [Account Management](https://docs.dynatrace.com/docs/manage/account-management).
+  2. Select **Identity & access management** > **OAuth clients**.
+  3. Select **Create client**.
+  4. Enter a client description and the user email.
+  5. Select at least the following scopes.
+     * `storage:metrics:read` 
+     * `storage:entities:read` 
+     * `storage:events:read` 
+     * `storage:bucket:read`  
+  6. Scroll down and select **Create client**.
+  7. Copy your client ID, client secret, and Dynatrace account URN. These settings are required for the Backstage plugin [configuration](https://github.com/Dynatrace/backstage-plugin?tab=readme-ov-file#add-dynatrace-environment-connection).
+</details>
+
 Create or update the `app-config.local.yaml` file (excluded by `.gitignore`)
 configuring the connection to the Dynatrace environment:
 
