@@ -124,7 +124,7 @@ Before configuring a Dynatrace connection, an OAuth 2.0 client is required.
 <details>
   <summary>How to create an OAuth 2.0 client</summary>
 
-  1. In Dynatrace, o to [Account Management](https://docs.dynatrace.com/docs/manage/account-management).
+  1. In Dynatrace, go to [Account Management](https://docs.dynatrace.com/docs/manage/account-management).
   2. Select **Identity & access management** > **OAuth clients**.
   3. Select **Create client**.
   4. Enter a client description and the user email.
