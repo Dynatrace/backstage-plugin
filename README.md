@@ -132,7 +132,7 @@ Before configuring a Dynatrace connection, an OAuth 2.0 client is required.
      * `storage:metrics:read` 
      * `storage:entities:read` 
      * `storage:events:read` 
-     * `storage:bucket:read`  
+     * `storage:buckets:read`  
   6. Scroll down and select **Create client**.
   7. Copy your client ID, client secret, and Dynatrace account URN. These settings are required for the Backstage plugin [configuration](https://github.com/Dynatrace/backstage-plugin?tab=readme-ov-file#add-dynatrace-environment-connection).
 </details>
