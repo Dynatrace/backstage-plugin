@@ -341,6 +341,33 @@ The query returns a result of:
 ]
 ```
 
+## Help & Support
+
+This Backstage integration is an open source project. The features are fully
+supported by [Dynatrace](https://www.dynatrace.com).
+
+**Get help:**
+
+- Ask a question in the
+  [product forums](https://community.dynatrace.com/t5/Using-Dynatrace/ct-p/UsingDynatrace)
+
+**Open a GitHub issue to:**
+
+- Report minor defects, minor items, or typos
+- Ask for improvements or changes
+- Ask any questions related to the community effort
+- Contribute as per our [Contribution guidelines](#contributing)
+
+SLAs don't apply for GitHub tickets.
+
+**Customers can open a ticket on the
+[Dynatrace support portal](https://support.dynatrace.com/supportportal/) to:**
+
+- Get support from the Dynatrace technical support engineering team
+- Manage and resolve product related technical issues
+
+SLAs apply according to the customer's support level.
+
 ## Contributing
 
 Everyone is welcome to contribute to this repository. See our
