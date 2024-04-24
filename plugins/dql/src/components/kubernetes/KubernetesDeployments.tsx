@@ -15,7 +15,7 @@
  */
 import { DqlQuery } from '../DqlQuery';
 import { KubernetesDeploymentsEmptyState } from './KubernetesDeploymentsEmptyState';
-import { MissingAnnotationEmptyState } from '@backstage/core-components';
+import { MissingAnnotationEmptyState } from '@backstage/plugin-catalog-react';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import React from 'react';
 

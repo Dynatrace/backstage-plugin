@@ -30,7 +30,7 @@
     "postpack": "backstage-cli package postpack"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.22.14"
+    "@backstage/cli": "^0.26.4"
   },
   "files": [
     "dist"
