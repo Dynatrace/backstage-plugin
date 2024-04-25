@@ -37,7 +37,7 @@
     "@backstage/theme": "^0.5.3",
     "@dynatrace/backstage-plugin-dql-common": "^0.1.0",
     "@material-ui/core": "^4.12.2",
-    "@material-ui/icons": "^4.9.1",
+    "@mui/icons-material": "^5.0.0",
     "@material-ui/lab": "4.0.0-alpha.61",
     "lodash": "^4.17.21",
     "react-use": "^17.2.4",
