@@ -22,10 +22,10 @@ import scaffolder from './plugins/scaffolder';
 import search from './plugins/search';
 import techdocs from './plugins/techdocs';
 import { PluginEnvironment } from './types';
+import { HostDiscovery } from '@backstage/backend-app-api';
 import {
   CacheManager,
   DatabaseManager,
-  HostDiscovery,
   ServerTokenManager,
   UrlReaders,
   createServiceBuilder,

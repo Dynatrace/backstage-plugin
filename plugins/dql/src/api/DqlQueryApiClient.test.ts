@@ -153,6 +153,6 @@ describe('DQLQueryApiClient', () => {
 
     await expect(
       client.getData('queryNamespace', 'queryName', mockedEntityRef),
-    ).rejects.toThrow('Request failed with 500 Error');
+    ).rejects.toThrow("Request failed with 500 It's broken");
   });
 });
