@@ -119,22 +119,25 @@ a full example.
 
 ### Add Dynatrace Environment Connection
 
-Before configuring a Dynatrace connection, an OAuth 2.0 client is required. 
+Before configuring a Dynatrace connection, an OAuth 2.0 client is required.
 
 <details>
   <summary>How to create an OAuth 2.0 client</summary>
 
-  1. In Dynatrace, go to [Account Management](https://docs.dynatrace.com/docs/manage/account-management).
-  2. Select **Identity & access management** > **OAuth clients**.
-  3. Select **Create client**.
-  4. Enter a client description and the user email.
-  5. Select at least the following scopes.
-     * `storage:metrics:read` 
-     * `storage:entities:read` 
-     * `storage:events:read` 
-     * `storage:buckets:read`  
-  6. Scroll down and select **Create client**.
-  7. Copy your client ID, client secret, and Dynatrace account URN. These settings are required for the Backstage plugin [configuration](https://github.com/Dynatrace/backstage-plugin?tab=readme-ov-file#add-dynatrace-environment-connection).
+1. In Dynatrace, go to
+   [Account Management](https://docs.dynatrace.com/docs/manage/account-management).
+2. Select **Identity & access management** > **OAuth clients**.
+3. Select **Create client**.
+4. Enter a client description and the user email.
+5. Select at least the following scopes.
+   - `storage:metrics:read`
+   - `storage:entities:read`
+   - `storage:events:read`
+   - `storage:buckets:read`
+6. Scroll down and select **Create client**.
+7. Copy your client ID, client secret, and Dynatrace account URN. These settings
+are required for the Backstage plugin
+[configuration](https://github.com/Dynatrace/backstage-plugin?tab=readme-ov-file#add-dynatrace-environment-connection).
 </details>
 
 Create or update the `app-config.local.yaml` file (excluded by `.gitignore`)
@@ -218,11 +221,12 @@ backstage.io/kubernetes-id: <backstage-namespace>.<backstage-component-name> *)
 backstage.io/kubernetes-namespace: namespace
 backstage.io/kubernetes-label-selector: stage=hardening,name=frontend
 ```
-*) While any value can be defined, it is recommended to set the backstage 
-  namespace followed by the component name. 
 
-- The annotation `backstage.io/kubernetes-id` 
-  will look for the Kubernetes label `backstage.io/kubernetes-id`.
+\*) While any value can be defined, it is recommended to set the backstage
+namespace followed by the component name.
+
+- The annotation `backstage.io/kubernetes-id` will look for the Kubernetes label
+  `backstage.io/kubernetes-id`.
 - The annotation `backstage.io/kubernetes-namespace` will look for the
   Kubernetes namespace.
 - The annotation `backstage.io/kubernetes-label-selector` will look for the
