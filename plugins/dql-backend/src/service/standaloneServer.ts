@@ -16,6 +16,7 @@
 import { createRouter } from './router';
 import { createServiceBuilder } from '@backstage/backend-common';
 import { ConfigReader } from '@backstage/config';
+import { PluginEnvironment } from 'backend/src/types';
 import { Server } from 'http';
 import { Logger } from 'winston';
 
@@ -33,7 +34,15 @@ export const startStandaloneServer = async (
   const router = await createRouter({
     logger,
     config: new ConfigReader({}),
-  });
+    discovery: {
+      async getBaseUrl(pluginId: string): Promise<string> {
+        return `http://localhost:${options.port}/api/${pluginId}`;
+      },
+      async getExternalBaseUrl(pluginId: string): Promise<string> {
+        return `http://localhost:${options.port}/api/${pluginId}`;
+      },
+    },
+  } as unknown as PluginEnvironment);
 
   let service = createServiceBuilder(module)
     .setPort(options.port)

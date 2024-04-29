@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 import { QueryExecutor } from './queryExecutor';
+import { Entity } from '@backstage/catalog-model';
 
 describe('queryExecutor', () => {
   const executor = new QueryExecutor([], { 'my.id': 'myQuery' });
   const inputVariables = {
     componentNamespace: 'namespace',
     componentName: 'name',
+  };
+  const entity: Entity = {
+    apiVersion: '1.0.0',
+    kind: 'component',
+    metadata: { name: 'componentName' },
   };
 
   describe('Invalid IDs', () => {
@@ -33,7 +39,7 @@ describe('queryExecutor', () => {
     it('should throw an error if a Dynatrace query is undefined', async () => {
       // assert
       await expect(() =>
-        executor.executeDynatraceQuery('not.existing', inputVariables),
+        executor.executeDynatraceQuery('not.existing', entity),
       ).rejects.toThrow();
     });
   });
@@ -50,7 +56,7 @@ describe('queryExecutor', () => {
       // act
       const result = await executor.executeDynatraceQuery(
         'kubernetes-deployments',
-        inputVariables,
+        entity,
       );
       // assert
       expect(result).toEqual([]);

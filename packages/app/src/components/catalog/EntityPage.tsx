@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 import {
+  EntityGithubActionsContent,
+  isGithubActionsAvailable,
+} from '@backstage-community/plugin-github-actions';
+import {
   RELATION_API_CONSUMED_BY,
   RELATION_API_PROVIDED_BY,
   RELATION_CONSUMES_API,
@@ -56,10 +60,6 @@ import {
   Direction,
   EntityCatalogGraphCard,
 } from '@backstage/plugin-catalog-graph';
-import {
-  EntityGithubActionsContent,
-  isGithubActionsAvailable,
-} from '@backstage/plugin-github-actions';
 import {
   EntityGroupProfileCard,
   EntityMembersListCard,

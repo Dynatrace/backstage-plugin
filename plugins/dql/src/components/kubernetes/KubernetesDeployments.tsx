@@ -15,6 +15,8 @@
  */
 import { DqlQuery } from '../DqlQuery';
 import { KubernetesDeploymentsEmptyState } from './KubernetesDeploymentsEmptyState';
+import { MissingAnnotationEmptyState } from '@backstage/plugin-catalog-react';
+import { useEntity } from '@backstage/plugin-catalog-react';
 import React from 'react';
 
 type KubernetesDeploymentsProps = {
@@ -22,10 +24,36 @@ type KubernetesDeploymentsProps = {
   pageSize?: number;
 };
 
+const KUBERNETES_ANNOTATION = 'backstage.io/kubernetes-id';
+const KUBERNETES_LABEL_SELECTOR_QUERY_ANNOTATION =
+  'backstage.io/kubernetes-label-selector';
+
 export const KubernetesDeployments = ({
   title = 'Kubernetes Deployments',
   pageSize,
 }: KubernetesDeploymentsProps) => {
+  const { entity } = useEntity();
+  const kubernetesAnnotationValue =
+    entity.metadata.annotations?.[KUBERNETES_ANNOTATION];
+
+  const kubernetesLabelSelectorQueryAnnotationValue =
+    entity.metadata.annotations?.[KUBERNETES_LABEL_SELECTOR_QUERY_ANNOTATION];
+
+  if (
+    !kubernetesAnnotationValue &&
+    !kubernetesLabelSelectorQueryAnnotationValue
+  ) {
+    return (
+      <>
+        <MissingAnnotationEmptyState annotation={KUBERNETES_ANNOTATION} />
+        <h1>
+          Or use a label selector query, which takes precedence over the
+          previous annotation
+        </h1>
+      </>
+    );
+  }
+
   return (
     <DqlQuery
       title={title}

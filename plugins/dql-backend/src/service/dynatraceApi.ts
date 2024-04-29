@@ -75,7 +75,10 @@ const executeQuery = async (
       body: JSON.stringify(dql),
     },
   );
-  return await queryExecRes.json();
+  if (!queryExecRes.ok) {
+    throw new Error(await queryExecRes.text().catch(() => ''));
+  }
+  return queryExecRes.json();
 };
 
 const pollQuery = async <T>(
