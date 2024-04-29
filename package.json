@@ -48,7 +48,7 @@
     "lerna": "^8.0.0",
     "lint-staged": "^15.0.1",
     "node-gyp": "^10.0.0",
-    "prettier": "^2.3.2",
+    "prettier": "^3.0.0",
     "typescript": "~5.2.0",
     "@typescript-eslint/parser": "^6.20.0"
   },
