@@ -37,6 +37,7 @@ type TokenResponse = {
 type DynatraceAccessInfo = {
   url: string;
   accessToken: string;
+  identifier: string;
 };
 
 type ExecuteQueryResponse = {
@@ -61,11 +62,12 @@ const logger = getRootLogger().child({ plugin: 'dql-backend' });
 const DEFAULT_TOKEN_URL = 'https://sso.dynatrace.com/sso/oauth2/token';
 
 const executeQuery = async (
-  { url, accessToken }: DynatraceAccessInfo,
+  { url, accessToken, identifier }: DynatraceAccessInfo,
   dql: string,
 ): Promise<ExecuteQueryResponse> => {
   const queryExecRes = await dtFetch(
     `${url}/platform/storage/query/v1/query:execute`,
+    identifier,
     {
       method: 'POST',
       headers: {
@@ -82,13 +84,14 @@ const executeQuery = async (
 };
 
 const pollQuery = async <T>(
-  { url, accessToken }: DynatraceAccessInfo,
+  { url, accessToken, identifier }: DynatraceAccessInfo,
   requestToken: string,
 ): Promise<PollQueryResponse<T>> => {
   const queryPollRes = await dtFetch(
     `${url}/platform/storage/query/v1/query:poll?request-token=${encodeURIComponent(
       requestToken,
     )}`,
+    identifier,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -122,6 +125,7 @@ const waitForQueryResult = async <RecordType>(
 
 const getAccessToken = async (
   config: DynatraceEnvironmentConfig,
+  identifier: string,
 ): Promise<TokenResponse> => {
   const body = new URLSearchParams({
     grant_type: 'client_credentials',
@@ -129,13 +133,17 @@ const getAccessToken = async (
     client_secret: config.clientSecret,
     resource: config.accountUrn,
   });
-  const tokenRes = await dtFetch(config.tokenUrl ?? DEFAULT_TOKEN_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+  const tokenRes = await dtFetch(
+    config.tokenUrl ?? DEFAULT_TOKEN_URL,
+    identifier,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body,
     },
-    body,
-  });
+  );
   if (tokenRes.status !== 200) {
     logger.error(
       `Failed to get access token for environment ${config.name} (${config.url})`,
@@ -148,7 +156,10 @@ const getAccessToken = async (
 };
 
 export class DynatraceApi {
-  constructor(private readonly config: DynatraceEnvironmentConfig) {}
+  constructor(
+    private readonly config: DynatraceEnvironmentConfig,
+    private identifier: string,
+  ) {}
 
   get environmentName() {
     return this.config.name;
@@ -159,10 +170,11 @@ export class DynatraceApi {
   }
 
   async executeDqlQuery(query: string): Promise<TabularData> {
-    const tokenResponse = await getAccessToken(this.config);
+    const tokenResponse = await getAccessToken(this.config, this.identifier);
     const environment: DynatraceAccessInfo = {
       url: this.config.url,
       accessToken: tokenResponse.access_token,
+      identifier: this.identifier,
     };
 
     const execQueryRes = await executeQuery(environment, query);
