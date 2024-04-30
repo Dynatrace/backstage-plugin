@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { rest } from 'msw';
+import { http } from 'msw';
 import { setupServer } from 'msw/node';
 
 const server = setupServer();
@@ -31,11 +31,16 @@ describe('dtFetch', () => {
     }));
 
     server.use(
-      rest.get('*', (req, res, ctx) => {
-        return res(
-          ctx.json({
-            userAgent: req.headers.get('user-agent'),
+      http.get('*', ({ request }) => {
+        return new Response(
+          JSON.stringify({
+            userAgent: request.headers.get('user-agent'),
           }),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
         );
       }),
     );
