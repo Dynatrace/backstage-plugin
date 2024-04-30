@@ -15,7 +15,7 @@
  */
 import { DqlQueryApiClient } from './DqlQueryApiClient';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
-import { rest } from 'msw';
+import { http } from 'msw';
 import { setupServer } from 'msw/node';
 
 const server = setupServer();
@@ -26,23 +26,26 @@ const mockFetchResponse = (
   queryParams: string | null = null,
 ) => {
   server.use(
-    rest.get(url, (req, res, ctx) => {
+    http.get(url, ({ request }) => {
       if (
         queryParams === null ||
-        req.url.searchParams.toString() === queryParams
+        new URL(request.url).searchParams.toString() === queryParams
       ) {
-        return res(ctx.json(response));
+        return new Response(JSON.stringify(response), {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
       }
-      return res(ctx.status(404));
+      return new Response(undefined, { status: 404 });
     }),
   );
 };
 
 const mockDiscoveryApiUrl = (url: string): DiscoveryApi => {
-  const discoveryApi = {
+  return {
     getBaseUrl: jest.fn().mockResolvedValue(url),
   };
-  return discoveryApi;
 };
 
 const mockedEntityRef = 'component:default/example';
@@ -99,8 +102,8 @@ describe('DQLQueryApiClient', () => {
 
   it('should reject for non-json data', async () => {
     server.use(
-      rest.get('*', (_, res, ctx) => {
-        return res(ctx.text('not json'));
+      http.get('*', () => {
+        return new Response('not json');
       }),
     );
 
@@ -109,7 +112,7 @@ describe('DQLQueryApiClient', () => {
 
     await expect(
       client.getData('queryNamespace', 'queryName', mockedEntityRef),
-    ).rejects.toThrow('invalid json');
+    ).rejects.toThrow(/is not valid JSON/);
   });
 
   it('should reject for invalid TabularData', async () => {
@@ -126,8 +129,8 @@ describe('DQLQueryApiClient', () => {
     const statusCode = 404;
     const statusText = 'Not Found';
     server.use(
-      rest.get('*', (_, res, ctx) => {
-        return res(ctx.status(statusCode, statusText));
+      http.get('*', () => {
+        return new Response(undefined, { status: statusCode, statusText });
       }),
     );
 
@@ -143,8 +146,8 @@ describe('DQLQueryApiClient', () => {
     const statusCode = 500;
     const statusText = "It's broken";
     server.use(
-      rest.get('*', (_, res, ctx) => {
-        return res(ctx.status(statusCode, statusText));
+      http.get('*', () => {
+        return new Response(undefined, { status: statusCode, statusText });
       }),
     );
 

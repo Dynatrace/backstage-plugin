@@ -27,7 +27,15 @@
   "jest": {
     "testPathIgnorePatterns": [
       "packages"
-    ]
+    ],
+    "setupFiles": [
+      "<rootDir>/../../../jest.polyfills.js"
+    ],
+    "testEnvironmentOptions": {
+      "customExportConditions": [
+        ""
+      ]
+    }
   },
   "workspaces": {
     "packages": [
