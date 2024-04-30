@@ -37,6 +37,27 @@ describe('config-parser', () => {
       const api = result[0];
       expect(api.environmentName).toEqual(TEST_ENVIRONMENT.name);
       expect(api.environmentUrl).toEqual(TEST_ENVIRONMENT.url);
+      expect(Reflect.get(api, 'identifier')).toEqual(btoa('test'));
+    });
+
+    it('should return "unknown" if the tenant is invalid', () => {
+      const config = new MockConfigApi({
+        dynatrace: {
+          environments: [{ ...TEST_ENVIRONMENT, url: 'https://example' }],
+        },
+      });
+      const result = parseEnvironments(config);
+      const api = result[0];
+      expect(Reflect.get(api, 'identifier')).toEqual(btoa('unknown'));
+    });
+
+    it('should return "unknown" if the URL is invalid', () => {
+      const config = new MockConfigApi({
+        dynatrace: { environments: [{ ...TEST_ENVIRONMENT, url: '' }] },
+      });
+      const result = parseEnvironments(config);
+      const api = result[0];
+      expect(Reflect.get(api, 'identifier')).toEqual(btoa('unknown'));
     });
   });
 

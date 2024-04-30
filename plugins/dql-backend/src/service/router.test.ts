@@ -38,7 +38,7 @@ describe('createRouter', () => {
           environments: [
             {
               name: 'dynatrace-env-name',
-              url: 'dynatrace-envurl',
+              url: 'https://test.dynatrace.com',
               tokenUrl: 'token-url',
               clientId: 'dynatrace-client-id',
               clientSecret: 'dynatrace-client-secret',

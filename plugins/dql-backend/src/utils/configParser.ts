@@ -16,25 +16,48 @@
 import { DynatraceApi, DynatraceEnvironmentConfig } from '../service';
 import { Config } from '@backstage/config';
 
+const defaultId = 'unknown';
+
+const getId = (url: string) => {
+  try {
+    const host = new URL(url).host;
+    return host.substring(0, host.indexOf('.')) || defaultId;
+  } catch (e) {
+    return defaultId;
+  }
+};
+
+const getIdentifier = (configArray: Config[]) => {
+  return btoa(
+    configArray
+      .map(envConfig => getId(envConfig.get<DynatraceEnvironmentConfig>().url))
+      .join(','),
+  );
+};
+
 export const parseEnvironments = (config: Config): DynatraceApi[] => {
-  return config
-    .getConfigArray('dynatrace.environments')
-    .map(
-      envConfig =>
-        new DynatraceApi(envConfig.get<DynatraceEnvironmentConfig>()),
-    );
+  const configArray = config.getConfigArray('dynatrace.environments');
+
+  const identifier = getIdentifier(configArray);
+  return configArray.map(
+    envConfig =>
+      new DynatraceApi(envConfig.get<DynatraceEnvironmentConfig>(), identifier),
+  );
 };
 
 export const parseCustomQueries = (
   config: Config,
 ): Record<string, string | undefined> => {
   const queryObjects = config.getOptionalConfigArray('dynatrace.queries') ?? [];
-  return queryObjects.reduce((acc, queryObject) => {
-    const queryId = queryObject.getOptionalString('id');
-    const query = queryObject.getOptionalString('query');
-    if (queryId && query) {
-      acc[queryId] = query;
-    }
-    return acc;
-  }, {} as Record<string, string | undefined>);
+  return queryObjects.reduce(
+    (acc, queryObject) => {
+      const queryId = queryObject.getOptionalString('id');
+      const query = queryObject.getOptionalString('query');
+      if (queryId && query) {
+        acc[queryId] = query;
+      }
+      return acc;
+    },
+    {} as Record<string, string | undefined>,
+  );
 };

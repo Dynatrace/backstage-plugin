@@ -48,7 +48,7 @@ describe('dtFetch', () => {
     const dtFetchModule = await import('./dtFetch');
     const dtFetch = dtFetchModule.dtFetch;
 
-    const resp = await dtFetch('http://localhost:3000');
+    const resp = await dtFetch('http://localhost:3000', 'uuid');
     const jsonData = await resp.json();
 
     expect(jsonData.userAgent).toBe('dql-backend/1.0.0');
