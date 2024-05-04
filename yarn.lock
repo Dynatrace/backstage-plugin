@@ -2915,9 +2915,9 @@
     "@types/react" "^16.13.1 || ^17.0.0"
 
 "@backstage/core-components@^0.14.4":
-  version "0.14.5"
-  resolved "https://registry.yarnpkg.com/@backstage/core-components/-/core-components-0.14.5.tgz#5fc4fe6041058b8ee750409fbe1d218b6380a061"
-  integrity sha512-r0N/UH0CBl0PmPy3aCfACPNAl7N8s6ggyCm2r1OAOjJQDZ8PLza00AAmNe35EjXkfMOS7upeRCEe9N9tXuZ6IA==
+  version "0.14.6"
+  resolved "https://registry.yarnpkg.com/@backstage/core-components/-/core-components-0.14.6.tgz#50bfc6a418b45885cd353d5ecf49710eca661345"
+  integrity sha512-9HkJLPFG/XqMJJUIDw1DZ4Y0DUz7yjFc4227ZpIXhhC9GtDrvQQIBdZhg35Wu0CmlO6aezp7dHKs0vh4eFdS2g==
   dependencies:
     "@backstage/config" "^1.2.0"
     "@backstage/core-plugin-api" "^1.9.2"
@@ -3778,9 +3778,9 @@
     zod "^3.22.4"
 
 "@backstage/plugin-scaffolder-backend@^1.22.4":
-  version "1.22.4"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend/-/plugin-scaffolder-backend-1.22.4.tgz#8bb4b188441f0b72735687d1267af46c0c0819f6"
-  integrity sha512-g8f7hdx3/2x9cEFOKssuomBipphK2OUIL4X6gUJOsrZ7+J/Q/1daFy9RuLzVJPA0aDeirSjgE27n5wl4Mt8YJQ==
+  version "1.22.5"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend/-/plugin-scaffolder-backend-1.22.5.tgz#db81592e28ff1399742fc15f50187fab8729d97c"
+  integrity sha512-HJ9FxafG4di0tq9MZsnNoh4aY5pzLUfsE8JJiQvzEEO2geOozhs3BFEHfQ/x6wCJuleUq9FPLX4+ymmLgTIgQw==
   dependencies:
     "@backstage/backend-common" "^0.21.7"
     "@backstage/backend-plugin-api" "^0.6.17"
@@ -3825,6 +3825,7 @@
     prom-client "^15.0.0"
     uuid "^9.0.0"
     winston "^3.2.1"
+    winston-transport "^4.7.0"
     yaml "^2.0.0"
     zen-observable "^0.10.0"
     zod "^3.22.4"
@@ -9715,9 +9716,9 @@
     "@types/ssh2" "*"
 
 "@types/dockerode@^3.3.0":
-  version "3.3.28"
-  resolved "https://registry.yarnpkg.com/@types/dockerode/-/dockerode-3.3.28.tgz#8accfc7543e054481ee9ee4ab08cfebc4ac2576c"
-  integrity sha512-RjY96chW88t2QvSebCsec+mQYo3/nyOr+/tVcE+0ynlOg2m/i9wPE52DhptzF75QDlhv2uDYVPqKfHKeGTn6Fg==
+  version "3.3.29"
+  resolved "https://registry.yarnpkg.com/@types/dockerode/-/dockerode-3.3.29.tgz#7d3c99a91c381115015587a8a2a71002029e1740"
+  integrity sha512-5PRRq/yt5OT/Jf77ltIdz4EiR9+VLnPF+HpU4xGFwUqmV24Co2HKBNW3w+slqZ1CYchbcDeqJASHDYWzZCcMiQ==
   dependencies:
     "@types/docker-modem" "*"
     "@types/node" "*"
@@ -9914,9 +9915,9 @@
     "@types/node" "*"
 
 "@types/lodash@^4.17.0":
-  version "4.17.0"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.17.0.tgz#d774355e41f372d5350a4d0714abb48194a489c3"
-  integrity sha512-t7dhREVv6dbNj0q17X12j7yDG4bD/DHYX7o5/DbDxobP0HnGPgpRz2Ej77aL7TZT3DSw13fqUTj8J4mMnqa7WA==
+  version "4.17.1"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.17.1.tgz#0fabfcf2f2127ef73b119d98452bd317c4a17eb8"
+  integrity sha512-X+2qazGS3jxLAIz5JDXDzglAF3KpijdhFxlf/V1+hEsOUc+HnWi81L/uv/EvGuV90WY+7mPGFCUDGfQC3Gj95Q==
 
 "@types/long@^4.0.0":
   version "4.0.2"
@@ -9924,19 +9925,24 @@
   integrity sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==
 
 "@types/lunr@^2.3.3":
-  version "2.3.5"
-  resolved "https://registry.yarnpkg.com/@types/lunr/-/lunr-2.3.5.tgz#de3a04b085477ce1d7519c8cbdceed92f9310593"
-  integrity sha512-C4xYh7A4FRKg70AWJCe27oJYVPhUlEY5MQ4dKbRR7G6Xsb2HiqO672yWHRvWxl8/h7IuISvwDjv88ECHUEsV2A==
+  version "2.3.7"
+  resolved "https://registry.yarnpkg.com/@types/lunr/-/lunr-2.3.7.tgz#378a98ecf7a9fafc42466f67f73173c34a6265a0"
+  integrity sha512-Tb/kUm38e8gmjahQzdCKhbdsvQ9/ppzHFfsJ0dMs3ckqQsRj+P5IkSAwFTBrBxdyr3E/LoMUUrZngjDYAjiE3A==
 
-"@types/luxon@^3.0.0", "@types/luxon@~3.3.0":
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-3.3.2.tgz#f6e3524c2486b949a4db445e85d93c8e9886dfe2"
-  integrity sha512-l5cpE57br4BIjK+9BSkFBOsWtwv6J9bJpC7gdXIzZyI0vuKvNTk0wZZrkQxMGsUAuGW9+WMNWF2IJMD7br2yeQ==
+"@types/luxon@^3.0.0":
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-3.4.2.tgz#e4fc7214a420173cea47739c33cdf10874694db7"
+  integrity sha512-TifLZlFudklWlMBfhubvgqTXRzLDI5pCbGa4P8a3wPyUQSW+1xQ5eDsreP9DWHX3tjq1ke96uYG/nwundroWcA==
+
+"@types/luxon@~3.3.0":
+  version "3.3.8"
+  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-3.3.8.tgz#84dbf2d020a9209a272058725e168f21d331a67e"
+  integrity sha512-jYvz8UMLDgy3a5SkGJne8H7VA7zPV2Lwohjx0V8V31+SqAjNmurWMkk9cQhfvlcnXWudBpK9xPM1n4rljOcHYQ==
 
 "@types/mdast@^3.0.0":
-  version "3.0.13"
-  resolved "https://registry.yarnpkg.com/@types/mdast/-/mdast-3.0.13.tgz#b7ba6e52d0faeb9c493e32c205f3831022be4e1b"
-  integrity sha512-HjiGiWedR0DVFkeNljpa6Lv4/IZU1+30VY5d747K7lBudFc3R0Ibr6yJ9lN3BE28VnZyDfLF/VB1Ql1ZIbKrmg==
+  version "3.0.15"
+  resolved "https://registry.yarnpkg.com/@types/mdast/-/mdast-3.0.15.tgz#49c524a263f30ffa28b71ae282f813ed000ab9f5"
+  integrity sha512-LnwD+mUEfxWMa1QpDraczIn6k0Ee3SMicuYSSzS6ZYl2gKS09EClnJYGd8Du6rfc5r/GZEk5o1mRb8TaTj03sQ==
   dependencies:
     "@types/unist" "^2"
 
@@ -26776,9 +26782,9 @@ zod-to-json-schema@^3.20.4, zod-to-json-schema@^3.21.4:
   integrity sha512-fjUZh4nQ1s6HMccgIeE0VP4QG/YRGPmyjO9sAh890aQKPEk3nqbfUXhMFaC+Dr5KvYBm8BCyvfpZf2jY9aGSsw==
 
 zod@^3.22.4:
-  version "3.23.5"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.23.5.tgz#c7b7617d017d4a2f21852f533258d26a9a5ae09f"
-  integrity sha512-fkwiq0VIQTksNNA131rDOsVJcns0pfVUjHzLrNBiF/O/Xxb5lQyEXkhZWcJ7npWsYlvs+h0jFWXXy4X46Em1JA==
+  version "3.23.6"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.23.6.tgz#c08a977e2255dab1fdba933651584a05fcbf19e1"
+  integrity sha512-RTHJlZhsRbuA8Hmp/iNL7jnfc4nZishjsanDAfEY1QpDQZCahUp3xDzl+zfweE9BklxMUcgBgS1b7Lvie/ZVwA==
 
 zwitch@^2.0.0:
   version "2.0.4"
