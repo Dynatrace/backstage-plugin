@@ -26,7 +26,7 @@ export type DynatraceEnvironmentConfig = {
   accountUrn: string;
 };
 
-type TokenResponse = {
+export type TokenResponse = {
   scope: string;
   token_type: string;
   expires_in: number;
@@ -40,20 +40,21 @@ type DynatraceAccessInfo = {
   identifier: string;
 };
 
-type ExecuteQueryResponse = {
+export type ExecuteQueryResponse = {
   state: string;
   requestToken: string;
   ttlSeconds: number;
 };
 
-type PollQueryResponse<RecordType> = {
+export type PollQueryResponse<RecordType> = {
   state: string;
   progress: number;
   result: {
     records: RecordType[];
-    types: [
-      { indexRange: number[]; mappings: Record<string, { type: string }> },
-    ];
+    types: {
+      indexRange: number[];
+      mappings: Record<string, { type: string }>;
+    }[];
     metadata: Record<string, object>;
   };
 };
