@@ -54,6 +54,8 @@ Dyantrace Backstage plugins.
 
 ### Install Plugins
 
+> We are publishing our packages to NPM and removed the release candidate (v1.0.0-rc1) packages from the GitHub registry. If you were using the v1.0.0-rc1 packages, please update your `.yarnrc.yml` correspondingly.
+
 Install the DQL plugins into Backstage:
 
 ```bash
