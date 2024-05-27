@@ -196,7 +196,7 @@ describe('dynatraceApi', () => {
       expect(dtFetchMock).toHaveBeenCalledTimes(2);
     });
 
-    it('should ignore trailing slashe in the environment URL', async () => {
+    it('should ignore trailing slash in the environment URL', async () => {
       // act, assert
       await expect(() =>
         trailingSlashApi.executeDqlQuery('my query'),
@@ -235,7 +235,7 @@ describe('dynatraceApi', () => {
       expect(dtFetchMock).toHaveBeenCalledTimes(3);
     });
 
-    it('should ignore trailing slashe in the environment URL', async () => {
+    it('should ignore trailing slash in the environment URL', async () => {
       // act, assert
       await expect(() =>
         trailingSlashApi.executeDqlQuery('my query'),
