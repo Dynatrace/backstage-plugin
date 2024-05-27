@@ -26,7 +26,7 @@ export type DynatraceEnvironmentConfig = {
   accountUrn: string;
 };
 
-type TokenResponse = {
+export type TokenResponse = {
   scope: string;
   token_type: string;
   expires_in: number;
@@ -40,20 +40,21 @@ type DynatraceAccessInfo = {
   identifier: string;
 };
 
-type ExecuteQueryResponse = {
+export type ExecuteQueryResponse = {
   state: string;
   requestToken: string;
   ttlSeconds: number;
 };
 
-type PollQueryResponse<RecordType> = {
+export type PollQueryResponse<RecordType> = {
   state: string;
   progress: number;
   result: {
     records: RecordType[];
-    types: [
-      { indexRange: number[]; mappings: Record<string, { type: string }> },
-    ];
+    types: {
+      indexRange: number[];
+      mappings: Record<string, { type: string }>;
+    }[];
     metadata: Record<string, object>;
   };
 };
@@ -65,18 +66,15 @@ const executeQuery = async (
   { url, accessToken, identifier }: DynatraceAccessInfo,
   dql: string,
 ): Promise<ExecuteQueryResponse> => {
-  const queryExecRes = await dtFetch(
-    `${url}/platform/storage/query/v1/query:execute`,
-    identifier,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(dql),
+  const fullUrl = new URL('platform/storage/query/v1/query:execute', url);
+  const queryExecRes = await dtFetch(fullUrl, identifier, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
     },
-  );
+    body: JSON.stringify(dql),
+  });
   if (!queryExecRes.ok) {
     throw new Error(await queryExecRes.text().catch(() => ''));
   }
@@ -87,17 +85,14 @@ const pollQuery = async <T>(
   { url, accessToken, identifier }: DynatraceAccessInfo,
   requestToken: string,
 ): Promise<PollQueryResponse<T>> => {
-  const queryPollRes = await dtFetch(
-    `${url}/platform/storage/query/v1/query:poll?request-token=${encodeURIComponent(
-      requestToken,
-    )}`,
-    identifier,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+  const fullUrl = new URL('platform/storage/query/v1/query:poll', url);
+  fullUrl.searchParams.set('request-token', requestToken);
+
+  const queryPollRes = await dtFetch(fullUrl, identifier, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
     },
-  );
+  });
   if (queryPollRes.status !== 200) {
     logger.error(
       `Failed to poll query results for request token ${requestToken}`,
