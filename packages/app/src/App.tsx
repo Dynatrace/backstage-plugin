@@ -20,7 +20,11 @@ import { searchPage } from './components/search/SearchPage';
 import { TechRadarPage } from '@backstage-community/plugin-tech-radar';
 import { createApp } from '@backstage/app-defaults';
 import { AppRouter, FlatRoutes } from '@backstage/core-app-api';
-import { AlertDisplay, OAuthRequestDialog } from '@backstage/core-components';
+import {
+  AlertDisplay,
+  OAuthRequestDialog,
+  SignInPage,
+} from '@backstage/core-components';
 import { ApiExplorerPage, apiDocsPlugin } from '@backstage/plugin-api-docs';
 import {
   CatalogEntityPage,
@@ -66,6 +70,9 @@ const app = createApp({
     bind(orgPlugin.externalRoutes, {
       catalogIndex: catalogPlugin.routes.catalogIndex,
     });
+  },
+  components: {
+    SignInPage: props => <SignInPage {...props} auto providers={['guest']} />,
   },
 });
 

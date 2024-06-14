@@ -2660,6 +2660,15 @@
     yauzl "^3.0.0"
     yn "^4.0.0"
 
+"@backstage/backend-defaults@^0.2.18":
+  version "0.2.18"
+  resolved "https://registry.yarnpkg.com/@backstage/backend-defaults/-/backend-defaults-0.2.18.tgz#07055241c38ae19431247dcf453d6e572a482bfd"
+  integrity sha512-85qX2tvTMWGlrujBXy3OX0XipVEH9Zv19V/1NPPFkwEPqCfA+D2X7VBWQFFtuQ5jtoYvZgR2u9XdrUCsQ7e3ng==
+  dependencies:
+    "@backstage/backend-app-api" "^0.7.3"
+    "@backstage/backend-common" "^0.22.0"
+    "@backstage/plugin-events-node" "^0.3.4"
+
 "@backstage/backend-dev-utils@^0.1.4":
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/@backstage/backend-dev-utils/-/backend-dev-utils-0.1.4.tgz#65d204939c49b5df6a2148e8ad4dc718ccd1df07"
@@ -3242,6 +3251,18 @@
     google-auth-library "^9.0.0"
     passport-google-oauth20 "^2.0.0"
 
+"@backstage/plugin-auth-backend-module-guest-provider@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-auth-backend-module-guest-provider/-/plugin-auth-backend-module-guest-provider-0.1.4.tgz#1400820c514c72b97baa33b9e25378ef3ec1c1ce"
+  integrity sha512-Dw+TEmlXGSE3zEPIKfs+PDkuSHdPFD1o68AaGaNNMJAaDKL6diD/WUMrj3pMIVVwn834z4nSiu/Fj6O96TXlEA==
+  dependencies:
+    "@backstage/backend-common" "^0.22.0"
+    "@backstage/backend-plugin-api" "^0.6.18"
+    "@backstage/catalog-model" "^1.5.0"
+    "@backstage/errors" "^1.2.4"
+    "@backstage/plugin-auth-node" "^0.4.13"
+    passport-oauth2 "^1.7.0"
+
 "@backstage/plugin-auth-backend-module-microsoft-provider@^0.1.13":
   version "0.1.13"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-auth-backend-module-microsoft-provider/-/plugin-auth-backend-module-microsoft-provider-0.1.13.tgz#1add7c97672ba07bcbeb1d3a27257f46014618a2"
@@ -3615,6 +3636,37 @@
     pluralize "^8.0.0"
     qs "^6.10.1"
     react-use "^17.2.4"
+
+"@backstage/plugin-permission-backend-module-allow-all-policy@^0.1.15":
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-permission-backend-module-allow-all-policy/-/plugin-permission-backend-module-allow-all-policy-0.1.15.tgz#188453996e1bd64702e8bcebc2a039e4c659c2e9"
+  integrity sha512-mobDfNLVs8M+MCzUDvUbH3yQHXmEv8auoqPu6uWpuDaPk8f+8B+gl7ZZ5z2CGkM9amflsUgq7uuu0HJf6Oz8uw==
+  dependencies:
+    "@backstage/backend-plugin-api" "^0.6.18"
+    "@backstage/plugin-auth-node" "^0.4.13"
+    "@backstage/plugin-permission-common" "^0.7.13"
+    "@backstage/plugin-permission-node" "^0.7.29"
+
+"@backstage/plugin-permission-backend@^0.5.42":
+  version "0.5.42"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-permission-backend/-/plugin-permission-backend-0.5.42.tgz#0fed5dad5f039ff8e2f6871a2f64dd60acc098a3"
+  integrity sha512-PhxVDXV+KAzbOUsNADkZx/BSjGdIhlhUtr9496zQ8vy4Pbcn7pGSt03Fs2hDvQUbJMf/AIXmxWNyUulkLG4cIA==
+  dependencies:
+    "@backstage/backend-common" "^0.22.0"
+    "@backstage/backend-plugin-api" "^0.6.18"
+    "@backstage/config" "^1.2.0"
+    "@backstage/errors" "^1.2.4"
+    "@backstage/plugin-auth-node" "^0.4.13"
+    "@backstage/plugin-permission-common" "^0.7.13"
+    "@backstage/plugin-permission-node" "^0.7.29"
+    "@types/express" "*"
+    dataloader "^2.0.0"
+    express "^4.17.1"
+    express-promise-router "^4.1.0"
+    lodash "^4.17.21"
+    node-fetch "^2.6.7"
+    yn "^4.0.0"
+    zod "^3.22.4"
 
 "@backstage/plugin-permission-common@^0.7.13":
   version "0.7.13"
@@ -10147,7 +10199,7 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.5.tgz#38bd1733ae299620771bd414837ade2e57757498"
   integrity sha512-xrO9OoVPqFuYyR/loIHjnbvvyRZREYKLjxV4+dY6v3FQR3stQ9ZxIGkaclF7YhI9hfjpuTbu14hZEy94qKLtOA==
 
-"@types/react-dom@*", "@types/react-dom@<18.0.0", "@types/react-dom@^17":
+"@types/react-dom@*", "@types/react-dom@<18.0.0":
   version "17.0.25"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.25.tgz#e0e5b3571e1069625b3a3da2b279379aa33a0cb5"
   integrity sha512-urx7A7UxkZQmThYA4So0NelOVjx3V4rNFVJwp0WZlbIK5eM4rNJDiN3R/E9ix0MBh6kAEojk/9YL+Te6D9zHNA==
@@ -20730,6 +20782,11 @@ oauth-sign@~0.9.0:
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.9.0.tgz#47a7b016baa68b5fa0ecf3dee08a85c679ac6455"
   integrity sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ==
 
+oauth@0.10.x:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/oauth/-/oauth-0.10.0.tgz#3551c4c9b95c53ea437e1e21e46b649482339c58"
+  integrity sha512-1orQ9MT1vHFGQxhuy7E/0gECD3fd2fCC+PIX+/jgmU/gI3EpRocXtmtvxCO5x3WZ443FLTLFWNDjl5MPJf9u+Q==
+
 oauth@0.9.x:
   version "0.9.15"
   resolved "https://registry.yarnpkg.com/oauth/-/oauth-0.9.15.tgz#bd1fefaf686c96b75475aed5196412ff60cfb9c1"
@@ -21426,6 +21483,17 @@ passport-oauth2@1.x.x, passport-oauth2@^1.1.2, passport-oauth2@^1.4.0, passport-
   dependencies:
     base64url "3.x.x"
     oauth "0.9.x"
+    passport-strategy "1.x.x"
+    uid2 "0.0.x"
+    utils-merge "1.x.x"
+
+passport-oauth2@^1.7.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/passport-oauth2/-/passport-oauth2-1.8.0.tgz#55725771d160f09bbb191828d5e3d559eee079c8"
+  integrity sha512-cjsQbOrXIDE4P8nNb3FQRCCmJJ/utnFKEz2NX209f7KOHPoX18gF7gBzBbLLsj2/je4KrgiwLLGjf0lm9rtTBA==
+  dependencies:
+    base64url "3.x.x"
+    oauth "0.10.x"
     passport-strategy "1.x.x"
     uid2 "0.0.x"
     utils-merge "1.x.x"
