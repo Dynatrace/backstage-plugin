@@ -32,7 +32,7 @@ backend.add(import('@backstage/plugin-scaffolder-backend/alpha'));
 backend.add(import('@backstage/plugin-search-backend/alpha'));
 backend.add(import('@backstage/plugin-techdocs-backend/alpha'));
 
-// Todo
-// import dql from './plugins/dynatrace-dql';
+// Dynatrace Plugin
+backend.add(import('@dynatrace/backstage-plugin-dql-backend'));
 
 backend.start();

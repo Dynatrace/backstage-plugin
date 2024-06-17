@@ -32,12 +32,16 @@ export class DqlQueryApiClient implements DqlQueryApi {
     queryNamespace: string,
     queryName: string,
     entityRef: string,
+    identityToken: string,
   ): Promise<TabularData> {
     const baseUrl = await this.discoveryApi.getBaseUrl('dynatrace-dql');
     const searchParams = new URLSearchParams({ entityRef });
     const url = `${baseUrl}/${queryNamespace}/${queryName}?${searchParams}`;
     const response = await fetch(url, {
       method: 'GET',
+      headers: {
+        Authorization: `Bearer ${identityToken}`,
+      },
     });
 
     if (response.status === 404) {
