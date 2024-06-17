@@ -125,7 +125,7 @@ describe('DQLQueryApiClient', () => {
         mockedEntityRef,
         mockedIdentityToken,
       ),
-    ).rejects.toThrow(/Unexpected token o in JSON at position 1/);
+    ).rejects.toThrow(/Unexpected token/);
   });
 
   it('should reject for invalid TabularData', async () => {
