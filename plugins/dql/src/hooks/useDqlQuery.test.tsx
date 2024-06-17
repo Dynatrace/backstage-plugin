@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { identityApiRef } from '@backstage/core-plugin-api';
 import { DqlQueryApi, dqlQueryApiRef } from '../api';
 import { useDqlQuery } from './useDqlQuery';
 import { TestApiProvider } from '@backstage/test-utils';
@@ -23,15 +24,20 @@ import React, { ReactNode } from 'react';
 const MockDqlQueryApi = {
   getData: jest.fn().mockResolvedValue([] as TabularData),
 };
+const MockIdentityApi = {
+  getCredentials: jest.fn().mockResolvedValue({ token: 'mock-token' }),
+};
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <TestApiProvider apis={[[dqlQueryApiRef, MockDqlQueryApi]]}>
-    {children}
+    <TestApiProvider apis={[[identityApiRef, MockIdentityApi]]}>
+      {children}
+    </TestApiProvider>
   </TestApiProvider>
 );
 const mockedEntityRef = 'component:default/example';
 
-describe('usDqlQuery', () => {
+describe('useDqlQuery', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -46,7 +52,7 @@ describe('usDqlQuery', () => {
 
     expect(MockDqlQueryApi.getData).toHaveBeenCalledWith<
       Parameters<DqlQueryApi['getData']>
-    >('queryNamespace', 'queryName', mockedEntityRef);
+    >('queryNamespace', 'queryName', mockedEntityRef, expect.anything());
     expect(result.current.value).toEqual([]);
   });
 
@@ -64,6 +70,20 @@ describe('usDqlQuery', () => {
   it('should return error if the query fails', async () => {
     const error = new Error('test');
     MockDqlQueryApi.getData.mockRejectedValue(error);
+
+    const { result, waitForNextUpdate } = renderHook(
+      () => useDqlQuery('queryNamespace', 'queryName', mockedEntityRef),
+      { wrapper },
+    );
+
+    await waitForNextUpdate();
+
+    expect(result.current.error).toEqual(error);
+  });
+
+  it('should return error if identity api fails to retrieve credentials', async () => {
+    const error = new Error('Failed to get identity token');
+    MockIdentityApi.getCredentials.mockResolvedValue({});
 
     const { result, waitForNextUpdate } = renderHook(
       () => useDqlQuery('queryNamespace', 'queryName', mockedEntityRef),

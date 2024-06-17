@@ -20,6 +20,7 @@ import { TabularDataTable } from './TabularDataTable';
 import { EmptyStateProps } from './types';
 import { Entity } from '@backstage/catalog-model';
 import { ResponseErrorPanel } from '@backstage/core-components';
+import { IdentityApi, identityApiRef } from '@backstage/core-plugin-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { TestApiProvider, renderInTestApp } from '@backstage/test-utils';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
@@ -65,10 +66,14 @@ const mockDqlQueryApi = (data: TabularData = []) => {
     getData: jest.fn().mockResolvedValue(data),
   };
 };
+const MockIdentityApi = {
+  getCredentials: jest.fn().mockResolvedValue({ token: 'mock-token' }),
+};
 
 type PrepareComponentProps = {
   entity?: Entity;
   queryApi?: DqlQueryApi;
+  identityApi?: Partial<IdentityApi>;
   title?: string;
   queryNamespace?: string;
   queryName?: string;
@@ -78,6 +83,7 @@ type PrepareComponentProps = {
 const prepareComponent = async ({
   entity = mockEntity(),
   queryApi = mockDqlQueryApi(),
+  identityApi = MockIdentityApi,
   title = 'some title',
   queryNamespace = 'dynatrace',
   queryName = 'query-id-1',
@@ -86,12 +92,14 @@ const prepareComponent = async ({
   return await renderInTestApp(
     <EntityProvider entity={entity}>
       <TestApiProvider apis={[[dqlQueryApiRef, queryApi]]}>
-        <InternalDqlQuery
-          title={title}
-          queryNamespace={queryNamespace}
-          queryName={queryName}
-          EmptyState={EmptyState}
-        />
+        <TestApiProvider apis={[[identityApiRef, identityApi]]}>
+          <InternalDqlQuery
+            title={title}
+            queryNamespace={queryNamespace}
+            queryName={queryName}
+            EmptyState={EmptyState}
+          />
+        </TestApiProvider>
       </TestApiProvider>
     </EntityProvider>,
   );
@@ -133,7 +141,7 @@ describe('DqlQuery', () => {
 
     expect(queryApi.getData).toHaveBeenCalledWith<
       Parameters<DqlQueryApi['getData']>
-    >(expect.anything(), expect.anything(), mockedEntityRef);
+    >(expect.anything(), expect.anything(), mockedEntityRef, expect.anything());
   });
 
   it('should render an error panel in case of errors', async () => {

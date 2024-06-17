@@ -15,6 +15,7 @@
  */
 import { getEntityFromRequest } from './routeUtils';
 import { CatalogClient, CatalogApi } from '@backstage/catalog-client';
+import { AuthService } from '@backstage/backend-plugin-api';
 import { Entity } from '@backstage/catalog-model';
 import { Request } from 'express';
 
@@ -32,6 +33,18 @@ describe('routeUtils', () => {
     getEntityByRef: getEntityByRefMock,
   } as unknown as CatalogClient;
 
+  const getPluginRequestTokenMock: jest.Mock<
+    Awaited<ReturnType<AuthService['getPluginRequestToken']>>
+  > = jest.fn().mockResolvedValue({ token: 'mock-token' });
+
+  const getOwnServiceCredentialsMock: jest.Mock<
+    Awaited<ReturnType<AuthService['getOwnServiceCredentials']>>
+  > = jest.fn();
+  const mockedAuth = {
+    getPluginRequestToken: getPluginRequestTokenMock,
+    getOwnServiceCredentials: getOwnServiceCredentialsMock,
+  } as unknown as AuthService;
+
   beforeEach(() => {
     getEntityByRefMock.mockReset();
 
@@ -48,7 +61,7 @@ describe('routeUtils', () => {
     it('should fail the request if the entityRef is invalid', async () => {
       // act, assert
       await expect(() =>
-        getEntityFromRequest(getRequest(''), mockedClient),
+        getEntityFromRequest(getRequest(''), mockedClient, mockedAuth),
       ).rejects.toThrow('Invalid entity ref');
     });
 
@@ -58,7 +71,11 @@ describe('routeUtils', () => {
 
       // act, assert
       await expect(() =>
-        getEntityFromRequest(getRequest(mockedEntityRef), mockedClient),
+        getEntityFromRequest(
+          getRequest(mockedEntityRef),
+          mockedClient,
+          mockedAuth,
+        ),
       ).rejects.toThrow('Entity ref "component:default/example" not found');
     });
 
@@ -67,6 +84,7 @@ describe('routeUtils', () => {
       const entity = await getEntityFromRequest(
         getRequest(mockedEntityRef),
         mockedClient,
+        mockedAuth,
       );
 
       // assert
