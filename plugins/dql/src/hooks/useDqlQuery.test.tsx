@@ -29,10 +29,13 @@ const MockIdentityApi = {
 };
 
 const wrapper = ({ children }: { children: ReactNode }) => (
-  <TestApiProvider apis={[[dqlQueryApiRef, MockDqlQueryApi]]}>
-    <TestApiProvider apis={[[identityApiRef, MockIdentityApi]]}>
-      {children}
-    </TestApiProvider>
+  <TestApiProvider
+    apis={[
+      [dqlQueryApiRef, MockDqlQueryApi],
+      [identityApiRef, MockIdentityApi],
+    ]}
+  >
+    {children}
   </TestApiProvider>
 );
 const mockedEntityRef = 'component:default/example';

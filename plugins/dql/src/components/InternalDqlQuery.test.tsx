@@ -91,15 +91,18 @@ const prepareComponent = async ({
 }: PrepareComponentProps = {}) => {
   return await renderInTestApp(
     <EntityProvider entity={entity}>
-      <TestApiProvider apis={[[dqlQueryApiRef, queryApi]]}>
-        <TestApiProvider apis={[[identityApiRef, identityApi]]}>
-          <InternalDqlQuery
-            title={title}
-            queryNamespace={queryNamespace}
-            queryName={queryName}
-            EmptyState={EmptyState}
-          />
-        </TestApiProvider>
+      <TestApiProvider
+        apis={[
+          [dqlQueryApiRef, queryApi],
+          [identityApiRef, identityApi],
+        ]}
+      >
+        <InternalDqlQuery
+          title={title}
+          queryNamespace={queryNamespace}
+          queryName={queryName}
+          EmptyState={EmptyState}
+        />
       </TestApiProvider>
     </EntityProvider>,
   );
