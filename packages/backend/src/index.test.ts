@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PluginEnvironment } from './types';
-
 describe('test', () => {
   it('unbreaks the test runner', () => {
-    const unbreaker = {} as PluginEnvironment;
+    const unbreaker = {} as unknown;
     expect(unbreaker).toBeTruthy();
   });
 });

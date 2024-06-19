@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export * from './service';
+export { dqlPlugin as default } from './plugin';

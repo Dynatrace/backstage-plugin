@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { dqlQueryApiRef } from '../api';
-import { useApi } from '@backstage/core-plugin-api';
+import { useApi, identityApiRef } from '@backstage/core-plugin-api';
 import useAsync from 'react-use/lib/useAsync';
 
 export const useDqlQuery = (
@@ -23,9 +23,15 @@ export const useDqlQuery = (
   entityRef: string,
 ) => {
   const dqlQueryApi = useApi(dqlQueryApiRef);
+  const identityApi = useApi(identityApiRef);
 
   const { value, loading, error } = useAsync(async () => {
-    return await dqlQueryApi.getData(namespace, queryName, entityRef);
+    const { token } = await identityApi.getCredentials();
+    if (!token) {
+      throw new Error(`Failed to get identity token`);
+    }
+
+    return await dqlQueryApi.getData(namespace, queryName, entityRef, token);
   }, [dqlQueryApi, namespace, queryName, entityRef]);
 
   return {

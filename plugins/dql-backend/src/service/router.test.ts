@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createRouter } from './router';
+import { RouterOptions, createRouter } from './router';
 import { getVoidLogger } from '@backstage/backend-common';
 import { MockConfigApi } from '@backstage/test-utils';
-import { PluginEnvironment } from 'backend/src/types';
 import express from 'express';
 
 describe('createRouter', () => {
@@ -47,7 +46,7 @@ describe('createRouter', () => {
           ],
         },
       }),
-    } as unknown as PluginEnvironment);
+    } as unknown as RouterOptions);
     app = express().use(router);
   });
 

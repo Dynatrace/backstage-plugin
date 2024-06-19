@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createRouter } from './router';
+import { RouterOptions, createRouter } from './router';
 import { createServiceBuilder } from '@backstage/backend-common';
 import { ConfigReader } from '@backstage/config';
-import { PluginEnvironment } from 'backend/src/types';
 import { Server } from 'http';
 import { Logger } from 'winston';
 
@@ -42,7 +41,7 @@ export const startStandaloneServer = async (
         return `http://localhost:${options.port}/api/${pluginId}`;
       },
     },
-  } as unknown as PluginEnvironment);
+  } as unknown as RouterOptions);
 
   let service = createServiceBuilder(module)
     .setPort(options.port)

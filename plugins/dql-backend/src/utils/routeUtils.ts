@@ -15,17 +15,28 @@
  */
 import { CatalogClient } from '@backstage/catalog-client';
 import { Entity } from '@backstage/catalog-model';
+import { AuthService } from '@backstage/backend-plugin-api';
 import { Request } from 'express';
 
 export const getEntityFromRequest = async (
   req: Request,
   client: CatalogClient,
+  auth: AuthService,
 ): Promise<Entity> => {
   const entityRef = req.query?.entityRef;
   if (typeof entityRef !== 'string' || !entityRef) {
     throw new Error('Invalid entity ref');
   }
-  const entity = await client.getEntityByRef(entityRef);
+
+  const { token } = await auth.getPluginRequestToken({
+    onBehalfOf: await auth.getOwnServiceCredentials(),
+    targetPluginId: 'catalog',
+  });
+  if (!token) {
+    throw new Error(`Failed to get service token`);
+  }
+
+  const entity = await client.getEntityByRef(entityRef, { token });
   if (!entity) {
     throw new Error(`Entity ref "${entityRef}" not found`);
   }

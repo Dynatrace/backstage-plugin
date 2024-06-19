@@ -54,7 +54,9 @@ Dyantrace Backstage plugins.
 
 ### Install Plugins
 
-> We are publishing our packages to NPM and removed the release candidate (v1.0.0-rc1) packages from the GitHub registry. If you were using the v1.0.0-rc1 packages, please update your `.yarnrc.yml` correspondingly.
+> We are publishing our packages to NPM and removed the release candidate
+> (v1.0.0-rc1) packages from the GitHub registry. If you were using the
+> v1.0.0-rc1 packages, please update your `.yarnrc.yml` correspondingly.
 
 Install the DQL plugins into Backstage:
 
@@ -88,32 +90,15 @@ Add the DQL plugin to the respective component type pages in your
 See the `EntityPage.tsx` file in this repository
 (`packages/app/src/components/catalog/EntityPage.tsx`) for a full example.
 
-### Integrate the DQL Plugin
+### Integrate the DQL Backend Plugin
 
-Add a `dynatrace-dql.ts` file to your `packages/backend/src/plugins` folder. For
-example:
-
-```ts
-import { PluginEnvironment } from '../types';
-import { createRouter } from '@dynatrace/backstage-plugin-dql-backend';
-import { Router } from 'express';
-
-export default async function createPlugin(
-  env: PluginEnvironment,
-): Promise<Router> {
-  return await createRouter(env);
-}
-```
-
-Add the DQL backend plugin to your `main()` in
-`packages/backend/src/plugins/catalog.ts`:
+Add the DQL backend plugin to in `packages/backend/src/index.ts`:
 
 ```ts
-import dql from './plugins/dynatrace-dql';
-
-const dynatraceDqlEnv = useHotMemoize(module, () => createEnv('dynatrace-dql'));
-
-apiRouter.use('/dynatrace-dql', await dql(dynatraceDqlEnv));
+const backend = createBackend();
+...
+backend.add(import('@dynatrace/backstage-plugin-dql-backend'));
+...
 ```
 
 See the `index.ts` file in this repository (`packages/backend/src/index.ts`) for
