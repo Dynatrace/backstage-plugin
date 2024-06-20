@@ -13,10 +13,16 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Dynatrace/backstage-plugin.git",
-    "directory": "plugins/dql"
+    "directory": "plugins\\dql"
   },
   "backstage": {
-    "role": "frontend-plugin"
+    "role": "frontend-plugin",
+    "pluginId": "dql",
+    "pluginPackages": [
+      "@dynatrace/backstage-plugin-dql",
+      "@dynatrace/backstage-plugin-dql-backend",
+      "@dynatrace/backstage-plugin-dql-common"
+    ]
   },
   "sideEffects": false,
   "scripts": {
