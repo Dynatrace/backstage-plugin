@@ -40,7 +40,7 @@
     "@backstage/plugin-techdocs-backend": "^1.10.5",
     "@dynatrace/backstage-plugin-dql-backend": "^0.1.0",
     "app": "link:../app",
-    "better-sqlite3": "^9.0.0",
+    "better-sqlite3": "^11.0.0",
     "dockerode": "^4.0.0",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
