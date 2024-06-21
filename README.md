@@ -61,18 +61,9 @@ Dyantrace Backstage plugins.
 Install the DQL plugins into Backstage:
 
 ```bash
-cd packages/app
-yarn add @dynatrace/backstage-plugin-dql
-```
-
-```bash
-cd packages/backend
-yarn add @dynatrace/backstage-plugin-dql-backend
-```
-
-```bash
-cd packages/backend
-yarn add @dynatrace/backstage-plugin-dql-common
+yarn --cwd packages/app add @dynatrace/backstage-plugin-dql
+yarn --cwd packages/app backend @dynatrace/backstage-plugin-dql-backend
+yarn --cwd packages/app backend @dynatrace/backstage-plugin-dql-common
 ```
 
 ### Integrate the `EntityDqlQueryCard`
