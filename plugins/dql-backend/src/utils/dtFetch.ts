@@ -21,7 +21,7 @@ import fetch, { RequestInfo, RequestInit, Response } from 'node-fetch';
 const userAgent: string = getUserAgent();
 const agent = process.env.HTTP_PROXY
   ? new HttpsProxyAgent(process.env.HTTP_PROXY)
-  : ('' as any);
+  : undefined;
 
 export const dtFetch = (
   url: RequestInfo,
