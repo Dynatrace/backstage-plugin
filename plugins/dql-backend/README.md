@@ -14,5 +14,6 @@ on [localhost:7007/dql](http://localhost:7007/dql).
 
 ## Behind a corporate proxy
 
-If you are application is behind a corporate proxy. set HTTP_PROXY as
-environment variable. It will pass to HttpsProxyAgent in fetch request.
+If your application is behind a corporate proxy, set `HTTP_PROXY` as an
+environment variable. This will be passed to `HttpsProxyAgent` as `agent` in the
+fetch request.
