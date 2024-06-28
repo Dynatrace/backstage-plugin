@@ -11,3 +11,9 @@ against it.
 
 The backend can be started locally using `yarn start`, this starts the backend
 on [localhost:7007/dql](http://localhost:7007/dql).
+
+## Behind a corporate proxy
+
+If your application is behind a corporate proxy, set `HTTP_PROXY` as an
+environment variable. This will be passed to `HttpsProxyAgent` as `agent` in the
+fetch request.

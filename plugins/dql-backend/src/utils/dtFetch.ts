@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { getUserAgent } from './userAgent';
-import fetch, { RequestInfo, RequestInit, Response } from 'node-fetch';
 import packageJson from '../../package.json';
+import { getUserAgent } from './userAgent';
+import { HttpsProxyAgent } from 'https-proxy-agent';
+import fetch, { RequestInfo, RequestInit, Response } from 'node-fetch';
 
 const userAgent: string = getUserAgent();
+const agent = process.env.HTTP_PROXY
+  ? new HttpsProxyAgent(process.env.HTTP_PROXY)
+  : undefined;
 
 export const dtFetch = (
   url: RequestInfo,
@@ -31,5 +35,5 @@ export const dtFetch = (
     Referer: `backstage-plugin@${packageJson.version ?? '1.0.0'}/${identifier}`,
   };
 
-  return fetch(url, options);
+  return fetch(url, { ...options, agent });
 };
