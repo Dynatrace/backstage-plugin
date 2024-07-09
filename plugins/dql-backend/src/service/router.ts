@@ -24,6 +24,7 @@ import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { LoggerService, AuthService } from '@backstage/backend-plugin-api';
 import { CatalogClient } from '@backstage/catalog-client';
 import { Config } from '@backstage/config';
+import { EntityQuery } from '@dynatrace/backstage-plugin-dql/src/components/types';
 import express from 'express';
 import Router from 'express-promise-router';
 
@@ -57,7 +58,7 @@ export const createRouter = async (
     const entity = await getEntityFromRequest(req, catalogClient, auth);
     const queryId: number = Number(req.params.queryId);
     const result = await queryExecutor.executeCustomCatalogQueries(
-      entity.spec?.queries?.at(queryId),
+      (entity.spec?.queries as EntityQuery[])?.[queryId],
       {
         componentNamespace: entity.metadata.namespace ?? 'default',
         componentName: entity.metadata.name,
