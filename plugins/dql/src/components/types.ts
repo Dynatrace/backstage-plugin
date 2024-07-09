@@ -19,3 +19,14 @@ export type EmptyStateProps = {
   queryName: string;
   queryNamespace: string;
 };
+
+export type EntityQuery = {
+  /**
+   * The description of the query.
+   */
+  name: string;
+  /**
+   * The query itself.
+   */
+  query: string;
+};

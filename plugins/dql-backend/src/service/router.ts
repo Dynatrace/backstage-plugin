@@ -20,10 +20,10 @@ import {
   createLegacyAuthAdapters,
   errorHandler,
 } from '@backstage/backend-common';
-import { CatalogClient } from '@backstage/catalog-client';
-import { LoggerService, AuthService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import { LoggerService, AuthService } from '@backstage/backend-plugin-api';
+import { CatalogClient } from '@backstage/catalog-client';
+import { Config } from '@backstage/config';
 import express from 'express';
 import Router from 'express-promise-router';
 
@@ -52,6 +52,20 @@ export const createRouter = async (
 
   const router = Router();
   router.use(express.json());
+
+  router.get('/catalog/:queryId', async (req, res) => {
+    const entity = await getEntityFromRequest(req, catalogClient, auth);
+    const queryId: number = Number(req.params.queryId);
+    const result = await queryExecutor.executeCustomCatalogQueries(
+      entity.spec?.queries?.at(queryId),
+      {
+        componentNamespace: entity.metadata.namespace ?? 'default',
+        componentName: entity.metadata.name,
+      },
+    );
+
+    return res.json(result);
+  });
 
   router.get('/custom/:queryId', async (req, res) => {
     const entity = await getEntityFromRequest(req, catalogClient, auth);

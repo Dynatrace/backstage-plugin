@@ -70,6 +70,7 @@ import { EntityTechdocsContent } from '@backstage/plugin-techdocs';
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import {
+  EntityCatalogInfoQueryCard,
   EntityDqlQueryCard,
   EntityKubernetesDeploymentsCard,
 } from '@dynatrace/backstage-plugin-dql';
@@ -245,6 +246,12 @@ const websiteEntityPage = (
             title="Davis Events"
             queryId="custom.davis-events"
           />
+        </TabbedLayout.Route>
+        <TabbedLayout.Route
+          path="/example-catalog-queries"
+          title="Example Catalog Queries"
+        >
+          <EntityCatalogInfoQueryCard />
         </TabbedLayout.Route>
       </TabbedLayout>
     </EntityLayout.Route>

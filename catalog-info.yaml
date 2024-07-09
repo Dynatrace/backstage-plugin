@@ -10,6 +10,33 @@ spec:
   owner: user:default/mjakl
   lifecycle: experimental
   system: integrations
+  queries:
+    - name: Error Logs
+      query: >
+        fetch logs, from: -2d
+                | filter status == "ERROR"
+                | sort timestamp desc
+                | fieldsAdd content=if(isNull(content), "N/A", else: content)
+                | fieldsAdd source=if(isNull(log.source), "N/A", else: log.source)
+                | fieldsAdd host=if(isNull(host.name), "N/A", else: host.name)
+                | fieldsKeep timestamp, source, content, host
+    - name: Problem Events
+      query: >
+        fetch events, from: -2d
+                | filter event.kind=="DAVIS_PROBLEM"
+                | fieldsAdd category=if(isNull(event.category), "N/A", else: event.category)
+                | fieldsAdd id=if(isNull(event.id), "N/A", else: event.id)
+                | fieldsAdd status=if(isNull(event.status), "N/A", else: event.status)
+                | fieldsAdd name=if(isNull(event.name), "N/A", else: event.name)
+                | fieldsKeep timestamp, event.category, id, name, status
+    - name: Security Vulnerabilities
+      query: >
+        fetch events, from: -2d
+                | filter event.provider=="Dynatrace"
+                | filter event.kind=="SECURITY_EVENT"
+                | filter event.type=="VULNERABILITY_STATUS_CHANGE_EVENT"
+                | filter event.level=="VULNERABILITY"
+                | fieldsKeep timestamp, event.status, vulnerability.display_id, event.id, vulnerability.title, vulnerability.risk.level, vulnerability.display_id
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component

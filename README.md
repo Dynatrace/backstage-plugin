@@ -298,6 +298,47 @@ by its ID with the `custom.` prefix:
 />
 ```
 
+### Custom Queries within catalog-info.yaml file of the Backstage Entity
+
+You can also register your custom queries in the catalog-info.yaml file.
+
+```yaml
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: demo-backstage
+  description: Backstage Demo instance.
+  annotations:
+    backstage.io/kubernetes-id: kubernetescustom
+spec:
+  type: website
+  owner: user:default/mjakl
+  lifecycle: experimental
+  system: integrations
+  queries:
+    - name: Fetch all Davis events 1
+      query: >
+        fetch events | filter event.kind == "DAVIS_EVENT" | fields event.kind,
+        timestamp
+```
+
+As mentioned before, queries can contain placeholders. In the catalog-info.yaml
+file, the placeholders are prefixed with a single `$`. For example:
+
+- `${environmentName}`
+- `${environmentUrl}`
+
+To include the result tables for the custom queries of the entity, you would
+use:
+
+```jsx
+<EntityCatalogInfoQueryCard />
+```
+
+This component displays a result table for each query. The order in which the
+tables are displayed depends on the order of the entity's queries defined in the
+catalog-info.yaml file.
+
 ### Backlink to Dynatrace
 
 To link from a table cell to a Dynatrace app, the DQL query must contain a
