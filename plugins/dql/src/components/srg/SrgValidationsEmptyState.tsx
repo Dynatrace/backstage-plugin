@@ -13,11 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { EmptyStateProps } from '..';
+import { DynatraceMarkdownText } from '../DynatraceMarkdownText';
+import React from 'react';
 
-export { DqlQuery } from './DqlQuery';
-export type { DqlQueryProps } from './DqlQuery';
-export { CatalogInfoQuery } from './CatalogInfoQuery';
-export type { CatalogInfoQueryProps } from './CatalogInfoQuery';
-export { KubernetesDeployments } from './kubernetes';
-export { SrgValidatons } from './srg';
-export type { EmptyStateProps } from './types';
+export const SrgValidationsEmptyState = ({
+  componentName,
+}: EmptyStateProps) => {
+  const message = `# No Site Reliability Guardian resources
+  No Site Reliability Guardians for ${componentName} found.
+  
+  Do not hesitate to integrate Site Reliability Guardians! 
+  [View this for more information.](https://docs.dynatrace.com/docs/platform-modules/automations/site-reliability-guardian)
+`;
+
+  return <DynatraceMarkdownText content={message} />;
+};

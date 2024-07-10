@@ -64,3 +64,12 @@ export const EntityKubernetesDeploymentsCard = dqlQueryPlugin.provide(
     },
   }),
 );
+
+export const EntitySrgValidationsCard = dqlQueryPlugin.provide(
+  createComponentExtension({
+    name: 'EntitySrgValidationsCard',
+    component: {
+      lazy: () => import('./components').then(m => m.SrgValidatons),
+    },
+  }),
+);

@@ -13,11 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { DqlQuery } from '../DqlQuery';
+import { SrgValidationsEmptyState } from './SrgValidationsEmptyState';
+import React from 'react';
 
-export { DqlQuery } from './DqlQuery';
-export type { DqlQueryProps } from './DqlQuery';
-export { CatalogInfoQuery } from './CatalogInfoQuery';
-export type { CatalogInfoQueryProps } from './CatalogInfoQuery';
-export { KubernetesDeployments } from './kubernetes';
-export { SrgValidatons } from './srg';
-export type { EmptyStateProps } from './types';
+type SrgValidationsProps = {
+  title?: string;
+  pageSize?: number;
+};
+
+export const SrgValidatons = ({
+  title = 'Srg Validations',
+  pageSize,
+}: SrgValidationsProps) => {
+  return (
+    <DqlQuery
+      title={title}
+      queryId="dynatrace.srg-validations"
+      emptyState={SrgValidationsEmptyState}
+      pageSize={pageSize}
+    />
+  );
+};

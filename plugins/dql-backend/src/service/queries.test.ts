@@ -95,5 +95,20 @@ describe('queries', () => {
       // assert
       expect(query).toContain('| filter workload.labels[`label`] == "value"');
     });
+
+    it('should return the srg-query', () => {
+      // act
+      const query = dynatraceQueries[DynatraceQueryKeys.SRG_VALIDATIONS](
+        getEntity(),
+        defaultApiConfig,
+      );
+
+      // assert
+      expect(query).toContain('fetch bizevents');
+      expect(query).toContain(
+        '| filter event.provider == "dynatrace.site.reliability.guardian"',
+      );
+      expect(query).toContain('componentName');
+    });
   });
 });

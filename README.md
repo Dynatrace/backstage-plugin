@@ -224,6 +224,41 @@ here:
 [`dynatrace.kubernetes-deployments`](plugins/dql-backend/src/service/queries.ts).
 You can change this query for all cards or override it using a custom query.
 
+### SRG Validations Use Case
+
+Using the `EntitySrgValidationsCard`, you can see the validations of the site
+reliability guardians in your Dynatrace environment.
+
+```jsx
+<EntitySrgValidationsCard title="SRG Release Validations" />
+```
+
+_Convention:_ Site Reliability Guardian (SRG) validations are listed for the
+corresponding Backstage component. Each guardian must have a tag with the key
+`component` and the value should match the `metadata.name` property defined in
+the component's `catalog-info.yaml` file.
+
+For example, consider the following `catalog-info.yaml` file:
+
+```yaml
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: demo-backstage
+```
+
+In this case, the guardian tag should be:
+
+```yaml
+component: demo-backstage
+```
+
+[`How to create a SRG?`](https://docs.dynatrace.com/docs/shortlink/guardian-create-srg#create-a-guardian-from-a-template)
+
+The query for fetching the monitoring data for Kubernetes deployments is defined
+here: [`dynatrace.srg-validations`](plugins/dql-backend/src/service/queries.ts).
+You can change this query for all cards or override it using a custom query.
+
 ### Custom Queries
 
 You can also register your custom queries and use them with

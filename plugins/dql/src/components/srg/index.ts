@@ -14,10 +14,4 @@
  * limitations under the License.
  */
 
-export { DqlQuery } from './DqlQuery';
-export type { DqlQueryProps } from './DqlQuery';
-export { CatalogInfoQuery } from './CatalogInfoQuery';
-export type { CatalogInfoQueryProps } from './CatalogInfoQuery';
-export { KubernetesDeployments } from './kubernetes';
-export { SrgValidatons } from './srg';
-export type { EmptyStateProps } from './types';
+export { SrgValidatons } from './SrgValidations';

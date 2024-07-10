@@ -18,6 +18,7 @@ import { Entity } from '@backstage/catalog-model';
 
 export enum DynatraceQueryKeys {
   KUBERNETES_DEPLOYMENTS = 'kubernetes-deployments',
+  SRG_VALIDATIONS = 'srg-validations',
 }
 
 interface ApiConfig {
@@ -86,5 +87,29 @@ export const dynatraceQueries: Record<
       "%5C%22)%20%7C%20sort%20timestamp%20desc%22%2C%22title%22%3A%22Logs%22%7D")})
     | fieldsRemove id, name, workload.labels, cluster.id, namespace.id
     | fieldsAdd Environment = "${apiConfig.environmentName}"`;
+  },
+  [DynatraceQueryKeys.SRG_VALIDATIONS]: (entity, apiConfig) => {
+    const componentName = entity.metadata.name;
+    return `
+    fetch bizevents, from: -2d
+    | filter event.provider == "dynatrace.site.reliability.guardian"
+    | filter event.type == "guardian.validation.finished"
+    | parse validation.summary, "JSON:summary"
+    | parse execution_context, "JSON:context"
+    | parse guardian.tags, "JSON:tags"
+    | filter in(tags[component], "${componentName}")
+    | fieldsAdd Version = if(isNull(context[version]), "N/A", else: context[version])
+    | fieldsRename \`Validation Result\` = validation.status
+    | fieldsAdd Error = summary[error], Fail = summary[fail], Warning = summary[warning], Pass = summary[pass], Info = summary[info]
+    | fieldsAdd Environment = "${apiConfig.environmentName}"
+    | fieldsAdd Link = record({type="link", text="Open Validation", url=concat(
+      "${apiConfig.environmentUrl}",
+      "/ui/intent/dynatrace.site.reliability.guardian/view_validation#%7B%22guardian.id%22%3A%22",
+      guardian.id,
+      "%22%2C%22validation.id%22%3A%22",
+      validation.id,
+      "%22%7D")})
+    | fieldsKeep Fail, Error, Pass, Info, Warning, Link, \`Validation Result\`, Version, Environment
+    `;
   },
 };
