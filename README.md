@@ -253,7 +253,8 @@ In this case, the guardian tag should be:
 component: demo-backstage
 ```
 
-[`How to create a SRG?`](https://docs.dynatrace.com/docs/shortlink/guardian-create-srg#create-a-guardian-from-a-template)
+See
+[How to create a SRG?](https://docs.dynatrace.com/docs/shortlink/guardian-create-srg#create-a-guardian-from-a-template).
 
 The query for fetching the monitoring data for Kubernetes deployments is defined
 here: [`dynatrace.srg-validations`](plugins/dql-backend/src/service/queries.ts).
