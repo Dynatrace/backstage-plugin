@@ -65,21 +65,26 @@ export class QueryExecutor {
   }
 
   async executeCustomCatalogQueries(
-    catalogQuery: EntityQuery | undefined,
+    catalogQueries: EntityQuery[],
     variables: ComponentQueryVariables,
-  ): Promise<TabularData | undefined> {
+  ): Promise<TabularData[] | undefined> {
     componentQueryVariablesSchema.parse(variables);
-    if (!catalogQuery) {
+    if (catalogQueries.length == 0) {
       throw new Error(`No custom catalog query found`);
     }
     const results$ = this.apis.map(api => {
-      const compiledQuery = compileDqlQuery(catalogQuery.query, {
-        ...variables,
-        environmentName: api.environmentName,
-        environmentUrl: api.environmentUrl,
+      const queryPromises = catalogQueries.map(catalogQuery => {
+        const compiledQuery = compileDqlQuery(catalogQuery.query, {
+          ...variables,
+          environmentName: api.environmentName,
+          environmentUrl: api.environmentUrl,
+        });
+        return api.executeDqlQuery(compiledQuery);
       });
-      return api.executeDqlQuery(compiledQuery);
+
+      return Promise.all(queryPromises);
     });
+
     const results = await Promise.all(results$);
     return results.flatMap(result => result);
   }

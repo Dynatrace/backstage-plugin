@@ -70,6 +70,14 @@ describe('DQLQueryApiClient', () => {
     );
 
     expect(discoveryApi.getBaseUrl).toHaveBeenCalledWith('dynatrace-dql');
+
+    await client.getDataFromQueries(
+      'namespace',
+      mockedEntityRef,
+      mockedIdentityToken,
+    );
+
+    expect(discoveryApi.getBaseUrl).toHaveBeenCalledWith('dynatrace-dql');
   });
 
   it('should encode the component parameter', async () => {
@@ -92,7 +100,7 @@ describe('DQLQueryApiClient', () => {
     expect(result).toEqual([]);
   });
 
-  it('should return the data from fetch', async () => {
+  it('should return the data from function getData()', async () => {
     const response = [{ column: 'value' }];
     mockFetchResponse(response);
     const discoveryApi = mockDiscoveryApiUrl('https://discovery-api.com');
@@ -105,6 +113,20 @@ describe('DQLQueryApiClient', () => {
       mockedIdentityToken,
     );
 
+    expect(result).toEqual(response);
+  });
+
+  it('should return the data from function getDataFromQueries()', async () => {
+    const response = [[{ column: 'value' }]];
+    mockFetchResponse(response);
+    const discoveryApi = mockDiscoveryApiUrl('https://discovery-api.com');
+    const client = new DqlQueryApiClient({ discoveryApi });
+
+    const result = await client.getDataFromQueries(
+      'queryNamespace',
+      mockedEntityRef,
+      mockedIdentityToken,
+    );
     expect(result).toEqual(response);
   });
 
@@ -126,6 +148,14 @@ describe('DQLQueryApiClient', () => {
         mockedIdentityToken,
       ),
     ).rejects.toThrow(/Unexpected token/);
+
+    await expect(
+      client.getDataFromQueries(
+        'queryNamespace',
+        mockedEntityRef,
+        mockedIdentityToken,
+      ),
+    ).rejects.toThrow(/Unexpected token/);
   });
 
   it('should reject for invalid TabularData', async () => {
@@ -137,6 +167,14 @@ describe('DQLQueryApiClient', () => {
       client.getData(
         'queryNamespace',
         'queryName',
+        mockedEntityRef,
+        mockedIdentityToken,
+      ),
+    ).rejects.toThrow();
+
+    await expect(
+      client.getDataFromQueries(
+        'queryNamespace',
         mockedEntityRef,
         mockedIdentityToken,
       ),
@@ -163,6 +201,14 @@ describe('DQLQueryApiClient', () => {
         mockedIdentityToken,
       ),
     ).rejects.toThrow(`Query queryNamespace/queryName does not exist.`);
+
+    await expect(
+      client.getDataFromQueries(
+        'queryNamespace',
+        mockedEntityRef,
+        mockedIdentityToken,
+      ),
+    ).rejects.toThrow(`Query queryNamespace does not exist.`);
   });
 
   it('should report any generic error to the frontend', async () => {
@@ -181,6 +227,14 @@ describe('DQLQueryApiClient', () => {
       client.getData(
         'queryNamespace',
         'queryName',
+        mockedEntityRef,
+        mockedIdentityToken,
+      ),
+    ).rejects.toThrow("Request failed with 500 It's broken");
+
+    await expect(
+      client.getDataFromQueries(
+        'queryNamespace',
         mockedEntityRef,
         mockedIdentityToken,
       ),

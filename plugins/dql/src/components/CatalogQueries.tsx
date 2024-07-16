@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { InternalDqlQuery } from './InternalDqlQuery';
+import { InternalCatalogQueries } from './InternalCatalogQueries';
 import { EmptyStateProps, EntityQuery } from './types';
 import { EmptyState } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
@@ -36,16 +36,12 @@ export const CatalogInfoQuery = (props: CatalogInfoQueryProps) => {
   return (
     <>
       {queries.length > 0 ? (
-        queries.map((query, index) => (
-          <InternalDqlQuery
-            key={index}
-            title={query.name}
-            queryNamespace={'catalog'}
-            queryName={index.toString()}
-            EmptyState={props.emptyState}
-            pageSize={props.pageSize}
-          />
-        ))
+        <InternalCatalogQueries
+          titles={queries.map(query => query.name)}
+          queryNamespace={'catalog'}
+          EmptyState={props.emptyState}
+          pageSize={props.pageSize}
+        ></InternalCatalogQueries>
       ) : (
         <EmptyState
           title="No queries defined in catalog-info.yaml for this entity."

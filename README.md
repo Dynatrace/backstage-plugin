@@ -316,17 +316,23 @@ spec:
   lifecycle: experimental
   system: integrations
   queries:
-    - name: Fetch all Davis events 1
+    - name: Problem Events
       query: >
-        fetch events | filter event.kind == "DAVIS_EVENT" | fields event.kind,
-        timestamp
+        fetch events, from: -2d
+              | filter event.kind=="DAVIS_PROBLEM"
+              | fieldsAdd category=if(isNull(event.category), "N/A", else:
+        event.category)
+              | fieldsAdd id=if(isNull(event.id), "N/A", else: event.id)
+              | fieldsAdd status=if(isNull(event.status), "N/A", else:
+        event.status)
+              | fieldsAdd name=if(isNull(event.name), "N/A", else: event.name)
+              | fieldsKeep timestamp, event.category, id, name, status
 ```
 
 As mentioned before, queries can contain placeholders. In the catalog-info.yaml
-file, the placeholders are prefixed with a single `$`. For example:
-
-- `${environmentName}`
-- `${environmentUrl}`
+file, the placeholders are prefixed with a single `$`. Please find the supported
+placeholders listed
+[here](https://github.com/Dynatrace/backstage-plugin/blob/eac6adfe0c25fc7a4e5b0b7d05d5dc83464f3652/README.md#custom-queries).
 
 To include the result tables for the custom queries of the entity, you would
 use:

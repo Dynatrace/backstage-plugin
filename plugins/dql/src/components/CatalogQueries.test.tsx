@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CatalogInfoQuery } from './CatalogInfoQuery';
+import { CatalogInfoQuery } from './CatalogQueries';
 import { Entity } from '@backstage/catalog-model';
 import { EmptyState } from '@backstage/core-components';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
@@ -21,8 +21,8 @@ import { renderInTestApp } from '@backstage/test-utils';
 import { screen } from '@testing-library/react';
 import React from 'react';
 
-jest.mock('./InternalDqlQuery', () => ({
-  InternalDqlQuery: jest.fn(() => <div data-testid="id"></div>),
+jest.mock('./InternalCatalogQueries', () => ({
+  InternalCatalogQueries: jest.fn(() => <div data-testid="id"></div>),
 }));
 
 jest.mock('@backstage/core-components', () => ({
@@ -50,11 +50,11 @@ const mockEntity = (
       queries: [
         {
           name: 'dynatrace dql test query 1',
-          query: 'fetch bizevents',
+          query: 'fetch data',
         },
         {
           name: 'dynatrace dql test query 2',
-          query: 'fetch bizevents',
+          query: 'fetch data',
         },
       ],
     },
@@ -102,10 +102,10 @@ describe('CatalogInfoQuery', () => {
     jest.clearAllMocks();
   });
 
-  it('Should call the InternalDqlQuery twice, for both queries of the entity', async () => {
+  it('Should call the InternalCatalogQueries once, for both queries of the entity', async () => {
     const entity = mockEntity();
     await prepareComponent({ entity: entity });
-    expect(screen.queryAllByTestId('id').length).toBe(2);
+    expect(screen.queryAllByTestId('id').length).toBe(1);
     expect(EmptyState).not.toHaveBeenCalled();
   });
 

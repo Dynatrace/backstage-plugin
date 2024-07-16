@@ -53,4 +53,32 @@ export class DqlQueryApiClient implements DqlQueryApi {
     const jsonResponse = await response.json();
     return TabularDataFactory.fromObject(jsonResponse);
   }
+
+  async getDataFromQueries(
+    queryNamespace: string,
+    entityRef: string,
+    identityToken: string,
+  ): Promise<TabularData[]> {
+    const baseUrl = await this.discoveryApi.getBaseUrl('dynatrace-dql');
+    const searchParams = new URLSearchParams({ entityRef });
+    const url = `${baseUrl}/${queryNamespace}?${searchParams}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${identityToken}`,
+      },
+    });
+
+    if (response.status === 404) {
+      throw new Error(`Query ${queryNamespace} does not exist.`);
+    } else if (response.status !== 200) {
+      throw await ResponseError.fromResponse(response);
+    }
+
+    const jsonResponse = await response.json();
+    jsonResponse.forEach((element: TabularData) => {
+      TabularDataFactory.fromObject(element);
+    });
+    return jsonResponse;
+  }
 }

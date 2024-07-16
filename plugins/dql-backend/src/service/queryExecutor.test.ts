@@ -62,4 +62,26 @@ describe('queryExecutor', () => {
       expect(result).toEqual([]);
     });
   });
+
+  describe('Catalog Queries', () => {
+    it('should not throw an error if catalog queries are defined', async () => {
+      // act
+      const result = await executor.executeCustomCatalogQueries(
+        [
+          { name: 'query-1', query: 'fetch data' },
+          { name: 'query-2', query: 'fetch data' },
+        ],
+        inputVariables,
+      );
+      // assert
+      expect(result).toEqual([]);
+    });
+
+    it('should throw an error if no catalog query is defined', async () => {
+      // assert
+      await expect(() =>
+        executor.executeCustomCatalogQueries([], inputVariables),
+      ).rejects.toThrow();
+    });
+  });
 });

@@ -15,7 +15,7 @@
  */
 import { DqlQueryApi, dqlQueryApiRef } from '../api';
 import { DqlEmptyState } from './DqlEmptyState';
-import { InternalDqlQuery } from './InternalDqlQuery';
+import { InternalCatalogQueries } from './InternalCatalogQueries';
 import { TabularDataTable } from './TabularDataTable';
 import { EmptyStateProps } from './types';
 import { Entity } from '@backstage/catalog-model';
@@ -24,10 +24,11 @@ import { IdentityApi, identityApiRef } from '@backstage/core-plugin-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { TestApiProvider, renderInTestApp } from '@backstage/test-utils';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
+import { screen } from '@testing-library/react';
 import React from 'react';
 
 jest.mock('./TabularDataTable', () => ({
-  TabularDataTable: jest.fn(() => null),
+  TabularDataTable: jest.fn(() => <div data-testid="datatable"></div>),
 }));
 
 jest.mock('./DqlEmptyState', () => ({
@@ -57,6 +58,16 @@ const mockEntity = (
       lifecycle: 'production',
       type: 'service',
       owner: 'user:guest',
+      queries: [
+        {
+          name: 'query-1',
+          query: 'fetch data',
+        },
+        {
+          name: 'query-2',
+          query: 'fetch data',
+        },
+      ],
     },
   };
 };
@@ -64,7 +75,7 @@ const mockedEntityRef = 'component:default/example';
 const mockDqlQueryApi = (data: TabularData = []) => {
   return {
     getData: jest.fn().mockResolvedValue(data),
-    getDataFromQueries: jest.fn().mockResolvedValue(data),
+    getDataFromQueries: jest.fn().mockResolvedValue([data, data]),
   };
 };
 const MockIdentityApi = {
@@ -75,9 +86,8 @@ type PrepareComponentProps = {
   entity?: Entity;
   queryApi?: DqlQueryApi;
   identityApi?: Partial<IdentityApi>;
-  title?: string;
+  titles?: string[];
   queryNamespace?: string;
-  queryName?: string;
   EmptyState?: React.ComponentType<EmptyStateProps>;
 };
 
@@ -85,9 +95,8 @@ const prepareComponent = async ({
   entity = mockEntity(),
   queryApi = mockDqlQueryApi(),
   identityApi = MockIdentityApi,
-  title = 'some title',
-  queryNamespace = 'dynatrace',
-  queryName = 'query-id-1',
+  titles = ['query-1', 'query-2'],
+  queryNamespace = 'catalog',
   EmptyState,
 }: PrepareComponentProps = {}) => {
   return await renderInTestApp(
@@ -98,10 +107,9 @@ const prepareComponent = async ({
           [identityApiRef, identityApi],
         ]}
       >
-        <InternalDqlQuery
-          title={title}
+        <InternalCatalogQueries
+          titles={titles}
           queryNamespace={queryNamespace}
-          queryName={queryName}
           EmptyState={EmptyState}
         />
       </TestApiProvider>
@@ -109,7 +117,7 @@ const prepareComponent = async ({
   );
 };
 
-describe('DqlQuery', () => {
+describe('CatalogQueries', () => {
   beforeAll(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
   });
@@ -125,17 +133,12 @@ describe('DqlQuery', () => {
   });
 
   it('should render the TabularDataTable component', async () => {
-    const title = 'some title';
+    const titles = ['query-1', 'query-2'];
     const data: TabularData = [{ Heading: 'value' }];
-    await prepareComponent({ title, queryApi: mockDqlQueryApi(data) });
+    await prepareComponent({ titles, queryApi: mockDqlQueryApi(data) });
 
-    expect(TabularDataTable).toHaveBeenCalledWith(
-      expect.objectContaining({
-        title,
-        data,
-      }),
-      expect.anything(),
-    );
+    expect(screen.getAllByTestId('datatable')).toHaveLength(2);
+    expect(DqlEmptyState).toHaveBeenCalledTimes(0);
   });
 
   it('should fill in entity ref', async () => {
@@ -143,9 +146,9 @@ describe('DqlQuery', () => {
     const entity = mockEntity('example', undefined);
     await prepareComponent({ entity, queryApi });
 
-    expect(queryApi.getData).toHaveBeenCalledWith<
-      Parameters<DqlQueryApi['getData']>
-    >(expect.anything(), expect.anything(), mockedEntityRef, expect.anything());
+    expect(queryApi.getDataFromQueries).toHaveBeenCalledWith<
+      Parameters<DqlQueryApi['getDataFromQueries']>
+    >(expect.anything(), mockedEntityRef, expect.anything());
   });
 
   it('should render an error panel in case of errors', async () => {
@@ -172,19 +175,17 @@ describe('DqlQuery', () => {
 
   it('should render an default empty state if no data is returned', async () => {
     const componentName = 'example';
-    const queryName = 'query-id-1';
     const queryNamespace = 'dynatrace';
 
     const queryApi = mockDqlQueryApi();
     const entity = mockEntity(componentName);
-    await prepareComponent({ entity, queryApi, queryName, queryNamespace });
+    await prepareComponent({ entity, queryApi, queryNamespace });
 
     expect(TabularDataTable).not.toHaveBeenCalled();
     expect(ResponseErrorPanel).not.toHaveBeenCalled();
     expect(DqlEmptyState).toHaveBeenCalledWith<[EmptyStateProps, unknown]>(
       expect.objectContaining<Partial<EmptyStateProps>>({
         queryNamespace,
-        queryName,
         componentName,
       }),
       expect.anything(),
@@ -193,7 +194,6 @@ describe('DqlQuery', () => {
 
   it('should render a custom empty state if no data is returned', async () => {
     const componentName = 'example';
-    const queryName = 'query-id-1';
     const queryNamespace = 'dynatrace';
 
     const queryApi = mockDqlQueryApi();
@@ -202,7 +202,6 @@ describe('DqlQuery', () => {
     await prepareComponent({
       entity,
       queryApi,
-      queryName,
       queryNamespace,
       EmptyState,
     });
@@ -213,7 +212,6 @@ describe('DqlQuery', () => {
     expect(EmptyState).toHaveBeenCalledWith<[EmptyStateProps, unknown]>(
       expect.objectContaining<Partial<EmptyStateProps>>({
         queryNamespace,
-        queryName,
         componentName,
       }),
       expect.anything(),

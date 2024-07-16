@@ -22,4 +22,10 @@ export type DqlQueryApi = {
     entityRef: string,
     identityToken: string,
   ): Promise<TabularData>;
+
+  getDataFromQueries(
+    queryNamespace: string,
+    entityRef: string,
+    identityToken: string,
+  ): Promise<TabularData[]>;
 };

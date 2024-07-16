@@ -54,17 +54,15 @@ export const createRouter = async (
   const router = Router();
   router.use(express.json());
 
-  router.get('/catalog/:queryId', async (req, res) => {
+  router.get('/catalog', async (req, res) => {
     const entity = await getEntityFromRequest(req, catalogClient, auth);
-    const queryId: number = Number(req.params.queryId);
     const result = await queryExecutor.executeCustomCatalogQueries(
-      (entity.spec?.queries as EntityQuery[])?.[queryId],
+      entity.spec?.queries as EntityQuery[],
       {
         componentNamespace: entity.metadata.namespace ?? 'default',
         componentName: entity.metadata.name,
       },
     );
-
     return res.json(result);
   });
 
