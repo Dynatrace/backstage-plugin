@@ -89,7 +89,34 @@ export const dynatraceQueries: Record<
     | fieldsAdd Environment = "${apiConfig.environmentName}"`;
   },
   [DynatraceQueryKeys.SRG_VALIDATIONS]: (entity, apiConfig) => {
-    const componentName = entity.metadata.name;
+    const catalogTags =
+      entity.metadata.annotations?.['dynatrace.com/guardian-tags'];
+    let filterString = '';
+
+    if (catalogTags) {
+      const tags = catalogTags.split(',').map(tag => {
+        const [key, value] = tag.split('=');
+        if (value === undefined) {
+          return { [key]: undefined };
+        }
+        return { [key]: value || '' };
+      });
+
+      if (tags.length > 0) {
+        filterString += '| filter ';
+        filterString += tags
+          .map(tag => {
+            const key = Object.keys(tag)[0];
+            const value = tag[key];
+            console.log(value);
+            return value !== undefined
+              ? `in (tags[${key}], "${value}")`
+              : `isNotNull(tags[${key}])`;
+          })
+          .join(' AND ');
+      }
+    }
+
     return `
     fetch bizevents, from: -2d
     | filter event.provider == "dynatrace.site.reliability.guardian"
@@ -97,7 +124,7 @@ export const dynatraceQueries: Record<
     | parse validation.summary, "JSON:summary"
     | parse execution_context, "JSON:context"
     | parse guardian.tags, "JSON:tags"
-    | filter in(tags[component], "${componentName}")
+    ${filterString}
     | fieldsAdd Version = if(isNull(context[version]), "N/A", else: context[version])
     | fieldsRename \`Validation Result\` = validation.status
     | fieldsAdd Error = summary[error], Fail = summary[fail], Warning = summary[warning], Pass = summary[pass], Info = summary[info]

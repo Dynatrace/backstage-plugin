@@ -224,37 +224,56 @@ here:
 [`dynatrace.kubernetes-deployments`](plugins/dql-backend/src/service/queries.ts).
 You can change this query for all cards or override it using a custom query.
 
-### SRG Validations Use Case
+### Site Reliability Guardian Validations
 
-Using the `EntitySrgValidationsCard`, you can see the validations of the site
-reliability guardians in your Dynatrace environment.
+Using the `EntityDqlQueryCard` with the queryId `dynatrace.srg-validations`, you
+can see the validations of the site reliability guardians in your Dynatrace
+environment.
 
 ```jsx
-<EntitySrgValidationsCard title="Site Reliability Guardian Validations" />
+<EntityDqlQueryCard
+  title="Site Reliability Guardian Validations"
+  queryId="dynatrace.srg-validations"
+/>
 ```
 
-_Convention:_ Site Reliability Guardian (SRG) validations are listed for the
-corresponding Backstage component. Each guardian must have a tag with the key
-`component` and the value should match the `metadata.name` property defined in
-the component's `catalog-info.yaml` file.
-
-For example, consider the following `catalog-info.yaml` file:
+To filter for specific guardians, you can filter tags defined in the
+`metadata.annotations` property of the `catalog-info.yaml` file under the key
+`dynatrace.com/guardian-tags`.
 
 ```yaml
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: demo-backstage
+  description: Backstage Demo instance.
+  annotations:
+    backstage.io/kubernetes-id: kubernetescustom
+    dynatrace.com/guardian-tags: 'service=my-service,stage=development,novalue'
 ```
 
-In this case, the guardian tag should be:
+There are two ways to filter tags:
+
+1. **Key-Value Match:** The tag must match both the key and the value. For
+   example, the key `service` must have the value `my-service`.
+2. **Key Exists:** The tag key must exist with any value. For example, the key
+   `novalue`.
+
+The difference between these filtering methods is indicated by the presence of
+the `=` symbol.
+
+For the example provided above, the filtered guardian should have at least these
+tags:
 
 ```yaml
-component: demo-backstage
+service: my-service
+stage: development
+novalue:
 ```
 
 See
-[How to create a Site Reliability Guardian?](https://docs.dynatrace.com/docs/shortlink/guardian-create-srg#create-a-guardian-from-a-template).
+[How to create a Site Reliability Guardian](https://docs.dynatrace.com/docs/shortlink/guardian-create-srg#create-a-guardian-from-a-template)
+and [Guardian tags](https://docs.dynatrace.com/docs/shortlink/srg-landing#tags).
 
 The query for fetching the monitoring data for Site Reliability Guardian
 validations is defined here:
