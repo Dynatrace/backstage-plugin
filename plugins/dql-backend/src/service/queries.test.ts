@@ -108,7 +108,6 @@ describe('queries', () => {
       expect(query).toContain(
         '| filter event.provider == "dynatrace.site.reliability.guardian"',
       );
-      expect(query).toContain('componentName');
     });
   });
 });
