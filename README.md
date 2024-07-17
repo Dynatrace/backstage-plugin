@@ -230,7 +230,7 @@ Using the `EntitySrgValidationsCard`, you can see the validations of the site
 reliability guardians in your Dynatrace environment.
 
 ```jsx
-<EntitySrgValidationsCard title="SRG Release Validations" />
+<EntitySrgValidationsCard title="Site Reliability Guardian Validations" />
 ```
 
 _Convention:_ Site Reliability Guardian (SRG) validations are listed for the
@@ -254,11 +254,12 @@ component: demo-backstage
 ```
 
 See
-[How to create a SRG?](https://docs.dynatrace.com/docs/shortlink/guardian-create-srg#create-a-guardian-from-a-template).
+[How to create a Site Reliability Guardian?](https://docs.dynatrace.com/docs/shortlink/guardian-create-srg#create-a-guardian-from-a-template).
 
-The query for fetching the monitoring data for Kubernetes deployments is defined
-here: [`dynatrace.srg-validations`](plugins/dql-backend/src/service/queries.ts).
-You can change this query for all cards or override it using a custom query.
+The query for fetching the monitoring data for Site Reliability Guardian
+validations is defined here:
+[`dynatrace.srg-validations`](plugins/dql-backend/src/service/queries.ts). You
+can change this query for all cards or override it using a custom query.
 
 ### Custom Queries
 

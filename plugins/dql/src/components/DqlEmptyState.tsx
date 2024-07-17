@@ -21,6 +21,7 @@ export const DqlEmptyState = ({
   componentName,
   queryName,
   queryNamespace,
+  additionalInformation,
 }: EmptyStateProps) => {
   const message = `# We turned up empty
 
@@ -31,7 +32,9 @@ export const DqlEmptyState = ({
   Dynatrace to start reporting data. If the component has been running
   for a while, it may not be reporting data. Please check that your
   component is indeed reporting data to Dynatrace and, in case you are
-  using custom queries, that the query is correct.`;
+  using custom queries, that the query is correct. 
+  
+  ${additionalInformation}`;
 
   return <DynatraceMarkdownText content={message} />;
 };

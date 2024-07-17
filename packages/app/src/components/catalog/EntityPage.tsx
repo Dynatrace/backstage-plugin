@@ -74,7 +74,6 @@ import {
   EntityDqlQueryCard,
   EntityKubernetesDeploymentsCard,
 } from '@dynatrace/backstage-plugin-dql';
-import { EntitySrgValidationsCard } from '@dynatrace/backstage-plugin-dql/src/plugin';
 import { Button, Grid } from '@material-ui/core';
 import React from 'react';
 
@@ -242,8 +241,11 @@ const websiteEntityPage = (
         <TabbedLayout.Route path="/kubernetes" title="Kubernetes Deployments">
           <EntityKubernetesDeploymentsCard title="Kubernetes Deployments with explicit title" />
         </TabbedLayout.Route>
-        <TabbedLayout.Route path="/srg" title="SRG Release Validations">
-          <EntitySrgValidationsCard title="SRG Release Validations" />
+        <TabbedLayout.Route path="/srg" title="Site Reliability Guardian">
+          <EntityDqlQueryCard
+            title="Site Reliability Guardian Validations"
+            queryId="dynatrace.srg-validations"
+          />
         </TabbedLayout.Route>
         <TabbedLayout.Route path="/davis-events" title="Davis Events">
           <EntityDqlQueryCard

@@ -57,6 +57,14 @@ export const InternalDqlQuery = ({
         componentName={componentName}
         queryName={queryName}
         queryNamespace={queryNamespace}
+        additionalInformation={
+          `${queryNamespace}.${queryName}` === 'dynatrace.srg-validations'
+            ? `# No Site Reliability Guardian resources
+  No result received. If you don't use Site Reliability Guardians, do not hesitate to integrate them. 
+  [View this for more information.](https://docs.dynatrace.com/docs/platform-modules/automations/site-reliability-guardian)
+`
+            : ''
+        }
       />
     );
   }
