@@ -5,6 +5,7 @@ metadata:
   description: Backstage Demo instance.
   annotations:
     backstage.io/kubernetes-id: kubernetescustom
+    dynatrace.com/guardian-tags: "service=my-service,stage=development,novalue"
 spec:
   type: website
   owner: user:default/mjakl

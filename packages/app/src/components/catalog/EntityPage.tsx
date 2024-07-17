@@ -241,6 +241,12 @@ const websiteEntityPage = (
         <TabbedLayout.Route path="/kubernetes" title="Kubernetes Deployments">
           <EntityKubernetesDeploymentsCard title="Kubernetes Deployments with explicit title" />
         </TabbedLayout.Route>
+        <TabbedLayout.Route path="/srg" title="Site Reliability Guardian">
+          <EntityDqlQueryCard
+            title="Site Reliability Guardian Validations"
+            queryId="dynatrace.srg-validations"
+          />
+        </TabbedLayout.Route>
         <TabbedLayout.Route path="/davis-events" title="Davis Events">
           <EntityDqlQueryCard
             title="Davis Events"

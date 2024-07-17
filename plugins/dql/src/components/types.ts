@@ -19,6 +19,7 @@ export type EmptyStateProps = {
   queryName: string;
   queryNamespace: string;
   isCatalogQuery?: boolean;
+  additionalInformation?: string;
 };
 
 export type EntityQuery = {
