@@ -47,11 +47,11 @@ export const EntityDqlQueryCard = dqlQueryPlugin.provide(
   }),
 );
 
-export const EntityCatalogInfoQueryCard = dqlQueryPlugin.provide(
+export const EntityNotebookQueriesCard = dqlQueryPlugin.provide(
   createComponentExtension({
-    name: 'EntityCatalogInfoQueryCard',
+    name: 'EntityNotebookQueriesCard',
     component: {
-      lazy: () => import('./components').then(m => m.CatalogInfoQuery),
+      lazy: () => import('./components').then(m => m.NotebookQueries),
     },
   }),
 );

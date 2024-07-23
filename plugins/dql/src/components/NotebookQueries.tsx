@@ -22,19 +22,17 @@ import { Progress, ResponseErrorPanel } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import React from 'react';
 
-export type InternalCatalogQueriesProps = {
-  titles: string[];
-  queryNamespace: string;
+export type NotebookQueriesProps = {
+  queryNamespace?: string;
   EmptyState?: React.ComponentType<EmptyStateProps>;
   pageSize?: number;
 };
 
-export const InternalCatalogQueries = ({
-  titles,
-  queryNamespace,
+export const NotebookQueries = ({
+  queryNamespace = 'notebook',
   EmptyState = DqlEmptyState,
   pageSize,
-}: InternalCatalogQueriesProps) => {
+}: NotebookQueriesProps) => {
   const { entity } = useEntity();
   const componentName = entity.metadata.name;
 
@@ -62,16 +60,18 @@ export const InternalCatalogQueries = ({
   return (
     <>
       {value.map((queryData, index) =>
-        queryData.length > 0 ? (
+        queryData.data?.length > 0 ? (
           <TabularDataTable
-            data={queryData}
-            title={titles[index]}
+            key={index}
+            data={queryData.data}
+            title={queryData.title}
             pageSize={pageSize}
           ></TabularDataTable>
         ) : (
           <EmptyState
+            key={index}
             componentName={componentName}
-            queryName={titles[index]}
+            queryName={queryData.title}
             queryNamespace={queryNamespace}
             isCatalogQuery={true}
           />

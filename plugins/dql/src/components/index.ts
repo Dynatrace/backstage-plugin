@@ -16,7 +16,7 @@
 
 export { DqlQuery } from './DqlQuery';
 export type { DqlQueryProps } from './DqlQuery';
-export { CatalogInfoQuery } from './CatalogQueries';
-export type { CatalogInfoQueryProps } from './CatalogQueries';
+export { NotebookQueries } from './NotebookQueries';
+export type { NotebookQueriesProps } from './NotebookQueries';
 export { KubernetesDeployments } from './kubernetes';
 export type { EmptyStateProps } from './types';

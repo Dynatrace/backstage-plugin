@@ -81,6 +81,44 @@ const executeQuery = async (
   return queryExecRes.json();
 };
 
+export type NotebookContent = {
+  sections: NotebookSection[];
+  version: string;
+  defaultTimeframe: {};
+};
+export type NotebookSection = {
+  id: string;
+  type: string;
+  showTitle: boolean;
+  title?: string;
+  state: {
+    input: {
+      value: string;
+    };
+  };
+};
+
+const executeNotebook = async (
+  { url, accessToken, identifier }: DynatraceAccessInfo,
+  documentId: string,
+): Promise<NotebookContent> => {
+  const fullUrl = new URL(
+    `platform/document/v1/documents/${documentId}/content`,
+    url,
+  );
+  const queryExecRes = await dtFetch(fullUrl, identifier, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!queryExecRes.ok) {
+    throw new Error(await queryExecRes.text().catch(() => ''));
+  }
+  return queryExecRes.json();
+};
+
 const pollQuery = async <T>(
   { url, accessToken, identifier }: DynatraceAccessInfo,
   requestToken: string,
@@ -152,7 +190,7 @@ const getAccessToken = async (
 
 export class DynatraceApi {
   constructor(
-    private readonly config: DynatraceEnvironmentConfig,
+    public readonly config: DynatraceEnvironmentConfig,
     private identifier: string,
   ) {}
 
@@ -162,6 +200,20 @@ export class DynatraceApi {
 
   get environmentUrl() {
     return this.config.url;
+  }
+
+  async executeNotebook(documentId: string): Promise<NotebookContent> {
+    const tokenResponse = await getAccessToken(this.config, this.identifier);
+    const environment: DynatraceAccessInfo = {
+      url: this.config.url,
+      accessToken: tokenResponse.access_token,
+      identifier: this.identifier,
+    };
+    const execQueryRes: NotebookContent = await executeNotebook(
+      environment,
+      documentId,
+    );
+    return execQueryRes;
   }
 
   async executeDqlQuery(query: string): Promise<TabularData> {

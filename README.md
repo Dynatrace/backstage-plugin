@@ -280,7 +280,7 @@ validations is defined here:
 [`dynatrace.srg-validations`](plugins/dql-backend/src/service/queries.ts). You
 can change this query for all cards or override it using a custom query.
 
-### Custom Queries
+### Custom Queries {#custom-queries}
 
 You can also register your custom queries and use them with
 `EntityDqlQueryCard`:
@@ -354,9 +354,17 @@ by its ID with the `custom.` prefix:
 />
 ```
 
-### Custom Queries within catalog-info.yaml file of the Backstage Entity
+### Custom Queries from Notebooks
 
-You can also register your custom queries in the catalog-info.yaml file.
+You can create custom queries in Notebooks and include them in a backstage
+entity via annotations. There are two types of notebook annotations supported:
+
+1. `notebook-id` annotation: the id of the notebook
+2. `notebook-url` annotation: the url of the notebook
+
+When only one environment is registered, both types of annotations will work. If
+multiple environments are registered, only the `notebook-url` annotation will
+work.
 
 ```yaml
 apiVersion: backstage.io/v1alpha1
@@ -366,40 +374,66 @@ metadata:
   description: Backstage Demo instance.
   annotations:
     backstage.io/kubernetes-id: kubernetescustom
+    dynatrace.com/notebook-id: my-notebook-id123
+    dynatrace.com/notebook-url: https://my-environment.dynatrace.com/ui/apps/dynatrace.notebooks/notebook/my-notebook-id123
 spec:
   type: website
   owner: user:default/mjakl
   lifecycle: experimental
   system: integrations
-  queries:
-    - name: Problem Events
-      query: >
-        fetch events, from: -2d
-              | filter event.kind=="DAVIS_PROBLEM"
-              | fieldsAdd category=if(isNull(event.category), "N/A", else:
-        event.category)
-              | fieldsAdd id=if(isNull(event.id), "N/A", else: event.id)
-              | fieldsAdd status=if(isNull(event.status), "N/A", else:
-        event.status)
-              | fieldsAdd name=if(isNull(event.name), "N/A", else: event.name)
-              | fieldsKeep timestamp, event.category, id, name, status
 ```
 
-As mentioned before, queries can contain placeholders. In the catalog-info.yaml
-file, the placeholders are prefixed with a single `$`. Please find the supported
-placeholders listed
-[here](https://github.com/Dynatrace/backstage-plugin/blob/eac6adfe0c25fc7a4e5b0b7d05d5dc83464f3652/README.md#custom-queries).
+The queries defined in notebooks must follow the guidelines introduced for
+[Custom Queries](#custom-queries). However, the notebook queries do not support
+placeholders.
 
 To include the result tables for the custom queries of the entity, you would
 use:
 
 ```jsx
-<EntityCatalogInfoQueryCard />
+<EntityNotebookQueriesCard />
 ```
 
-This component displays a result table for each query. The order in which the
-tables are displayed depends on the order of the entity's queries defined in the
-catalog-info.yaml file.
+This component displays a result table for each query defined. The order in
+which the tables are displayed depends on the order of the entity's queries
+defined in the notebook.
+
+### Sample DQL Queries
+
+Query Error Logs:
+
+```
+fetch logs, from: -2d
+        | filter status == "ERROR"
+        | sort timestamp desc
+        | fieldsAdd content=if(isNull(content), "N/A", else: content)
+        | fieldsAdd source=if(isNull(log.source), "N/A", else: log.source)
+        | fieldsAdd host=if(isNull(host.name), "N/A", else: host.name)
+        | fieldsKeep timestamp, source, content, host
+```
+
+Query Problem Events:
+
+```
+fetch events, from: -2d
+        | filter event.kind=="DAVIS_PROBLEM"
+        | fieldsAdd category=if(isNull(event.category), "N/A", else: event.category)
+        | fieldsAdd id=if(isNull(event.id), "N/A", else: event.id)
+        | fieldsAdd status=if(isNull(event.status), "N/A", else: event.status)
+        | fieldsAdd name=if(isNull(event.name), "N/A", else: event.name)
+        | fieldsKeep timestamp, event.category, id, name, status
+```
+
+Query Security Vulnerabilities:
+
+```
+fetch events, from: -2d
+        | filter event.provider=="Dynatrace"
+        | filter event.kind=="SECURITY_EVENT"
+        | filter event.type=="VULNERABILITY_STATUS_CHANGE_EVENT"
+        | filter event.level=="VULNERABILITY"
+        | fieldsKeep timestamp, event.status, vulnerability.display_id, event.id, vulnerability.title, vulnerability.risk.level, vulnerability.display_id
+```
 
 ### Backlink to Dynatrace
 

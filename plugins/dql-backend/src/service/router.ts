@@ -24,7 +24,6 @@ import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { LoggerService, AuthService } from '@backstage/backend-plugin-api';
 import { CatalogClient } from '@backstage/catalog-client';
 import { Config } from '@backstage/config';
-import { EntityQuery } from '@dynatrace/backstage-plugin-dql/src/components/types';
 import express from 'express';
 import Router from 'express-promise-router';
 
@@ -54,10 +53,29 @@ export const createRouter = async (
   const router = Router();
   router.use(express.json());
 
-  router.get('/catalog', async (req, res) => {
+  router.get('/notebook', async (req, res) => {
     const entity = await getEntityFromRequest(req, catalogClient, auth);
-    const result = await queryExecutor.executeCustomCatalogQueries(
-      entity.spec?.queries as EntityQuery[],
+
+    const notebookVariables = {
+      notebookId:
+        entity.metadata.annotations?.['dynatrace.com/notebook-url']
+          ?.split('/')
+          .pop() ??
+        entity.metadata.annotations?.['dynatrace.com/notebook-id'] ??
+        '',
+      notebookUrl:
+        entity.metadata.annotations?.['dynatrace.com/notebook-url']
+          ?.substring(8)
+          .split('/')[0] ?? '',
+    };
+
+    if (!notebookVariables.notebookId) {
+      throw new Error(
+        `No notebook-id or notebook-url annotation in catalog.info-yaml defined.`,
+      );
+    }
+    const result = await queryExecutor.executeCustomNotebookQueries(
+      notebookVariables,
       {
         componentNamespace: entity.metadata.namespace ?? 'default',
         componentName: entity.metadata.name,

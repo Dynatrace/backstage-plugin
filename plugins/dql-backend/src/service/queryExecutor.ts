@@ -18,6 +18,7 @@ import { dynatraceQueries, isValidDynatraceQueryKey } from './queries';
 import { compileDqlQuery } from './queryCompiler';
 import { Entity } from '@backstage/catalog-model';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
+import { NotebookQueryData } from '@dynatrace/backstage-plugin-dql/src/api/types';
 import { EntityQuery } from '@dynatrace/backstage-plugin-dql/src/components/types';
 import { z } from 'zod';
 
@@ -35,6 +36,10 @@ const componentQueryVariablesSchema = z.object({
 });
 
 type ComponentQueryVariables = z.infer<typeof componentQueryVariablesSchema>;
+type ComponentNotebookVariables = {
+  notebookId: string;
+  notebookUrl?: string;
+};
 
 export class QueryExecutor {
   constructor(
@@ -64,27 +69,56 @@ export class QueryExecutor {
     return results.flatMap(result => result);
   }
 
-  async executeCustomCatalogQueries(
-    catalogQueries: EntityQuery[],
+  async executeCustomNotebookQueries(
+    notebookVariables: ComponentNotebookVariables,
     variables: ComponentQueryVariables,
-  ): Promise<TabularData[] | undefined> {
+  ): Promise<NotebookQueryData[] | undefined> {
     componentQueryVariablesSchema.parse(variables);
-    if (catalogQueries.length == 0) {
-      throw new Error(`No custom catalog query found`);
+    if (this.apis.length > 1 && !notebookVariables.notebookUrl) {
+      throw new Error(
+        `The annotation notebook-id is only supported in the context of a single Dynatrace environment`,
+      );
     }
-    const results$ = this.apis.map(api => {
-      const queryPromises = catalogQueries.map(catalogQuery => {
-        const compiledQuery = compileDqlQuery(catalogQuery.query, {
+
+    const filteredApis = notebookVariables.notebookUrl
+      ? this.apis.filter(
+          api => api.config.url === 'https://' + notebookVariables.notebookUrl,
+        )
+      : this.apis;
+
+    const notebookResults$ = filteredApis.map(api =>
+      api.executeNotebook(notebookVariables.notebookId),
+    );
+
+    const notebookResults = await Promise.all(notebookResults$);
+    const notebookSections = notebookResults.flatMap(
+      result => result?.sections ?? [],
+    );
+    const notebookQueries: EntityQuery[] = notebookSections.map(section => {
+      return {
+        name: section.title ? section.title : '',
+        query: section.state.input.value,
+      };
+    });
+
+    if (notebookQueries.length == 0) {
+      throw new Error(`No queries in notebook found`);
+    }
+
+    const results$ = filteredApis.map(api => {
+      const queryPromises = notebookQueries.map(async notebookQueries => {
+        const compiledQuery = compileDqlQuery(notebookQueries.query, {
           ...variables,
           environmentName: api.environmentName,
           environmentUrl: api.environmentUrl,
         });
-        return api.executeDqlQuery(compiledQuery);
+        return {
+          title: notebookQueries.name,
+          data: await api.executeDqlQuery(compiledQuery),
+        };
       });
-
       return Promise.all(queryPromises);
     });
-
     const results = await Promise.all(results$);
     return results.flatMap(result => result);
   }
@@ -102,4 +136,6 @@ export class QueryExecutor {
     const results = await Promise.all(results$);
     return results.flatMap(result => result);
   }
+
+  async executeNotebook() {}
 }

@@ -70,9 +70,9 @@ import { EntityTechdocsContent } from '@backstage/plugin-techdocs';
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import {
-  EntityCatalogInfoQueryCard,
   EntityDqlQueryCard,
   EntityKubernetesDeploymentsCard,
+  EntityNotebookQueriesCard,
 } from '@dynatrace/backstage-plugin-dql';
 import { Button, Grid } from '@material-ui/core';
 import React from 'react';
@@ -254,10 +254,10 @@ const websiteEntityPage = (
           />
         </TabbedLayout.Route>
         <TabbedLayout.Route
-          path="/example-catalog-queries"
-          title="Example Catalog Queries"
+          path="/example-notebook-queries"
+          title="Example Notebook Queries"
         >
-          <EntityCatalogInfoQueryCard />
+          <EntityNotebookQueriesCard />
         </TabbedLayout.Route>
       </TabbedLayout>
     </EntityLayout.Route>

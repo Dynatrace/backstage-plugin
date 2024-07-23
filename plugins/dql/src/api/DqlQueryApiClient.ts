@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { DqlQueryApi } from './types';
+import { NotebookQueryData, DqlQueryApi } from './types';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
 import { ResponseError } from '@backstage/errors';
 import {
@@ -58,7 +58,7 @@ export class DqlQueryApiClient implements DqlQueryApi {
     queryNamespace: string,
     entityRef: string,
     identityToken: string,
-  ): Promise<TabularData[]> {
+  ): Promise<NotebookQueryData[]> {
     const baseUrl = await this.discoveryApi.getBaseUrl('dynatrace-dql');
     const searchParams = new URLSearchParams({ entityRef });
     const url = `${baseUrl}/${queryNamespace}?${searchParams}`;
@@ -76,8 +76,8 @@ export class DqlQueryApiClient implements DqlQueryApi {
     }
 
     const jsonResponse = await response.json();
-    jsonResponse.forEach((element: TabularData) => {
-      TabularDataFactory.fromObject(element);
+    jsonResponse.forEach((element: NotebookQueryData) => {
+      TabularDataFactory.fromObject(element.data);
     });
     return jsonResponse;
   }

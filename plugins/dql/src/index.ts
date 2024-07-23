@@ -16,7 +16,7 @@
 
 export {
   EntityDqlQueryCard,
-  EntityCatalogInfoQueryCard,
+  EntityNotebookQueriesCard,
   EntityKubernetesDeploymentsCard,
   dqlQueryPlugin,
 } from './plugin';

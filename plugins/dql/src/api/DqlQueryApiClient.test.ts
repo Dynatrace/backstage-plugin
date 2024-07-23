@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { DqlQueryApiClient } from './DqlQueryApiClient';
+import { NotebookQueryData } from './types';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
 import { http } from 'msw';
 import { setupServer } from 'msw/node';
@@ -117,16 +118,17 @@ describe('DQLQueryApiClient', () => {
   });
 
   it('should return the data from function getDataFromQueries()', async () => {
-    const response = [[{ column: 'value' }]];
+    const response = [{ data: [{ column: 'value' }] }];
     mockFetchResponse(response);
     const discoveryApi = mockDiscoveryApiUrl('https://discovery-api.com');
     const client = new DqlQueryApiClient({ discoveryApi });
 
-    const result = await client.getDataFromQueries(
+    const result: NotebookQueryData[] = await client.getDataFromQueries(
       'queryNamespace',
       mockedEntityRef,
       mockedIdentityToken,
     );
+
     expect(result).toEqual(response);
   });
 

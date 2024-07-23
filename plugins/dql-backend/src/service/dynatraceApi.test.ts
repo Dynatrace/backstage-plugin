@@ -18,6 +18,7 @@ import {
   DynatraceApi,
   DynatraceEnvironmentConfig,
   ExecuteQueryResponse,
+  NotebookContent,
   PollQueryResponse,
   TokenResponse,
 } from './dynatraceApi';
@@ -67,6 +68,8 @@ describe('dynatraceApi', () => {
   const mockTokenResult = (result: MockResult<TokenResponse>) =>
     mockResult(result);
   const mockExecuteResult = (result: MockResult<ExecuteQueryResponse>) =>
+    mockResult(result);
+  const mockExecuteNotebookResult = (result: MockResult<NotebookContent>) =>
     mockResult(result);
   const mockPollResult = (result: MockResult<PollQueryResponse<unknown>>) =>
     mockResult(result);
@@ -159,6 +162,59 @@ describe('dynatraceApi', () => {
     );
   });
 
+  it('should be a successful call: getAccessToken, executeNotebook', async () => {
+    // arrange
+    mockTokenResult({
+      json: {
+        access_token: 'token',
+        token_type: 'Bearer',
+        expires_in: 10_000,
+        resource: 'resource',
+        scope: 'my scopes',
+      },
+    });
+    mockExecuteNotebookResult({
+      json: {
+        version: '1',
+        defaultTimeframe: { from: 'now()-7d', to: 'now()' },
+        sections: [
+          {
+            id: 'my-id',
+            type: 'dql',
+            showTitle: false,
+            state: {
+              input: {
+                value: 'fetch data',
+              },
+            },
+            title: 'Error Logs',
+          },
+        ],
+      },
+    });
+    const documentId = 'my-notebook';
+    // act
+    await dynatraceApi.executeNotebook(documentId);
+
+    // assert
+    const expectedSearchParams = new URLSearchParams({
+      grant_type: 'client_credentials',
+      client_id: 'clientId',
+      client_secret: 'clientSecret',
+      resource: 'urn',
+    });
+    assertTokenCall(
+      'https://example.com/token',
+      'identifier',
+      expectedSearchParams,
+    );
+    assertExecuteCall(
+      `https://example.com/platform/document/v1/documents/${documentId}/content`,
+      'identifier',
+      'Bearer token',
+    );
+  });
+
   describe('getAccessToken', () => {
     it('should throw an error if the token request failed', async () => {
       // arrange
@@ -170,7 +226,10 @@ describe('dynatraceApi', () => {
       ).rejects.toThrow(
         'Failed to get access token for environment myEnv (https://example.com)',
       );
-      expect(dtFetchMock).toHaveBeenCalledTimes(1);
+      await expect(() =>
+        dynatraceApi.executeNotebook('my-notebook'),
+      ).rejects.toThrow();
+      expect(dtFetchMock).toHaveBeenCalledTimes(2);
     });
   });
 
