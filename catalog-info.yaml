@@ -6,7 +6,7 @@ metadata:
   annotations:
     backstage.io/kubernetes-id: kubernetescustom
     dynatrace.com/guardian-tags: "service=my-service,stage=development,novalue"
-    dynatrace.com/notebook-url:  https://my-environment.dynatrace.com/ui/apps/dynatrace.notebooks/notebook/my-notebook-id
+    dynatrace.com/notebook-url: https://pet39401.dev.apps.dynatracelabs.com/ui/apps/dynatrace.notebooks/notebook/44440166-0eb8-435d-80da-35b41896897c
     dynatrace.com/notebook-id: my-notebook-id
 spec:
   type: website
