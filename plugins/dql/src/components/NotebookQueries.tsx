@@ -53,6 +53,7 @@ export const NotebookQueries = ({
         componentName={componentName}
         queryName={''}
         queryNamespace={queryNamespace}
+        additionalInformation="Please ensure that your notebook is not empty and that the annotations are defined correctly."
       />
     );
   }
@@ -73,7 +74,6 @@ export const NotebookQueries = ({
             componentName={componentName}
             queryName={queryData.title}
             queryNamespace={queryNamespace}
-            isCatalogQuery={true}
           />
         ),
       )}

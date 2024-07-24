@@ -101,10 +101,6 @@ export class QueryExecutor {
       };
     });
 
-    if (notebookQueries.length == 0) {
-      throw new Error(`No queries in notebook found`);
-    }
-
     const results$ = filteredApis.map(api => {
       const queryPromises = notebookQueries.map(async notebookQueries => {
         const compiledQuery = compileDqlQuery(notebookQueries.query, {

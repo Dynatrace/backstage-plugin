@@ -18,7 +18,6 @@ export type EmptyStateProps = {
   componentName: string;
   queryName: string;
   queryNamespace: string;
-  isCatalogQuery?: boolean;
   additionalInformation?: string;
 };
 
