@@ -73,13 +73,14 @@ describe('queryExecutor', () => {
   });
 
   describe('Notebook Queries', () => {
-    it('should return an empty array if no notebook query is defined', async () => {
+    it('should throw an error if no notebook query is defined', async () => {
       // assert
-      const result = await executor.executeCustomNotebookQueries(
-        notebookVariables,
-        inputVariables,
-      );
-      expect(result).toEqual([]);
+      await expect(() =>
+        executor.executeCustomNotebookQueries(
+          notebookVariables,
+          inputVariables,
+        ),
+      ).rejects.toThrow();
     });
 
     it('should throw an error if no notebook-url is defined but there is more than 1 environment', async () => {

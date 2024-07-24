@@ -19,7 +19,6 @@ import {
   dqlQueryPlugin,
 } from '../src';
 import { DqlQueryApi, dqlQueryApiRef } from '../src/api';
-import { NotebookQueryData } from '../src/api/types';
 import { exampleData } from './data';
 import { Entity } from '@backstage/catalog-model';
 import { TabbedLayout } from '@backstage/core-components';
@@ -67,11 +66,8 @@ class MockDqlQueryApi implements DqlQueryApi {
   async getData(): Promise<TabularData> {
     return exampleData;
   }
-  async getDataFromQueries(): Promise<NotebookQueryData[]> {
-    return [
-      { data: exampleData, title: '' },
-      { data: exampleData, title: '' },
-    ];
+  async getDataFromQueries(): Promise<TabularData[]> {
+    return [exampleData, exampleData];
   }
 }
 
@@ -79,8 +75,8 @@ class MockDqlQueryApiNoResult implements DqlQueryApi {
   async getData(): Promise<TabularData> {
     return [];
   }
-  async getDataFromQueries(): Promise<NotebookQueryData[]> {
-    return [];
+  async getDataFromQueries(): Promise<TabularData[]> {
+    return [[]];
   }
 }
 
@@ -88,7 +84,7 @@ class MockDqlQueryApiError implements DqlQueryApi {
   async getData(): Promise<TabularData> {
     throw new Error('404 Not Found');
   }
-  async getDataFromQueries(): Promise<NotebookQueryData[]> {
+  async getDataFromQueries(): Promise<TabularData[]> {
     throw new Error('404 Not Found');
   }
 }
