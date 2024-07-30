@@ -280,7 +280,7 @@ validations is defined here:
 [`dynatrace.srg-validations`](plugins/dql-backend/src/service/queries.ts). You
 can change this query for all cards or override it using a custom query.
 
-### Custom Queries {#custom-queries}
+### Custom Queries
 
 You can also register your custom queries and use them with
 `EntityDqlQueryCard`:
@@ -360,7 +360,7 @@ You can create custom queries in Notebooks and include them in a backstage
 entity via annotations. There are two types of notebook annotations supported:
 
 1. `notebook-id` annotation: the id of the notebook
-2. `notebook-url` annotation: the url of the notebook
+2. `notebook-url` annotation: the URL of the notebook
 
 When only one environment is registered, both types of annotations will work. If
 multiple environments are registered, only the `notebook-url` annotation will
@@ -383,8 +383,8 @@ spec:
   system: integrations
 ```
 
-The queries defined in notebooks must follow the guidelines introduced for
-[Custom Queries](#custom-queries). However, the notebook queries do not support
+The queries defined in Notebooks must follow the guidelines introduced for
+[Custom Queries](#custom-queries). However, the Notebook queries do not support
 placeholders.
 
 To include the result tables for the custom queries of the entity, you would
@@ -396,7 +396,7 @@ use:
 
 This component displays a result table for each query defined. The order in
 which the tables are displayed depends on the order of the entity's queries
-defined in the notebook.
+defined in the Notebook.
 
 ### Sample DQL Queries
 
@@ -421,7 +421,7 @@ fetch events, from: -2d
         | fieldsAdd id=if(isNull(event.id), "N/A", else: event.id)
         | fieldsAdd status=if(isNull(event.status), "N/A", else: event.status)
         | fieldsAdd name=if(isNull(event.name), "N/A", else: event.name)
-        | fieldsKeep timestamp, event.category, id, name, status
+        | fieldsKeep timestamp, category, id, name, status
 ```
 
 Query Security Vulnerabilities:

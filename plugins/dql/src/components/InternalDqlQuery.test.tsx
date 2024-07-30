@@ -170,7 +170,7 @@ describe('DqlQuery', () => {
     );
   });
 
-  it('should render an default empty state if no data is returned', async () => {
+  it('should render a default empty state if no data is returned', async () => {
     const componentName = 'example';
     const queryName = 'query-id-1';
     const queryNamespace = 'dynatrace';

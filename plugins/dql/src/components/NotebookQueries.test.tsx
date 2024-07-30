@@ -163,7 +163,7 @@ describe('CatalogQueries', () => {
     );
   });
 
-  it('should render an default empty state if no data is returned', async () => {
+  it('should render a default empty state if no data is returned', async () => {
     const componentName = 'example';
     const queryNamespace = 'dynatrace';
 

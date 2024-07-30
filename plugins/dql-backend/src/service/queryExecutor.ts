@@ -38,7 +38,7 @@ const componentQueryVariablesSchema = z.object({
 type ComponentQueryVariables = z.infer<typeof componentQueryVariablesSchema>;
 type ComponentNotebookVariables = {
   notebookId: string;
-  notebookUrl?: string;
+  notebookHost?: string;
 };
 
 export class QueryExecutor {
@@ -74,15 +74,15 @@ export class QueryExecutor {
     variables: ComponentQueryVariables,
   ): Promise<NotebookQueryData[] | undefined> {
     componentQueryVariablesSchema.parse(variables);
-    if (this.apis.length > 1 && !notebookVariables.notebookUrl) {
+    if (this.apis.length > 1 && !notebookVariables.notebookHost) {
       throw new Error(
         `The annotation notebook-id is only supported in the context of a single Dynatrace environment`,
       );
     }
 
-    const filteredApis = notebookVariables.notebookUrl
+    const filteredApis = notebookVariables.notebookHost
       ? this.apis.filter(
-          api => api.config.url === 'https://' + notebookVariables.notebookUrl,
+          api => api.config.url === notebookVariables.notebookHost,
         )
       : this.apis;
 
@@ -132,6 +132,4 @@ export class QueryExecutor {
     const results = await Promise.all(results$);
     return results.flatMap(result => result);
   }
-
-  async executeNotebook() {}
 }

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { AuthService } from '@backstage/backend-plugin-api';
 import { CatalogClient } from '@backstage/catalog-client';
 import { Entity } from '@backstage/catalog-model';
-import { AuthService } from '@backstage/backend-plugin-api';
 import { Request } from 'express';
 
 export const getEntityFromRequest = async (
@@ -42,3 +42,38 @@ export const getEntityFromRequest = async (
   }
   return entity;
 };
+
+const NOTEBOOK_URL_ANNOTATION = 'dynatrace.com/notebook-url';
+const NOTEBOOK_ID_ANNOTATION = 'dynatrace.com/notebook-id';
+
+export const getNotebookVariables = (entity: Entity) => {
+  const annotationNotebookURL =
+    entity.metadata.annotations?.[NOTEBOOK_URL_ANNOTATION] ?? '';
+
+  if (!annotationNotebookURL) {
+    return {
+      notebookId: getNotebookId(
+        '',
+        entity.metadata.annotations?.[NOTEBOOK_ID_ANNOTATION],
+      ),
+      notebookHost: '',
+    };
+  }
+
+  const notebookURL = new URL(annotationNotebookURL);
+  const trimmedPathname = getTrimmedPathname(notebookURL.pathname);
+
+  return {
+    notebookId: getNotebookId(
+      trimmedPathname,
+      entity.metadata.annotations?.[NOTEBOOK_ID_ANNOTATION],
+    ),
+    notebookHost: notebookURL.origin,
+  };
+};
+
+const getTrimmedPathname = (pathname: string) =>
+  pathname.endsWith('/') ? pathname.slice(0, -1) : pathname; // remove the trailing slash
+
+const getNotebookId = (pathname: string, id?: string) =>
+  pathname ? pathname.split('/').pop() ?? '' : id ?? '';

@@ -109,7 +109,7 @@ export const dynatraceQueries: Record<
             const key = Object.keys(tag)[0];
             const value = tag[key];
             return value !== undefined
-              ? `in (tags[${key}], "${value}")`
+              ? `in (tags[\`${key}\`], "${value}")`
               : `isNotNull(tags[${key}])`;
           })
           .join(' AND ');

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { getEntityFromRequest } from './routeUtils';
-import { CatalogClient, CatalogApi } from '@backstage/catalog-client';
+import { getEntityFromRequest, getNotebookVariables } from './routeUtils';
 import { AuthService } from '@backstage/backend-plugin-api';
+import { CatalogClient, CatalogApi } from '@backstage/catalog-client';
 import { Entity } from '@backstage/catalog-model';
 import { Request } from 'express';
 
@@ -53,6 +53,10 @@ describe('routeUtils', () => {
       apiVersion: '1.0.0',
       metadata: {
         name: 'myComp',
+        annotations: {
+          'dynatrace.com/notebook-url':
+            'https://my-environment.dynatrace.com/ui/apps/dynatrace.notebooks/notebook/my-notebook-id',
+        },
       },
     });
   });
@@ -93,8 +97,80 @@ describe('routeUtils', () => {
         apiVersion: '1.0.0',
         metadata: {
           name: 'myComp',
+          annotations: {
+            'dynatrace.com/notebook-url':
+              'https://my-environment.dynatrace.com/ui/apps/dynatrace.notebooks/notebook/my-notebook-id',
+          },
         },
       });
+    });
+  });
+  describe('getNotebookVariables', () => {
+    it('should split the notebook url in id and host', async () => {
+      // act
+      const entity = await getEntityFromRequest(
+        getRequest(mockedEntityRef),
+        mockedClient,
+        mockedAuth,
+      );
+
+      const notebookVariables = getNotebookVariables(entity);
+
+      // assert
+      expect(entity).toEqual<Entity>({
+        kind: 'component',
+        apiVersion: '1.0.0',
+        metadata: {
+          name: 'myComp',
+          annotations: {
+            'dynatrace.com/notebook-url':
+              'https://my-environment.dynatrace.com/ui/apps/dynatrace.notebooks/notebook/my-notebook-id',
+          },
+        },
+      });
+
+      expect(notebookVariables).toEqual({
+        notebookId: 'my-notebook-id',
+        notebookHost: 'https://my-environment.dynatrace.com',
+      });
+    });
+
+    it('should return the notebook id', async () => {
+      // act
+      const entity: Entity = {
+        kind: 'component',
+        apiVersion: '1.0.0',
+        metadata: {
+          name: 'myComp',
+          annotations: {
+            'dynatrace.com/notebook-id': 'my-notebook-id',
+          },
+        },
+      };
+      const notebookVariables = getNotebookVariables(entity);
+      // assert
+      expect(notebookVariables).toEqual({
+        notebookId: 'my-notebook-id',
+        notebookHost: '',
+      });
+    });
+
+    it('should remove a trailing slash', async () => {
+      // act
+      const entity: Entity = {
+        kind: 'component',
+        apiVersion: '1.0.0',
+        metadata: {
+          name: 'myComp',
+          annotations: {
+            'dynatrace.com/notebook-url':
+              'https://my-environment.dynatrace.com/ui/apps/dynatrace.notebooks/notebook/my-notebook-id/',
+          },
+        },
+      };
+      const notebookVariables = getNotebookVariables(entity);
+      // assert
+      expect(notebookVariables.notebookId).toEqual('my-notebook-id');
     });
   });
 });

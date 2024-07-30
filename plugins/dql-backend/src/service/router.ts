@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 import { parseCustomQueries, parseEnvironments } from '../utils/configParser';
-import { getEntityFromRequest } from '../utils/routeUtils';
+import {
+  getEntityFromRequest,
+  getNotebookVariables,
+} from '../utils/routeUtils';
 import { QueryExecutor } from './queryExecutor';
 import {
   createLegacyAuthAdapters,
@@ -55,25 +58,14 @@ export const createRouter = async (
 
   router.get('/notebook', async (req, res) => {
     const entity = await getEntityFromRequest(req, catalogClient, auth);
-
-    const notebookVariables = {
-      notebookId:
-        entity.metadata.annotations?.['dynatrace.com/notebook-url']
-          ?.split('/')
-          .pop() ??
-        entity.metadata.annotations?.['dynatrace.com/notebook-id'] ??
-        '',
-      notebookUrl:
-        entity.metadata.annotations?.['dynatrace.com/notebook-url']
-          ?.substring(8)
-          .split('/')[0] ?? '',
-    };
+    const notebookVariables = getNotebookVariables(entity);
 
     if (!notebookVariables.notebookId) {
       throw new Error(
-        `No notebook-id or notebook-url annotation in catalog.info-yaml defined.`,
+        'No valid notebook-id or notebook-url annotation in catalog.info-yaml defined.',
       );
     }
+
     const result = await queryExecutor.executeCustomNotebookQueries(
       notebookVariables,
       {

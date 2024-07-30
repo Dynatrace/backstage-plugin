@@ -25,7 +25,7 @@ describe('queryExecutor', () => {
     componentName: 'name',
   };
   const notebookVariables = {
-    notebookUrl: 'https://sample.url/',
+    notebookHost: 'https://sample.url/',
     notebookId: 'samplenotebookid',
   };
   const entity: Entity = {
@@ -111,7 +111,6 @@ describe('queryExecutor', () => {
 
     it('should not throw an error if notebook queries are defined', async () => {
       // act
-
       executor.executeCustomNotebookQueries = jest.fn().mockResolvedValue([
         { data: [], title: 'query-1' },
         { data: [], title: 'query-2' },

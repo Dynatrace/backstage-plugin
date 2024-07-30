@@ -59,6 +59,23 @@ export type PollQueryResponse<RecordType> = {
   };
 };
 
+export type NotebookContent = {
+  sections: NotebookSection[];
+  version: string;
+  defaultTimeframe: {};
+};
+export type NotebookSection = {
+  id: string;
+  type: string;
+  showTitle: boolean;
+  title?: string;
+  state: {
+    input: {
+      value: string;
+    };
+  };
+};
+
 const logger = getRootLogger().child({ plugin: 'dql-backend' });
 const DEFAULT_TOKEN_URL = 'https://sso.dynatrace.com/sso/oauth2/token';
 
@@ -79,23 +96,6 @@ const executeQuery = async (
     throw new Error(await queryExecRes.text().catch(() => ''));
   }
   return queryExecRes.json();
-};
-
-export type NotebookContent = {
-  sections: NotebookSection[];
-  version: string;
-  defaultTimeframe: {};
-};
-export type NotebookSection = {
-  id: string;
-  type: string;
-  showTitle: boolean;
-  title?: string;
-  state: {
-    input: {
-      value: string;
-    };
-  };
 };
 
 const executeNotebook = async (
