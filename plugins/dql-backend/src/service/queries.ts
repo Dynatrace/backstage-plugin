@@ -96,26 +96,20 @@ export const dynatraceQueries: Record<
     if (catalogTags) {
       const tags = catalogTags.split(',').map(tag => {
         const [key, value] = tag.split('=');
-        if (value === undefined) {
-          return { [key]: undefined };
-        }
-        return { [key]: value || '' };
+        return { key, value: value !== undefined ? value || '' : undefined };
       });
 
       if (tags.length > 0) {
         filterString += '| filter ';
         filterString += tags
-          .map(tag => {
-            const key = Object.keys(tag)[0];
-            const value = tag[key];
-            return value !== undefined
+          .map(({ key, value }) =>
+            value !== undefined
               ? `in (tags[\`${key}\`], "${value}")`
-              : `isNotNull(tags[${key}])`;
-          })
+              : `isNotNull(tags[${key}])`,
+          )
           .join(' AND ');
       }
     }
-
     return `
     fetch bizevents, from: -2d
     | filter event.provider == "dynatrace.site.reliability.guardian"

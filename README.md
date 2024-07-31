@@ -366,6 +366,9 @@ When only one environment is registered, both types of annotations will work. If
 multiple environments are registered, only the `notebook-url` annotation will
 work.
 
+To enable this functionality, the following scope is required:
+`document:documents:read`.
+
 ```yaml
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -374,8 +377,8 @@ metadata:
   description: Backstage Demo instance.
   annotations:
     backstage.io/kubernetes-id: kubernetescustom
-    dynatrace.com/notebook-id: my-notebook-id123
-    dynatrace.com/notebook-url: https://my-environment.dynatrace.com/ui/apps/dynatrace.notebooks/notebook/my-notebook-id123
+    dynatrace.com/notebook-id: my-notebook-id
+    dynatrace.com/notebook-url: https://my-environment.dynatrace.com/ui/apps/dynatrace.notebooks/notebook/my-notebook-id
 spec:
   type: website
   owner: user:default/mjakl

@@ -82,7 +82,8 @@ export class QueryExecutor {
 
     const filteredApis = notebookVariables.notebookHost
       ? this.apis.filter(
-          api => api.config.url === notebookVariables.notebookHost,
+          api =>
+            new URL(api.config.url).origin === notebookVariables.notebookHost,
         )
       : this.apis;
 
