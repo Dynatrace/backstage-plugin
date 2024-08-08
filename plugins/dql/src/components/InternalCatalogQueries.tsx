@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useDqlQuery } from '../hooks';
+import { useCatalogDqlQueries } from '../hooks/useCatalogDqlQueries';
 import { DqlEmptyState } from './DqlEmptyState';
 import { TabularDataTable } from './TabularDataTable';
 import { EmptyStateProps } from './types';
@@ -22,26 +22,22 @@ import { Progress, ResponseErrorPanel } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import React from 'react';
 
-export type InternalDqlQueryProps = {
-  title: string;
+export type InternalCatalogQueriesProps = {
   queryNamespace: string;
-  queryName: string;
   EmptyState?: React.ComponentType<EmptyStateProps>;
   pageSize?: number;
 };
 
-export const InternalDqlQuery = ({
-  title,
+export const InternalCatalogQueries = ({
   queryNamespace,
-  queryName,
   EmptyState = DqlEmptyState,
   pageSize,
-}: InternalDqlQueryProps) => {
+}: InternalCatalogQueriesProps) => {
   const { entity } = useEntity();
   const componentName = entity.metadata.name;
-  const { error, loading, value } = useDqlQuery(
+
+  const { error, loading, value } = useCatalogDqlQueries(
     queryNamespace,
-    queryName,
     stringifyEntityRef(entity),
   );
 
@@ -55,19 +51,32 @@ export const InternalDqlQuery = ({
     return (
       <EmptyState
         componentName={componentName}
-        queryName={queryName}
+        queryName={''}
         queryNamespace={queryNamespace}
-        additionalInformation={
-          `${queryNamespace}.${queryName}` === 'dynatrace.srg-validations'
-            ? `# No Site Reliability Guardian resources
-  No result received. If you don't use Site Reliability Guardians, do not hesitate to integrate them. 
-  [View this for more information.](https://docs.dynatrace.com/docs/platform-modules/automations/site-reliability-guardian)
-`
-            : ''
-        }
+        additionalInformation="Please ensure that you have correctly defined queries in the catalog-info.yaml file."
       />
     );
   }
 
-  return <TabularDataTable title={title} data={value} pageSize={pageSize} />;
+  return (
+    <>
+      {value.map((queryData, index) =>
+        queryData.data?.length > 0 ? (
+          <TabularDataTable
+            key={index}
+            data={queryData.data}
+            title={queryData.title}
+            pageSize={pageSize}
+          ></TabularDataTable>
+        ) : (
+          <EmptyState
+            key={index}
+            componentName={componentName}
+            queryName={queryData.title}
+            queryNamespace={queryNamespace}
+          />
+        ),
+      )}
+    </>
+  );
 };

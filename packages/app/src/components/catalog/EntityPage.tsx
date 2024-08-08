@@ -70,6 +70,7 @@ import { EntityTechdocsContent } from '@backstage/plugin-techdocs';
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import {
+  EntityCatalogInfoQueryCard,
   EntityDqlQueryCard,
   EntityKubernetesDeploymentsCard,
 } from '@dynatrace/backstage-plugin-dql';
@@ -240,11 +241,23 @@ const websiteEntityPage = (
         <TabbedLayout.Route path="/kubernetes" title="Kubernetes Deployments">
           <EntityKubernetesDeploymentsCard title="Kubernetes Deployments with explicit title" />
         </TabbedLayout.Route>
+        <TabbedLayout.Route path="/srg" title="Site Reliability Guardian">
+          <EntityDqlQueryCard
+            title="Site Reliability Guardian Validations"
+            queryId="dynatrace.srg-validations"
+          />
+        </TabbedLayout.Route>
         <TabbedLayout.Route path="/davis-events" title="Davis Events">
           <EntityDqlQueryCard
             title="Davis Events"
             queryId="custom.davis-events"
           />
+        </TabbedLayout.Route>
+        <TabbedLayout.Route
+          path="/example-catalog-queries"
+          title="Example Catalog Queries"
+        >
+          <EntityCatalogInfoQueryCard />
         </TabbedLayout.Route>
       </TabbedLayout>
     </EntityLayout.Route>

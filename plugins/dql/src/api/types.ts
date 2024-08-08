@@ -15,6 +15,11 @@
  */
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 
+export type CatalogQueryData = {
+  title: string;
+  data: TabularData;
+};
+
 export type DqlQueryApi = {
   getData(
     queryNamespace: string,
@@ -22,4 +27,10 @@ export type DqlQueryApi = {
     entityRef: string,
     identityToken: string,
   ): Promise<TabularData>;
+
+  getDataFromQueries(
+    queryNamespace: string,
+    entityRef: string,
+    identityToken: string,
+  ): Promise<CatalogQueryData[]>;
 };
