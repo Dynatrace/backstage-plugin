@@ -117,7 +117,7 @@ describe('DQLQueryApiClient', () => {
   });
 
   it('should return the data from function getDataFromQueries()', async () => {
-    const response = [[{ column: 'value' }]];
+    const response = [{ title: 'queryTitle', data: [{ column: 'value' }] }];
     mockFetchResponse(response);
     const discoveryApi = mockDiscoveryApiUrl('https://discovery-api.com');
     const client = new DqlQueryApiClient({ discoveryApi });

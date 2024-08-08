@@ -95,7 +95,8 @@ describe('queries', () => {
       // assert
       expect(query).toContain('| filter workload.labels[`label`] == "value"');
     });
-
+  });
+  describe(DynatraceQueryKeys.SRG_VALIDATIONS, () => {
     it('should return the srg-query', () => {
       // act
       const query = dynatraceQueries[DynatraceQueryKeys.SRG_VALIDATIONS](
@@ -105,6 +106,24 @@ describe('queries', () => {
 
       // assert
       expect(query).toContain('fetch bizevents');
+      expect(query).toContain(
+        '| filter event.provider == "dynatrace.site.reliability.guardian"',
+      );
+    });
+
+    it('should return the srg-query with filtering for tags defined in guardian-tags annotation', () => {
+      // act
+      const query = dynatraceQueries[DynatraceQueryKeys.SRG_VALIDATIONS](
+        getEntity({
+          'dynatrace.com/guardian-tags': 'novalue,service=my-service',
+        }),
+        defaultApiConfig,
+      );
+
+      // assert
+      expect(query).toContain('fetch bizevents');
+      expect(query).toContain('isNotNull(tags[novalue])');
+      expect(query).toContain('in (tags[`service`], "my-service")');
       expect(query).toContain(
         '| filter event.provider == "dynatrace.site.reliability.guardian"',
       );

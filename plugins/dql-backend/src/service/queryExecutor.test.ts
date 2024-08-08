@@ -68,13 +68,16 @@ describe('queryExecutor', () => {
       // act
       const result = await executor.executeCustomCatalogQueries(
         [
-          { name: 'query-1', query: 'fetch data' },
-          { name: 'query-2', query: 'fetch data' },
+          { id: 'query-1', query: 'fetch data' },
+          { id: 'query-2', query: 'fetch data' },
         ],
         inputVariables,
       );
       // assert
-      expect(result).toEqual([]);
+      expect(result).toEqual([
+        { title: 'query-1', data: [] },
+        { title: 'query-2', data: [] },
+      ]);
     });
 
     it('should throw an error if no catalog query is defined', async () => {

@@ -354,7 +354,7 @@ by its ID with the `custom.` prefix:
 />
 ```
 
-### Custom Queries within catalog-info.yaml file of the Backstage Entity
+### Custom Queries within the catalog-info.yaml file of the Backstage Entity
 
 You can also register your custom queries in the catalog-info.yaml file.
 
@@ -372,7 +372,8 @@ spec:
   lifecycle: experimental
   system: integrations
   queries:
-    - name: Problem Events
+    - id: Problem Events
+      description: Fetch Problem Events
       query: >
         fetch events, from: -2d
               | filter event.kind=="DAVIS_PROBLEM"
@@ -382,7 +383,8 @@ spec:
               | fieldsAdd status=if(isNull(event.status), "N/A", else:
         event.status)
               | fieldsAdd name=if(isNull(event.name), "N/A", else: event.name)
-              | fieldsKeep timestamp, event.category, id, name, status
+              | fieldsAdd environment = "${environmentName}"
+              | fieldsKeep timestamp, category, id, name, status, environment
 ```
 
 As mentioned before, queries can contain placeholders. In the catalog-info.yaml
@@ -400,6 +402,46 @@ use:
 This component displays a result table for each query. The order in which the
 tables are displayed depends on the order of the entity's queries defined in the
 catalog-info.yaml file.
+
+### Sample DQL Queries
+
+Query Error Logs:
+
+```
+fetch logs, from: -2d
+        | filter status == "ERROR"
+        | sort timestamp desc
+        | fieldsAdd content=if(isNull(content), "N/A", else: content)
+        | fieldsAdd source=if(isNull(log.source), "N/A", else: log.source)
+        | fieldsAdd host=if(isNull(host.name), "N/A", else: host.name)
+        | fieldsAdd environment = "$${environmentName}"
+        | fieldsKeep timestamp, source, content, host, environment
+```
+
+Query Problem Events:
+
+```
+fetch events, from: -2d
+        | filter event.kind=="DAVIS_PROBLEM"
+        | fieldsAdd category=if(isNull(event.category), "N/A", else: event.category)
+        | fieldsAdd id=if(isNull(event.id), "N/A", else: event.id)
+        | fieldsAdd status=if(isNull(event.status), "N/A", else: event.status)
+        | fieldsAdd name=if(isNull(event.name), "N/A", else: event.name)
+        | fieldsAdd environment = "$${environmentName}"
+        | fieldsKeep timestamp, category, id, name, status, environment
+```
+
+Query Security Vulnerabilities:
+
+```
+fetch events, from: -2d
+        | filter event.provider=="Dynatrace"
+        | filter event.kind=="SECURITY_EVENT"
+        | filter event.type=="VULNERABILITY_STATUS_CHANGE_EVENT"
+        | filter event.level=="VULNERABILITY"
+        | fieldsAdd environment = "$${environmentName}"
+        | fieldsKeep timestamp, event.status, vulnerability.display_id, event.id, vulnerability.title, vulnerability.risk.level, vulnerability.display_id, environment
+```
 
 ### Backlink to Dynatrace
 

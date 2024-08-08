@@ -23,14 +23,12 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 import React from 'react';
 
 export type InternalCatalogQueriesProps = {
-  titles: string[];
   queryNamespace: string;
   EmptyState?: React.ComponentType<EmptyStateProps>;
   pageSize?: number;
 };
 
 export const InternalCatalogQueries = ({
-  titles,
   queryNamespace,
   EmptyState = DqlEmptyState,
   pageSize,
@@ -55,6 +53,7 @@ export const InternalCatalogQueries = ({
         componentName={componentName}
         queryName={''}
         queryNamespace={queryNamespace}
+        additionalInformation="Please ensure that you have correctly defined queries in the catalog-info.yaml file."
       />
     );
   }
@@ -62,18 +61,19 @@ export const InternalCatalogQueries = ({
   return (
     <>
       {value.map((queryData, index) =>
-        queryData.length > 0 ? (
+        queryData.data?.length > 0 ? (
           <TabularDataTable
-            data={queryData}
-            title={titles[index]}
+            key={index}
+            data={queryData.data}
+            title={queryData.title}
             pageSize={pageSize}
           ></TabularDataTable>
         ) : (
           <EmptyState
+            key={index}
             componentName={componentName}
-            queryName={titles[index]}
+            queryName={queryData.title}
             queryNamespace={queryNamespace}
-            isCatalogQuery={true}
           />
         ),
       )}

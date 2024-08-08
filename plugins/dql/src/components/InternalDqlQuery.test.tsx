@@ -61,10 +61,13 @@ const mockEntity = (
   };
 };
 const mockedEntityRef = 'component:default/example';
-const mockDqlQueryApi = (data: TabularData = []) => {
+const mockDqlQueryApi = (data: TabularData = [], titles: string[] = []) => {
   return {
     getData: jest.fn().mockResolvedValue(data),
-    getDataFromQueries: jest.fn().mockResolvedValue(data),
+    getDataFromQueries: jest.fn().mockResolvedValue([
+      { title: titles[0], data: data },
+      { title: titles[1], data: data },
+    ]),
   };
 };
 const MockIdentityApi = {
@@ -215,6 +218,40 @@ describe('DqlQuery', () => {
         queryNamespace,
         queryName,
         componentName,
+      }),
+      expect.anything(),
+    );
+  });
+
+  it('should promote the srg when no data is returned', async () => {
+    const componentName = 'example';
+    const queryName = 'srg-validations';
+    const queryNamespace = 'dynatrace';
+    const additionalInformation = `# No Site Reliability Guardian resources
+  No result received. If you don't use Site Reliability Guardians, do not hesitate to integrate them. 
+  [View this for more information.](https://docs.dynatrace.com/docs/platform-modules/automations/site-reliability-guardian)
+`;
+
+    const queryApi = mockDqlQueryApi();
+    const entity = mockEntity(componentName);
+    const EmptyState = jest.fn(() => null);
+    await prepareComponent({
+      entity,
+      queryApi,
+      queryName,
+      queryNamespace,
+      EmptyState,
+    });
+
+    expect(TabularDataTable).not.toHaveBeenCalled();
+    expect(ResponseErrorPanel).not.toHaveBeenCalled();
+    expect(DqlEmptyState).not.toHaveBeenCalled();
+    expect(EmptyState).toHaveBeenCalledWith<[EmptyStateProps, unknown]>(
+      expect.objectContaining<Partial<EmptyStateProps>>({
+        queryNamespace,
+        queryName,
+        componentName,
+        additionalInformation,
       }),
       expect.anything(),
     );

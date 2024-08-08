@@ -21,20 +21,21 @@ export const DqlEmptyState = ({
   componentName,
   queryName,
   queryNamespace,
-  isCatalogQuery = false,
   additionalInformation = '',
 }: EmptyStateProps) => {
   const message = `# We turned up empty
 
+  Query
   ${
-    isCatalogQuery
-      ? `Query named \`${queryName}\` defined in catalog-info.yaml 
-  for component \`${componentName}\` did not return any data.`
-      : `Query 
-  \`${queryNamespace}.${queryName}\` did not return any data for component 
-  \`${componentName}\`.`
-  }
-  
+    queryNamespace === 'catalog'
+      ? queryName
+        ? `with the title \`${queryName}\` defined in catalog-info.yaml`
+        : 'defined in catalog-info.yaml'
+      : `\`${queryNamespace}.${queryName}\``
+  } 
+   did not return any data for component 
+  \`${componentName}\`.
+
   If you recently added the component, it may take a few minutes for
   Dynatrace to start reporting data. If the component has been running
   for a while, it may not be reporting data. Please check that your

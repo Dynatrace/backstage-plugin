@@ -6,38 +6,45 @@ metadata:
   annotations:
     backstage.io/kubernetes-id: kubernetescustom
     dynatrace.com/guardian-tags: "service=my-service,stage=development,novalue"
-spec:
-  type: website
-  owner: user:default/mjakl
-  lifecycle: experimental
-  system: integrations
-  queries:
-    - name: Error Logs
-      query: >
-        fetch logs, from: -2d
+  dynatrace:
+    queries:
+      - id: Error Logs
+        description: Fetch Error Logs
+        query: >
+          fetch logs, from: -2d
                 | filter status == "ERROR"
                 | sort timestamp desc
                 | fieldsAdd content=if(isNull(content), "N/A", else: content)
                 | fieldsAdd source=if(isNull(log.source), "N/A", else: log.source)
                 | fieldsAdd host=if(isNull(host.name), "N/A", else: host.name)
-                | fieldsKeep timestamp, source, content, host
-    - name: Problem Events
-      query: >
-        fetch events, from: -2d
+                | fieldsAdd environment = "${environmentName}"
+                | fieldsKeep timestamp, source, content, host, environment
+      - id: Problem Events
+        description: Fetch Problem Events
+        query: >
+          fetch events, from: -2d
                 | filter event.kind=="DAVIS_PROBLEM"
                 | fieldsAdd category=if(isNull(event.category), "N/A", else: event.category)
                 | fieldsAdd id=if(isNull(event.id), "N/A", else: event.id)
                 | fieldsAdd status=if(isNull(event.status), "N/A", else: event.status)
                 | fieldsAdd name=if(isNull(event.name), "N/A", else: event.name)
-                | fieldsKeep timestamp, event.category, id, name, status
-    - name: Security Vulnerabilities
-      query: >
-        fetch events, from: -2d
+                | fieldsAdd environment = "${environmentName}"
+                | fieldsKeep timestamp, category, id, name, status, environment
+      - id: Security Vulnerabilities
+        description: Fetch Security Vulnerabilities
+        query: >
+          fetch events, from: -2d
                 | filter event.provider=="Dynatrace"
                 | filter event.kind=="SECURITY_EVENT"
                 | filter event.type=="VULNERABILITY_STATUS_CHANGE_EVENT"
                 | filter event.level=="VULNERABILITY"
-                | fieldsKeep timestamp, event.status, vulnerability.display_id, event.id, vulnerability.title, vulnerability.risk.level, vulnerability.display_id
+                | fieldsAdd environment = "${environmentName}"
+                | fieldsKeep timestamp, event.status, vulnerability.display_id, event.id, vulnerability.title, vulnerability.risk.level, vulnerability.display_id, environment
+spec:
+  type: website
+  owner: user:default/mjakl
+  lifecycle: experimental
+  system: integrations
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component

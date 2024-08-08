@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { CatalogInfoQuery } from './CatalogQueries';
+import { ExtendedEntity } from './types';
 import { Entity } from '@backstage/catalog-model';
 import { EmptyState } from '@backstage/core-components';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
@@ -33,7 +34,7 @@ const mockEntity = (
   name: string = 'example',
   annotations?: Record<string, string>,
   namespace?: string,
-): Entity => {
+): ExtendedEntity => {
   return {
     apiVersion: 'backstage.io/v1alpha1',
     kind: 'Component',
@@ -42,21 +43,23 @@ const mockEntity = (
       description: 'backstage.io/example',
       annotations,
       namespace,
+      dynatrace: {
+        queries: [
+          {
+            id: 'dynatrace dql test query 1',
+            query: 'fetch data',
+          },
+          {
+            id: 'dynatrace dql test query 2',
+            query: 'fetch data',
+          },
+        ],
+      },
     },
     spec: {
       lifecycle: 'production',
       type: 'service',
       owner: 'user:guest',
-      queries: [
-        {
-          name: 'dynatrace dql test query 1',
-          query: 'fetch data',
-        },
-        {
-          name: 'dynatrace dql test query 2',
-          query: 'fetch data',
-        },
-      ],
     },
   };
 };

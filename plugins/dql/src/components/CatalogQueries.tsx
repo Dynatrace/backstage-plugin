@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { InternalCatalogQueries } from './InternalCatalogQueries';
-import { EmptyStateProps, EntityQuery } from './types';
+import { EmptyStateProps, EntityQuery, ExtendedEntity } from './types';
 import { EmptyState } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import React from 'react';
@@ -25,19 +25,20 @@ export type CatalogInfoQueryProps = {
 };
 
 /**
- * CatalogInfoQuery is a wrapper around the InternalDqlQueries from the entity, that provides error handling
+ * CatalogInfoQuery is a wrapper around the InternalCatalogQueries from the entity, that provides error handling
  * for invalid props.
  * @param props DqlQueryProps
- * @returns React.ReactElement either a InternalDqlQuery or an ErrorPanel
+ * @returns React.ReactElement either a InternalCatalogQueries or an ErrorPanel
  */
 export const CatalogInfoQuery = (props: CatalogInfoQueryProps) => {
   const { entity } = useEntity();
-  const queries = (entity.spec?.queries as EntityQuery[]) || [];
+  const extendedEntity: ExtendedEntity = entity;
+  const queries =
+    (extendedEntity.metadata.dynatrace?.queries as EntityQuery[]) || [];
   return (
     <>
       {queries.length > 0 ? (
         <InternalCatalogQueries
-          titles={queries.map(query => query.name)}
           queryNamespace={'catalog'}
           EmptyState={props.emptyState}
           pageSize={props.pageSize}

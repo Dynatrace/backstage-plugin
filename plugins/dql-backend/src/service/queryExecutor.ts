@@ -18,6 +18,7 @@ import { dynatraceQueries, isValidDynatraceQueryKey } from './queries';
 import { compileDqlQuery } from './queryCompiler';
 import { Entity } from '@backstage/catalog-model';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
+import { CatalogQueryData } from '@dynatrace/backstage-plugin-dql/src/api/types';
 import { EntityQuery } from '@dynatrace/backstage-plugin-dql/src/components/types';
 import { z } from 'zod';
 
@@ -67,26 +68,30 @@ export class QueryExecutor {
   async executeCustomCatalogQueries(
     catalogQueries: EntityQuery[],
     variables: ComponentQueryVariables,
-  ): Promise<TabularData[] | undefined> {
+  ): Promise<CatalogQueryData[] | undefined> {
     componentQueryVariablesSchema.parse(variables);
     if (catalogQueries.length == 0) {
       throw new Error(`No custom catalog query found`);
     }
-    const results$ = this.apis.map(api => {
-      const queryPromises = catalogQueries.map(catalogQuery => {
+
+    const results$ = catalogQueries.map(async catalogQuery => {
+      const apiResultsPromises = this.apis.map(async api => {
         const compiledQuery = compileDqlQuery(catalogQuery.query, {
           ...variables,
           environmentName: api.environmentName,
           environmentUrl: api.environmentUrl,
         });
-        return api.executeDqlQuery(compiledQuery);
+        return await api.executeDqlQuery(compiledQuery);
       });
-
-      return Promise.all(queryPromises);
+      const apiResults = await Promise.all(apiResultsPromises);
+      return {
+        title: catalogQuery.id,
+        data: apiResults.flat(),
+      };
     });
 
-    const results = await Promise.all(results$);
-    return results.flatMap(result => result);
+    const queryResults = await Promise.all(results$);
+    return queryResults;
   }
 
   async executeDynatraceQuery(
