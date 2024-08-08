@@ -111,7 +111,7 @@ export const dynatraceQueries: Record<
       }
     }
     return `
-    fetch bizevents, from: -2d
+    fetch bizevents, from: -7d
     | filter event.provider == "dynatrace.site.reliability.guardian"
     | filter event.type == "guardian.validation.finished"
     | parse validation.summary, "JSON:summary"

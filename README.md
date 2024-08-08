@@ -356,7 +356,8 @@ by its ID with the `custom.` prefix:
 
 ### Custom Queries within the catalog-info.yaml file of the Backstage Entity
 
-You can also register your custom queries in the catalog-info.yaml file.
+You can register custom queries in the `metadata.dynatrace.queries` property of
+a component within the `catalog-info.yaml` file
 
 ```yaml
 apiVersion: backstage.io/v1alpha1
@@ -366,25 +367,26 @@ metadata:
   description: Backstage Demo instance.
   annotations:
     backstage.io/kubernetes-id: kubernetescustom
+    dynatrace.com/guardian-tags: 'service=my-service,stage=development,novalue'
+  dynatrace:
+    queries:
+      - id: Error Logs
+        description: Fetch Error Logs
+        query: >
+          fetch logs, from: -2d
+                | filter status == "ERROR"
+                | sort timestamp desc
+                | fieldsAdd content=if(isNull(content), "N/A", else: content)
+                | fieldsAdd source=if(isNull(log.source), "N/A", else:
+          log.source)
+                | fieldsAdd host=if(isNull(host.name), "N/A", else: host.name)
+                | fieldsAdd environment = "${environmentName}"
+                | fieldsKeep timestamp, source, content, host, environment
 spec:
   type: website
   owner: user:default/mjakl
   lifecycle: experimental
   system: integrations
-  queries:
-    - id: Problem Events
-      description: Fetch Problem Events
-      query: >
-        fetch events, from: -2d
-              | filter event.kind=="DAVIS_PROBLEM"
-              | fieldsAdd category=if(isNull(event.category), "N/A", else:
-        event.category)
-              | fieldsAdd id=if(isNull(event.id), "N/A", else: event.id)
-              | fieldsAdd status=if(isNull(event.status), "N/A", else:
-        event.status)
-              | fieldsAdd name=if(isNull(event.name), "N/A", else: event.name)
-              | fieldsAdd environment = "${environmentName}"
-              | fieldsKeep timestamp, category, id, name, status, environment
 ```
 
 As mentioned before, queries can contain placeholders. In the catalog-info.yaml
