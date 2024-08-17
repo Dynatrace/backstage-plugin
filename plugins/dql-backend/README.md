@@ -14,6 +14,10 @@ on [localhost:7007/dql](http://localhost:7007/dql).
 
 ## Behind a corporate proxy
 
-If your application is behind a corporate proxy, set `HTTP_PROXY` as an
+If your application is behind a corporate proxy, set `HTTPS_PROXY` as an
 environment variable. This will be passed to `HttpsProxyAgent` as `agent` in the
 fetch request.
+
+There is another method, you can open firewall for Dynatrace tokenUrl
+https://sso.dynatrace.com and https://xxxxxxxx.apps.dynatrace.com. In that case,
+you don't need HTTPS_PROXY.
