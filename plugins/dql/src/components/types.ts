@@ -32,6 +32,10 @@ export type EntityQuery = {
    */
   description?: string;
   /**
+   * The environments in which the query is executed.
+   */
+  environments?: string[];
+  /**
    * The query itself.
    */
   query: string;
