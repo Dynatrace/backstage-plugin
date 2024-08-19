@@ -407,6 +407,9 @@ catalog-info.yaml file.
 
 ### Sample DQL Queries
 
+These are sample custom queries for the `app-config.yaml`. To use these queries
+in the `catalog-info.yaml`, you need to remove one `$` from the placeholders.
+
 Query Error Logs:
 
 ```
