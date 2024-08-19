@@ -412,6 +412,8 @@ It is possible to specify the environments in which each query defined in the
 
 By default, queries are executed against all defined environments.
 
+Example query defined in `catalog-info.yaml` with environment limitation:
+
 ```
 apiVersion: backstage.io/v1alpha1
 kind: Component
