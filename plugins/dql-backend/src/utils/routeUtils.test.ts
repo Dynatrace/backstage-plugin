@@ -142,9 +142,9 @@ describe('routeUtils', () => {
           },
         },
       },
-      // @ts-ignore - For some reason jest writes the type incorrectly
     ])(
       'should throw if the queries are incorrect',
+      // @ts-ignore - For some reason jest writes the type incorrectly
       (entity: ExtendedEntity) => {
         expect(() => validateQueries(entity)).toThrow();
       },
