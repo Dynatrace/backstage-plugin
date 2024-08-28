@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 import { CatalogInfoQuery } from './CatalogQueries';
-import { ExtendedEntity } from './types';
 import { Entity } from '@backstage/catalog-model';
 import { EmptyState } from '@backstage/core-components';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { renderInTestApp } from '@backstage/test-utils';
+import { ExtendedEntity } from '@dynatrace/backstage-plugin-dql-common';
 import { screen } from '@testing-library/react';
 import React from 'react';
 

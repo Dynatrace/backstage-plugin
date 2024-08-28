@@ -63,7 +63,7 @@ describe('DqlEmptyState', () => {
     expect(rendered.getByText(/Fetch Error Logs/)).toBeInTheDocument();
     expect(
       rendered.getByText(
-        /defined in catalog-info.yaml did not return any data for component/,
+        /defined in catalog-info\.yaml did not return any data for component/,
       ),
     ).toBeInTheDocument();
   });
@@ -80,7 +80,7 @@ describe('DqlEmptyState', () => {
 
     expect(
       rendered.getByText(
-        /Query defined in catalog-info.yaml did not return any data for component/,
+        /Query defined in catalog-info\.yaml did not return any data for component/,
       ),
     ).toBeInTheDocument();
   });

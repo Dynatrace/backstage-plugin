@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { getEntityFromRequest } from './routeUtils';
-import { CatalogClient, CatalogApi } from '@backstage/catalog-client';
+import { getEntityFromRequest, validateQueries } from './routeUtils';
 import { AuthService } from '@backstage/backend-plugin-api';
+import { CatalogClient, CatalogApi } from '@backstage/catalog-client';
 import { Entity } from '@backstage/catalog-model';
+import { ExtendedEntity } from '@dynatrace/backstage-plugin-dql-common';
 import { Request } from 'express';
 
 const mockedEntityRef = 'component:default/example';
@@ -95,6 +96,85 @@ describe('routeUtils', () => {
           name: 'myComp',
         },
       });
+    });
+  });
+
+  describe('validateQueries', () => {
+    it.each<ExtendedEntity>([
+      {
+        kind: 'component',
+        apiVersion: '1.0.0',
+        metadata: {
+          name: '',
+        },
+      },
+      {
+        kind: 'component',
+        apiVersion: '1.0.0',
+        metadata: {
+          name: '',
+          // @ts-ignore
+          dynatrace: {},
+        },
+      },
+      {
+        kind: 'component',
+        apiVersion: '1.0.0',
+        metadata: {
+          name: '',
+          dynatrace: {
+            queries: [],
+          },
+        },
+      },
+      {
+        kind: 'component',
+        apiVersion: '1.0.0',
+        metadata: {
+          name: '',
+          dynatrace: {
+            queries: [
+              // @ts-ignore
+              {
+                id: '',
+              },
+            ],
+          },
+        },
+      },
+      // @ts-ignore - For some reason jest writes the type incorrectly
+    ])(
+      'should throw if the queries are incorrect',
+      (entity: ExtendedEntity) => {
+        expect(() => validateQueries(entity)).toThrow();
+      },
+    );
+
+    it('should not throw if the queries are valid', () => {
+      // act
+      const result = validateQueries({
+        kind: 'component',
+        apiVersion: '1.0.0',
+        metadata: {
+          name: '',
+          dynatrace: {
+            queries: [
+              {
+                id: 'id',
+                query: 'query',
+              },
+            ],
+          },
+        },
+      });
+
+      // assert
+      expect(result).toEqual([
+        {
+          id: 'id',
+          query: 'query',
+        },
+      ]);
     });
   });
 });

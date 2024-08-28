@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { AuthService } from '@backstage/backend-plugin-api';
 import { CatalogClient } from '@backstage/catalog-client';
 import { Entity } from '@backstage/catalog-model';
-import { AuthService } from '@backstage/backend-plugin-api';
+import {
+  dynatraceCatalogQuerySchema,
+  EntityQuery,
+  ExtendedEntity,
+} from '@dynatrace/backstage-plugin-dql-common';
 import { Request } from 'express';
 
 export const getEntityFromRequest = async (
@@ -41,4 +46,24 @@ export const getEntityFromRequest = async (
     throw new Error(`Entity ref "${entityRef}" not found`);
   }
   return entity;
+};
+
+export const validateQueries = (
+  extendedEntity: ExtendedEntity,
+): EntityQuery[] => {
+  const parsedQuery = dynatraceCatalogQuerySchema.safeParse(
+    extendedEntity.metadata.dynatrace?.queries,
+  );
+  if (parsedQuery.error) {
+    const zodError = parsedQuery.error.errors
+      .map(
+        error =>
+          `"${error.message}" at metadata/dynatrace/queries/${error.path.join(
+            '/',
+          )}`,
+      )
+      .join('\n');
+    throw new Error(`Invalid custom catalog queries.\n${zodError}`);
+  }
+  return parsedQuery.data;
 };

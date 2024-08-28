@@ -13,38 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Entity, EntityMeta } from '@backstage/catalog-model';
 
 export type EmptyStateProps = {
   componentName: string;
   queryName: string;
   queryNamespace: string;
   additionalInformation?: string;
-};
-
-export type EntityQuery = {
-  /**
-   * The id of the query.
-   */
-  id: string;
-  /**
-   * The description of the query.
-   */
-  description?: string;
-  /**
-   * The query itself.
-   */
-  query: string;
-};
-
-export type ExtendedEntityMetadata = EntityMeta & {
-  dynatrace?: {
-    queries: EntityQuery[];
-  };
-};
-export type ExtendedEntity = Entity & {
-  metadata: ExtendedEntityMetadata;
-  dynatrace?: {
-    queries: string[];
-  };
 };

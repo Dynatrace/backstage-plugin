@@ -79,12 +79,5 @@ describe('queryExecutor', () => {
         { title: 'query-2', data: [] },
       ]);
     });
-
-    it('should throw an error if no catalog query is defined', async () => {
-      // assert
-      await expect(() =>
-        executor.executeCustomCatalogQueries([], inputVariables),
-      ).rejects.toThrow();
-    });
   });
 });
