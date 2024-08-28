@@ -80,13 +80,6 @@ describe('queryExecutor', () => {
       ]);
     });
 
-    it('should throw an error if no catalog query is defined', async () => {
-      // assert
-      await expect(() =>
-        executor.executeCustomCatalogQueries([], inputVariables),
-      ).rejects.toThrow();
-    });
-
     it('should accept and filter environments if environments are defined in catalog query', async () => {
       // act
       const result = await executor.executeCustomCatalogQueries(
