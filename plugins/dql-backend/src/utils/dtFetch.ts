@@ -19,8 +19,8 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 import fetch, { RequestInfo, RequestInit, Response } from 'node-fetch';
 
 const userAgent: string = getUserAgent();
-const agent = process.env.HTTP_PROXY
-  ? new HttpsProxyAgent(process.env.HTTP_PROXY)
+const agent = process.env.HTTPS_PROXY
+  ? new HttpsProxyAgent(process.env.HTTPS_PROXY)
   : undefined;
 
 export const dtFetch = (

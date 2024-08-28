@@ -17,13 +17,16 @@ import { DqlQueryApi, dqlQueryApiRef } from '../api';
 import { DqlEmptyState } from './DqlEmptyState';
 import { InternalCatalogQueries } from './InternalCatalogQueries';
 import { TabularDataTable } from './TabularDataTable';
-import { EmptyStateProps, ExtendedEntity } from './types';
+import { EmptyStateProps } from './types';
 import { Entity } from '@backstage/catalog-model';
 import { ResponseErrorPanel } from '@backstage/core-components';
 import { IdentityApi, identityApiRef } from '@backstage/core-plugin-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { TestApiProvider, renderInTestApp } from '@backstage/test-utils';
-import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
+import {
+  TabularData,
+  ExtendedEntity,
+} from '@dynatrace/backstage-plugin-dql-common';
 import { screen } from '@testing-library/react';
 import React from 'react';
 
@@ -154,7 +157,7 @@ describe('CatalogQueries', () => {
     >(expect.anything(), mockedEntityRef, expect.anything());
   });
 
-  it('should render an error panel in case of errors', async () => {
+  it('should render a error panel in case of errors', async () => {
     const error = new Error('some error');
     const queryApi = {
       getData: () => {
@@ -176,7 +179,7 @@ describe('CatalogQueries', () => {
     );
   });
 
-  it('should render an default empty state if no data is returned', async () => {
+  it('should render a default empty state if no data is returned', async () => {
     const componentName = 'example';
     const queryNamespace = 'dynatrace';
 

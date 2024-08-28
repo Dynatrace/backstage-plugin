@@ -18,9 +18,11 @@ import { DynatraceApi } from './dynatraceApi';
 import { dynatraceQueries, isValidDynatraceQueryKey } from './queries';
 import { compileDqlQuery } from './queryCompiler';
 import { Entity } from '@backstage/catalog-model';
-import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
+import {
+  EntityQuery,
+  TabularData,
+} from '@dynatrace/backstage-plugin-dql-common';
 import { CatalogQueryData } from '@dynatrace/backstage-plugin-dql/src/api/types';
-import { EntityQuery } from '@dynatrace/backstage-plugin-dql/src/components/types';
 import { z } from 'zod';
 
 const componentQueryVariablesSchema = z.object({
@@ -81,9 +83,6 @@ export class QueryExecutor {
     variables: ComponentQueryVariables,
   ): Promise<CatalogQueryData[] | undefined> {
     componentQueryVariablesSchema.parse(variables);
-    if (catalogQueries.length == 0) {
-      throw new Error(`No custom catalog query found`);
-    }
 
     const results$ = catalogQueries.map(async catalogQuery => {
       const filteredApis = catalogQuery.environments

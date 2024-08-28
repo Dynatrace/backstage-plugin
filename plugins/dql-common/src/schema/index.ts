@@ -15,3 +15,4 @@
  */
 
 export * from './tabularData';
+export * from './dynatraceQueries';

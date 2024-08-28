@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 import { InternalCatalogQueries } from './InternalCatalogQueries';
-import { EmptyStateProps, EntityQuery, ExtendedEntity } from './types';
+import { EmptyStateProps } from './types';
 import { EmptyState } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { ExtendedEntity } from '@dynatrace/backstage-plugin-dql-common';
 import React from 'react';
 
 export type CatalogInfoQueryProps = {
@@ -33,8 +34,7 @@ export type CatalogInfoQueryProps = {
 export const CatalogInfoQuery = (props: CatalogInfoQueryProps) => {
   const { entity } = useEntity();
   const extendedEntity: ExtendedEntity = entity;
-  const queries =
-    (extendedEntity.metadata.dynatrace?.queries as EntityQuery[]) || [];
+  const queries = extendedEntity.metadata.dynatrace?.queries ?? [];
   return (
     <>
       {queries.length > 0 ? (
