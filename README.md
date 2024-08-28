@@ -224,6 +224,62 @@ here:
 [`dynatrace.kubernetes-deployments`](plugins/dql-backend/src/service/queries.ts).
 You can change this query for all cards or override it using a custom query.
 
+### Site Reliability Guardian Validations
+
+Using the `EntityDqlQueryCard` with the queryId `dynatrace.srg-validations`, you
+can see the validations of the site reliability guardians in your Dynatrace
+environment.
+
+```jsx
+<EntityDqlQueryCard
+  title="Site Reliability Guardian Validations"
+  queryId="dynatrace.srg-validations"
+/>
+```
+
+To filter for specific guardians, you can filter tags defined in the
+`metadata.annotations` property of the `catalog-info.yaml` file under the key
+`dynatrace.com/guardian-tags`.
+
+```yaml
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: demo-backstage
+  description: Backstage Demo instance.
+  annotations:
+    backstage.io/kubernetes-id: kubernetescustom
+    dynatrace.com/guardian-tags: 'service=my-service,stage=development,novalue'
+```
+
+There are two ways to filter tags:
+
+1. **Key-Value Match:** The tag must match both the key and the value. For
+   example, the key `service` must have the value `my-service`.
+2. **Key Exists:** The tag key must exist with any value. For example, the key
+   `novalue`.
+
+The difference between these filtering methods is indicated by the presence of
+the `=` symbol.
+
+For the example provided above, the filtered guardian should have at least these
+tags:
+
+```yaml
+service: my-service
+stage: development
+novalue:
+```
+
+See
+[How to create a Site Reliability Guardian](https://docs.dynatrace.com/docs/shortlink/guardian-create-srg#create-a-guardian-from-a-template)
+and [Guardian tags](https://docs.dynatrace.com/docs/shortlink/srg-landing#tags).
+
+The query for fetching the monitoring data for Site Reliability Guardian
+validations is defined here:
+[`dynatrace.srg-validations`](plugins/dql-backend/src/service/queries.ts). You
+can change this query for all cards or override it using a custom query.
+
 ### Custom Queries
 
 You can also register your custom queries and use them with
@@ -296,6 +352,100 @@ by its ID with the `custom.` prefix:
   title="My Custom Query Results"
   queryId="custom.my-custom-query"
 />
+```
+
+### Custom Queries within the catalog-info.yaml file of the Backstage Entity
+
+You can register custom queries in the `metadata.dynatrace.queries` property of
+a component within the `catalog-info.yaml` file
+
+```yaml
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: demo-backstage
+  description: Backstage Demo instance.
+  annotations:
+    backstage.io/kubernetes-id: kubernetescustom
+    dynatrace.com/guardian-tags: 'service=my-service,stage=development,novalue'
+  dynatrace:
+    queries:
+      - id: Error Logs
+        description: Fetch Error Logs
+        query: >
+          fetch logs, from: -2d
+                | filter status == "ERROR"
+                | sort timestamp desc
+                | fieldsAdd content=if(isNull(content), "N/A", else: content)
+                | fieldsAdd source=if(isNull(log.source), "N/A", else:
+          log.source)
+                | fieldsAdd host=if(isNull(host.name), "N/A", else: host.name)
+                | fieldsAdd environment = "${environmentName}"
+                | fieldsKeep timestamp, source, content, host, environment
+spec:
+  type: website
+  owner: user:default/mjakl
+  lifecycle: experimental
+  system: integrations
+```
+
+As mentioned before, queries can contain placeholders. In the catalog-info.yaml
+file, the placeholders are prefixed with a single `$`. Please find the supported
+placeholders listed
+[here](https://github.com/Dynatrace/backstage-plugin/blob/eac6adfe0c25fc7a4e5b0b7d05d5dc83464f3652/README.md#custom-queries).
+
+To include the result tables for the custom queries of the entity, you would
+use:
+
+```jsx
+<EntityCatalogInfoQueryCard />
+```
+
+This component displays a result table for each query. The order in which the
+tables are displayed depends on the order of the entity's queries defined in the
+catalog-info.yaml file.
+
+### Sample DQL Queries
+
+These are sample custom queries for the `app-config.yaml`. To use these queries
+in the `catalog-info.yaml`, you need to remove one `$` from the placeholders.
+
+Query Error Logs:
+
+```
+fetch logs, from: -2d
+        | filter status == "ERROR"
+        | sort timestamp desc
+        | fieldsAdd content=if(isNull(content), "N/A", else: content)
+        | fieldsAdd source=if(isNull(log.source), "N/A", else: log.source)
+        | fieldsAdd host=if(isNull(host.name), "N/A", else: host.name)
+        | fieldsAdd environment = "$${environmentName}"
+        | fieldsKeep timestamp, source, content, host, environment
+```
+
+Query Problem Events:
+
+```
+fetch events, from: -2d
+        | filter event.kind=="DAVIS_PROBLEM"
+        | fieldsAdd category=if(isNull(event.category), "N/A", else: event.category)
+        | fieldsAdd id=if(isNull(event.id), "N/A", else: event.id)
+        | fieldsAdd status=if(isNull(event.status), "N/A", else: event.status)
+        | fieldsAdd name=if(isNull(event.name), "N/A", else: event.name)
+        | fieldsAdd environment = "$${environmentName}"
+        | fieldsKeep timestamp, category, id, name, status, environment
+```
+
+Query Security Vulnerabilities:
+
+```
+fetch events, from: -2d
+        | filter event.provider=="Dynatrace"
+        | filter event.kind=="SECURITY_EVENT"
+        | filter event.type=="VULNERABILITY_STATUS_CHANGE_EVENT"
+        | filter event.level=="VULNERABILITY"
+        | fieldsAdd environment = "$${environmentName}"
+        | fieldsKeep timestamp, event.status, vulnerability.display_id, event.id, vulnerability.title, vulnerability.risk.level, vulnerability.display_id, environment
 ```
 
 ### Backlink to Dynatrace

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { DqlQueryApi } from './types';
+import { CatalogQueryData, DqlQueryApi } from './types';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
 import { ResponseError } from '@backstage/errors';
 import {
@@ -52,5 +52,32 @@ export class DqlQueryApiClient implements DqlQueryApi {
 
     const jsonResponse = await response.json();
     return TabularDataFactory.fromObject(jsonResponse);
+  }
+
+  async getDataFromQueries(
+    queryNamespace: string,
+    entityRef: string,
+    identityToken: string,
+  ): Promise<CatalogQueryData[]> {
+    const baseUrl = await this.discoveryApi.getBaseUrl('dynatrace-dql');
+    const searchParams = new URLSearchParams({ entityRef });
+    const url = `${baseUrl}/${queryNamespace}?${searchParams}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${identityToken}`,
+      },
+    });
+
+    if (response.status === 404) {
+      throw new Error(`Query ${queryNamespace} does not exist.`);
+    } else if (response.status !== 200) {
+      throw await ResponseError.fromResponse(response);
+    }
+    const jsonResponse = await response.json();
+    jsonResponse.forEach((element: CatalogQueryData) => {
+      TabularDataFactory.fromObject(element.data);
+    });
+    return jsonResponse;
   }
 }

@@ -18,4 +18,5 @@ export type EmptyStateProps = {
   componentName: string;
   queryName: string;
   queryNamespace: string;
+  additionalInformation?: string;
 };

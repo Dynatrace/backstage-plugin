@@ -17,7 +17,11 @@ import { DynatraceApi } from './dynatraceApi';
 import { dynatraceQueries, isValidDynatraceQueryKey } from './queries';
 import { compileDqlQuery } from './queryCompiler';
 import { Entity } from '@backstage/catalog-model';
-import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
+import {
+  EntityQuery,
+  TabularData,
+} from '@dynatrace/backstage-plugin-dql-common';
+import { CatalogQueryData } from '@dynatrace/backstage-plugin-dql/src/api/types';
 import { z } from 'zod';
 
 const componentQueryVariablesSchema = z.object({
@@ -61,6 +65,32 @@ export class QueryExecutor {
     });
     const results = await Promise.all(results$);
     return results.flatMap(result => result);
+  }
+
+  async executeCustomCatalogQueries(
+    catalogQueries: EntityQuery[],
+    variables: ComponentQueryVariables,
+  ): Promise<CatalogQueryData[] | undefined> {
+    componentQueryVariablesSchema.parse(variables);
+
+    const results$ = catalogQueries.map(async catalogQuery => {
+      const apiResultsPromises = this.apis.map(async api => {
+        const compiledQuery = compileDqlQuery(catalogQuery.query, {
+          ...variables,
+          environmentName: api.environmentName,
+          environmentUrl: api.environmentUrl,
+        });
+        return await api.executeDqlQuery(compiledQuery);
+      });
+      const apiResults = await Promise.all(apiResultsPromises);
+      return {
+        title: catalogQuery.id,
+        data: apiResults.flat(),
+      };
+    });
+
+    const queryResults = await Promise.all(results$);
+    return queryResults;
   }
 
   async executeDynatraceQuery(

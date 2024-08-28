@@ -62,4 +62,22 @@ describe('queryExecutor', () => {
       expect(result).toEqual([]);
     });
   });
+
+  describe('Catalog Queries', () => {
+    it('should not throw an error if catalog queries are defined', async () => {
+      // act
+      const result = await executor.executeCustomCatalogQueries(
+        [
+          { id: 'query-1', query: 'fetch data' },
+          { id: 'query-2', query: 'fetch data' },
+        ],
+        inputVariables,
+      );
+      // assert
+      expect(result).toEqual([
+        { title: 'query-1', data: [] },
+        { title: 'query-2', data: [] },
+      ]);
+    });
+  });
 });

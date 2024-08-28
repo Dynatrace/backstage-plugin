@@ -47,6 +47,15 @@ export const EntityDqlQueryCard = dqlQueryPlugin.provide(
   }),
 );
 
+export const EntityCatalogInfoQueryCard = dqlQueryPlugin.provide(
+  createComponentExtension({
+    name: 'EntityCatalogInfoQueryCard',
+    component: {
+      lazy: () => import('./components').then(m => m.CatalogInfoQuery),
+    },
+  }),
+);
+
 export const EntityKubernetesDeploymentsCard = dqlQueryPlugin.provide(
   createComponentExtension({
     name: 'EntityKubernetesDeploymentsCard',

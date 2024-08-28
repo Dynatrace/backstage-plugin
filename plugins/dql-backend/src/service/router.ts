@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 import { parseCustomQueries, parseEnvironments } from '../utils/configParser';
-import { getEntityFromRequest } from '../utils/routeUtils';
+import { getEntityFromRequest, validateQueries } from '../utils/routeUtils';
 import { QueryExecutor } from './queryExecutor';
 import {
   createLegacyAuthAdapters,
   errorHandler,
 } from '@backstage/backend-common';
-import { CatalogClient } from '@backstage/catalog-client';
-import { LoggerService, AuthService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import { LoggerService, AuthService } from '@backstage/backend-plugin-api';
+import { CatalogClient } from '@backstage/catalog-client';
+import { Config } from '@backstage/config';
+import { ExtendedEntity } from '@dynatrace/backstage-plugin-dql-common';
 import express from 'express';
 import Router from 'express-promise-router';
 
@@ -52,6 +53,20 @@ export const createRouter = async (
 
   const router = Router();
   router.use(express.json());
+
+  router.get('/catalog', async (req, res) => {
+    const entity = await getEntityFromRequest(req, catalogClient, auth);
+    const extendedEntity: ExtendedEntity = entity;
+    const validatedQueries = validateQueries(extendedEntity);
+    const result = await queryExecutor.executeCustomCatalogQueries(
+      validatedQueries,
+      {
+        componentNamespace: entity.metadata.namespace ?? 'default',
+        componentName: entity.metadata.name,
+      },
+    );
+    return res.json(result);
+  });
 
   router.get('/custom/:queryId', async (req, res) => {
     const entity = await getEntityFromRequest(req, catalogClient, auth);
