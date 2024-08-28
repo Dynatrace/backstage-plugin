@@ -405,6 +405,45 @@ This component displays a result table for each query. The order in which the
 tables are displayed depends on the order of the entity's queries defined in the
 catalog-info.yaml file.
 
+### Optional environment limitation for custom queries
+
+It is possible to specify the environments in which each query defined in the
+`app-config.yaml` and `catalog-info.yaml` is executed.
+
+By default, queries are executed against all defined environments.
+
+Example query defined in `catalog-info.yaml` with environment limitation:
+
+```
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: demo-backstage
+  description: Backstage Demo instance.
+  annotations:
+    backstage.io/kubernetes-id: kubernetescustom
+    dynatrace.com/guardian-tags: "service=my-service,stage=development,novalue"
+  dynatrace:
+    queries:
+      - id: Error Logs
+        description: Fetch Error Logs
+        environments:
+          - tenant1
+          - tenant2
+        query: >
+          fetch logs, from: -2d
+                | filter status == "ERROR"
+                | sort timestamp desc
+                | fieldsAdd content=if(isNull(content), "N/A", else: content)
+                | fieldsAdd source=if(isNull(log.source), "N/A", else: log.source)
+                | fieldsAdd host=if(isNull(host.name), "N/A", else: host.name)
+                | fieldsAdd environment = "${environmentName}"
+                | fieldsKeep timestamp, source, content, host, environment
+```
+
+The environments defined for a query must align with the environments names
+configured in the `app-config.local.yaml` file.
+
 ### Sample DQL Queries
 
 These are sample custom queries for the `app-config.yaml`. To use these queries

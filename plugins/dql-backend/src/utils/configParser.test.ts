@@ -78,7 +78,30 @@ describe('config-parser', () => {
       });
       const result = parseCustomQueries(config);
 
-      expect(result).toEqual({ [queryId]: query });
+      expect(result).toEqual({ [queryId]: { query: query } });
+    });
+
+    it('should return a list of custom queries with environment limitation', () => {
+      const queryId = 'test';
+      const query = 'fetch...';
+      const environments = ['env1', 'env2'];
+
+      const config = new MockConfigApi({
+        dynatrace: {
+          queries: [
+            {
+              id: queryId,
+              query: query,
+              environments: environments,
+            },
+          ],
+        },
+      });
+      const result = parseCustomQueries(config);
+
+      expect(result).toEqual({
+        [queryId]: { query: query, environments: environments },
+      });
     });
   });
 });

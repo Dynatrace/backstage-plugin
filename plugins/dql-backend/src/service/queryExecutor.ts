@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { CustomQueryConfig } from '../utils/configParser';
 import { DynatraceApi } from './dynatraceApi';
 import { dynatraceQueries, isValidDynatraceQueryKey } from './queries';
 import { compileDqlQuery } from './queryCompiler';
@@ -42,21 +43,31 @@ type ComponentQueryVariables = z.infer<typeof componentQueryVariablesSchema>;
 export class QueryExecutor {
   constructor(
     private readonly apis: DynatraceApi[],
-    private readonly queries: Record<string, string | undefined>,
+    private readonly queries: Record<string, CustomQueryConfig | undefined>,
   ) {}
+
+  filterApis = (apis: DynatraceApi[], filterApis: string[]): DynatraceApi[] => {
+    return apis.filter((api: DynatraceApi) =>
+      filterApis.includes(new URL(api.environmentUrl).host.split('.')[0]),
+    );
+  };
 
   async executeCustomQuery(
     queryId: string,
     variables: ComponentQueryVariables,
   ): Promise<TabularData> {
-    const dqlQuery = this.queries[queryId];
-    if (!dqlQuery) {
+    const dqlQueryConfig = this.queries[queryId];
+    if (!dqlQueryConfig?.query) {
       throw new Error(`No custom query to the given id "${queryId}" found`);
     }
 
+    const filteredApis = dqlQueryConfig.environments
+      ? this.filterApis(this.apis, dqlQueryConfig.environments)
+      : this.apis;
+
     componentQueryVariablesSchema.parse(variables);
-    const results$ = this.apis.map(api => {
-      const compiledQuery = compileDqlQuery(dqlQuery, {
+    const results$ = filteredApis.map(api => {
+      const compiledQuery = compileDqlQuery(dqlQueryConfig.query, {
         ...variables,
         environmentName: api.environmentName,
         environmentUrl: api.environmentUrl,
@@ -74,7 +85,10 @@ export class QueryExecutor {
     componentQueryVariablesSchema.parse(variables);
 
     const results$ = catalogQueries.map(async catalogQuery => {
-      const apiResultsPromises = this.apis.map(async api => {
+      const filteredApis = catalogQuery.environments
+        ? this.filterApis(this.apis, catalogQuery.environments)
+        : this.apis;
+      const apiResultsPromises = filteredApis.map(async api => {
         const compiledQuery = compileDqlQuery(catalogQuery.query, {
           ...variables,
           environmentName: api.environmentName,

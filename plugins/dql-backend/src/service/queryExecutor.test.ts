@@ -17,7 +17,7 @@ import { QueryExecutor } from './queryExecutor';
 import { Entity } from '@backstage/catalog-model';
 
 describe('queryExecutor', () => {
-  const executor = new QueryExecutor([], { 'my.id': 'myQuery' });
+  const executor = new QueryExecutor([], { 'my.id': { query: 'myQuery' } });
   const inputVariables = {
     componentNamespace: 'namespace',
     componentName: 'name',
@@ -70,6 +70,26 @@ describe('queryExecutor', () => {
         [
           { id: 'query-1', query: 'fetch data' },
           { id: 'query-2', query: 'fetch data' },
+        ],
+        inputVariables,
+      );
+      // assert
+      expect(result).toEqual([
+        { title: 'query-1', data: [] },
+        { title: 'query-2', data: [] },
+      ]);
+    });
+
+    it('should accept and filter environments if environments are defined in catalog query', async () => {
+      // act
+      const result = await executor.executeCustomCatalogQueries(
+        [
+          {
+            id: 'query-1',
+            query: 'fetch data',
+            environments: ['env1', 'env2'],
+          },
+          { id: 'query-2', query: 'fetch data', environments: ['env1'] },
         ],
         inputVariables,
       );
