@@ -29,12 +29,6 @@ Please find the getting started guide, installation details, and more in the
 - If you haven't already,
   [install Backstage](https://backstage.io/docs/getting-started/create-an-app).
 
-- Setup npm to use the GitHub Package Registry as described
-  [here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#installing-a-package).
-  (in short, run
-  `npm login --registry https://npm.pkg.github.com --scope @dynatrace` with your
-  GitHub personal access token)
-
 - Follow the [Getting Started](README.md/#getting-started).
 
 ## Development
