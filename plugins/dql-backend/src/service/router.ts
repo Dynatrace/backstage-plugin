@@ -16,11 +16,8 @@
 import { parseCustomQueries, parseEnvironments } from '../utils/configParser';
 import { getEntityFromRequest, validateQueries } from '../utils/routeUtils';
 import { QueryExecutor } from './queryExecutor';
-import {
-  createLegacyAuthAdapters,
-  errorHandler,
-} from '@backstage/backend-common';
-import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import { MiddlewareFactory } from '@backstage/backend-defaults/rootHttpRouter';
+import { DiscoveryService } from '@backstage/backend-plugin-api';
 import { LoggerService, AuthService } from '@backstage/backend-plugin-api';
 import { CatalogClient } from '@backstage/catalog-client';
 import { Config } from '@backstage/config';
@@ -31,22 +28,16 @@ import Router from 'express-promise-router';
 export interface RouterOptions {
   logger: LoggerService;
   config: Config;
-  discovery: PluginEndpointDiscovery;
-  auth?: AuthService;
+  discovery: DiscoveryService;
+  auth: AuthService;
 }
 
 export const createRouter = async (
   options: RouterOptions,
 ): Promise<express.Router> => {
-  // In order to make the new auth services available to the plugin
-  // implementation in a backwards compatible way, we use the
-  // createLegacyAuthAdapters helper from @backstage/backend-common.
-  // Ref: https://backstage.io/docs/tutorials/auth-service-migration/#making-the-new-auth-services-available-in-createrouter
-  const { auth } = createLegacyAuthAdapters(options);
+  const { config, discovery, logger, auth } = options;
 
-  const { config, discovery } = options;
-
-  const apis = parseEnvironments(config);
+  const apis = parseEnvironments(config, logger);
   const customQueries = parseCustomQueries(config);
   const queryExecutor = new QueryExecutor(apis, customQueries);
   const catalogClient = new CatalogClient({ discoveryApi: discovery });
@@ -86,6 +77,6 @@ export const createRouter = async (
     res.json(deployments);
   });
 
-  router.use(errorHandler());
+  router.use(MiddlewareFactory.create({ logger, config }).error());
   return router;
 };

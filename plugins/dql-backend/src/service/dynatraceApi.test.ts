@@ -21,6 +21,7 @@ import {
   PollQueryResponse,
   TokenResponse,
 } from './dynatraceApi';
+import { createLogger } from 'winston';
 
 jest.mock('../utils', () => ({ dtFetch: jest.fn() }));
 
@@ -58,10 +59,12 @@ describe('dynatraceApi', () => {
     name: 'myEnv',
     accountUrn: 'urn',
   };
-  const dynatraceApi = new DynatraceApi(defaultApiConfig, 'identifier');
+  const logger = createLogger();
+  const dynatraceApi = new DynatraceApi(defaultApiConfig, 'identifier', logger);
   const trailingSlashApi = new DynatraceApi(
     { ...defaultApiConfig, url: 'https://example.com/' },
     'identifier',
+    logger,
   );
 
   const mockTokenResult = (result: MockResult<TokenResponse>) =>
