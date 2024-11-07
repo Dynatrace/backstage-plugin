@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { dtFetch } from '../utils';
-import { getRootLogger } from '@backstage/backend-common';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 
 export type DynatraceEnvironmentConfig = {
@@ -59,7 +59,6 @@ export type PollQueryResponse<RecordType> = {
   };
 };
 
-const logger = getRootLogger().child({ plugin: 'dql-backend' });
 const DEFAULT_TOKEN_URL = 'https://sso.dynatrace.com/sso/oauth2/token';
 
 const executeQuery = async (
@@ -84,6 +83,7 @@ const executeQuery = async (
 const pollQuery = async <T>(
   { url, accessToken, identifier }: DynatraceAccessInfo,
   requestToken: string,
+  logger: LoggerService,
 ): Promise<PollQueryResponse<T>> => {
   const fullUrl = new URL('platform/storage/query/v1/query:poll', url);
   fullUrl.searchParams.set('request-token', requestToken);
@@ -105,13 +105,15 @@ const pollQuery = async <T>(
 const waitForQueryResult = async <RecordType>(
   accessInfo: DynatraceAccessInfo,
   requestToken: string,
+  logger: LoggerService,
 ): Promise<RecordType[]> => {
   let pollQueryRes: PollQueryResponse<RecordType> = await pollQuery(
     accessInfo,
     requestToken,
+    logger,
   );
   while (pollQueryRes.state !== 'SUCCEEDED') {
-    pollQueryRes = await pollQuery(accessInfo, requestToken);
+    pollQueryRes = await pollQuery(accessInfo, requestToken, logger);
   }
   return pollQueryRes.result.records;
 };
@@ -119,6 +121,7 @@ const waitForQueryResult = async <RecordType>(
 const getAccessToken = async (
   config: DynatraceEnvironmentConfig,
   identifier: string,
+  logger: LoggerService,
 ): Promise<TokenResponse> => {
   const body = new URLSearchParams({
     grant_type: 'client_credentials',
@@ -152,6 +155,7 @@ export class DynatraceApi {
   constructor(
     private readonly config: DynatraceEnvironmentConfig,
     private identifier: string,
+    private logger: LoggerService,
   ) {}
 
   get environmentName() {
@@ -163,7 +167,11 @@ export class DynatraceApi {
   }
 
   async executeDqlQuery(query: string): Promise<TabularData> {
-    const tokenResponse = await getAccessToken(this.config, this.identifier);
+    const tokenResponse = await getAccessToken(
+      this.config,
+      this.identifier,
+      this.logger,
+    );
     const environment: DynatraceAccessInfo = {
       url: this.config.url,
       accessToken: tokenResponse.access_token,
@@ -171,6 +179,10 @@ export class DynatraceApi {
     };
 
     const execQueryRes = await executeQuery(environment, query);
-    return await waitForQueryResult(environment, execQueryRes.requestToken);
+    return await waitForQueryResult(
+      environment,
+      execQueryRes.requestToken,
+      this.logger,
+    );
   }
 }

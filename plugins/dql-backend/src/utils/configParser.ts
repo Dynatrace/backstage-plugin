@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { DynatraceApi, DynatraceEnvironmentConfig } from '../service';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
 
 const defaultId = 'unknown';
@@ -35,13 +36,20 @@ const getIdentifier = (configArray: Config[]) => {
   );
 };
 
-export const parseEnvironments = (config: Config): DynatraceApi[] => {
+export const parseEnvironments = (
+  config: Config,
+  logger: LoggerService,
+): DynatraceApi[] => {
   const configArray = config.getConfigArray('dynatrace.environments');
 
   const identifier = getIdentifier(configArray);
   return configArray.map(
     envConfig =>
-      new DynatraceApi(envConfig.get<DynatraceEnvironmentConfig>(), identifier),
+      new DynatraceApi(
+        envConfig.get<DynatraceEnvironmentConfig>(),
+        identifier,
+        logger,
+      ),
   );
 };
 

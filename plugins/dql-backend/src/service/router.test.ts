@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 import { RouterOptions, createRouter } from './router';
-import { getVoidLogger } from '@backstage/backend-common';
 import { MockConfigApi } from '@backstage/test-utils';
 import express from 'express';
+import { createLogger } from 'winston';
 
 describe('createRouter', () => {
   let app: express.Express;
 
   beforeAll(async () => {
     const router = await createRouter({
-      logger: getVoidLogger(),
+      logger: createLogger(),
       discovery: {
         async getBaseUrl(): Promise<string> {
           return '';
