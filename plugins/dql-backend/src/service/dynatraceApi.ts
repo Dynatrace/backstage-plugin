@@ -152,11 +152,19 @@ const getAccessToken = async (
 };
 
 export class DynatraceApi {
+  private readonly config: DynatraceEnvironmentConfig;
   constructor(
-    private readonly config: DynatraceEnvironmentConfig,
+    config: DynatraceEnvironmentConfig,
     private identifier: string,
     private logger: LoggerService,
-  ) {}
+  ) {
+    this.config = {
+      ...config,
+      url: config.url.endsWith('/')
+        ? config.url.substring(0, config.url.length - 1)
+        : config.url,
+    };
+  }
 
   get environmentName() {
     return this.config.name;
