@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
+import {
+  TableTypes,
+  TabularData,
+} from '@dynatrace/backstage-plugin-dql-common';
 
 export const exampleData: TabularData = [
   {
     Name: 'backstage',
     Namespace: 'hardening',
     'A Link': {
-      type: 'link',
+      type: TableTypes.LINK,
       text: 'https://backstage.io',
       url: 'https://backstage.io',
     },
@@ -29,7 +32,7 @@ export const exampleData: TabularData = [
     Name: 'nginx',
     Namespace: 'default',
     'A Link': {
-      type: 'link',
+      type: TableTypes.LINK,
       text: 'https://nginx.org',
       url: 'https://nginx.org',
     },

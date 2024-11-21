@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { ObjectModal } from './ObjectModal';
 import { Table, TableColumn } from '@backstage/core-components';
 import {
+  TableTypes,
   TabularData,
   TabularDataRow,
 } from '@dynatrace/backstage-plugin-dql-common';
 import { Link } from '@material-ui/core';
 import _ from 'lodash';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useMemo } from 'react';
 
 type TabularDataTableProps = {
   title: string;
@@ -32,11 +34,20 @@ const cellRenderer = (field: string) => {
   return (data: TabularDataRow): ReactNode => {
     const cellData = data[field];
 
+    if (cellData === undefined) {
+      // key does not exist on this row
+      return '';
+    }
+
     if (typeof cellData === 'string') {
       return cellData;
     }
 
-    if (cellData.type === 'link') {
+    if (cellData.type === TableTypes.OBJECT) {
+      return <ObjectModal data={cellData.content} property={field} />;
+    }
+
+    if (cellData.type === TableTypes.LINK) {
       return (
         <Link href={cellData.url} target="_blank" rel="noopener">
           {cellData.text}
@@ -53,14 +64,20 @@ export const TabularDataTable = ({
   data,
   pageSize = 10,
 }: TabularDataTableProps) => {
-  let columns: TableColumn[] = [];
+  const columns = useMemo<TableColumn[]>(() => {
+    const keys = data.reduce((acc, row) => {
+      for (const key in row) {
+        acc.add(key);
+      }
+      return acc;
+    }, new Set<string>());
 
-  if (data.length !== 0) {
-    const firstRow = data[0];
-    columns = _.keys(firstRow).map(key => {
-      return { title: key, field: key, render: cellRenderer(key) };
-    });
-  }
+    return Array.from(keys).map(key => ({
+      title: key,
+      field: key,
+      render: cellRenderer(key),
+    }));
+  }, [data]);
 
   return (
     <Table

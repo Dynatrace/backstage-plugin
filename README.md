@@ -317,16 +317,10 @@ following in your query:
 filter backstageComponent == "$${componentNamespace}.$${componentName}"
 ```
 
-To be able to render correctly, the DQL must return data conforming to the
-following:
+To be able to render correctly, the DQL must return an array. Links are also
+supported and can be added to the table if transformed like this:
 
-- No `null` values; use `coalesce` to replace `null` values with a default value
-- May contain simple types:
-  - Strings (e.g. `Name: 'My Name'`)
-- May contain complex types that have a type discriminator (`type`):
-  - Links: (e.g.
-    `Logs: { type: 'link', title: 'Link to Logs', url: 'https...' }`)
-- As a fallback, other types will be rendered as JSON
+`Logs: { type: 'link', title: 'Link to Logs', url: 'https...' }`
 
 An example of a valid DQL result would be:
 
@@ -335,10 +329,18 @@ An example of a valid DQL result would be:
   {
     "Name": "backstage",
     "Namespace": "hardening",
+    "LogCount": 0,
+    "latestLog": null,
+    "hasLogs": false,
     "Link": {
       "type": "link",
       "text": "Click me",
       "url": "https://backstage.io"
+    },
+    "metadata": {
+      "time": {
+        "timestamp": "xyz"
+      }
     }
   }
 ]

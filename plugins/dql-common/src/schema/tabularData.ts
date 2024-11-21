@@ -13,33 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import _ from 'lodash';
 import { z } from 'zod';
 
-const tableCell = z.string().or(
-  z.strictObject({
-    type: z.literal('link'),
-    text: z.string(),
-    url: z.string().url(),
-  }),
-);
+export enum TableTypes {
+  LINK = 'link',
+  OBJECT = 'object',
+}
+
+const tableCell = z
+  .string()
+  .or(z.null().or(z.boolean()).or(z.number()).transform(String))
+  .or(
+    z.strictObject({
+      type: z.literal(TableTypes.LINK),
+      text: z.string(),
+      url: z.string().url(),
+    }),
+  )
+  .or(
+    z
+      .array(z.any())
+      .or(z.object({}).passthrough())
+      .transform(obj => ({
+        type: TableTypes.OBJECT as const,
+        content: JSON.stringify(obj, null, 2),
+      })),
+  );
 
 const rowData = z.record(tableCell);
-
 const tabularDataSchema = z.array(rowData);
-
-/**
- * Check if all rows have the same columns
- *
- * @param data TabularData to validate
- * @returns true if all elements of the array have the same keys, false otherwise
- */
-const validate = (data: TabularData): boolean => {
-  if (data.length === 0) return true;
-  // ensure all rows have the same columns
-  const keys = _.keys(data[0]);
-  return data.every(item => _.isEqual(_.keys(item), keys));
-};
 
 export const TabularDataFactory = {
   fromString: (input: string): TabularData => {
@@ -48,11 +50,7 @@ export const TabularDataFactory = {
   },
 
   fromObject: (input: unknown) => {
-    const tabularData = tabularDataSchema.parse(input);
-    if (!validate(tabularData)) {
-      throw new Error('Invalid tabular data');
-    }
-    return tabularData;
+    return tabularDataSchema.parse(input);
   },
 };
 

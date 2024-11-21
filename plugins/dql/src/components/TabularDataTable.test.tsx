@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 import { TabularDataTable } from './TabularDataTable';
-import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
+import {
+  TableTypes,
+  TabularData,
+} from '@dynatrace/backstage-plugin-dql-common';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 
@@ -61,7 +64,7 @@ describe('TabularDataTable', () => {
     const data: TabularData = [
       {
         Header: {
-          type: 'link',
+          type: TableTypes.LINK,
           text: 'value',
           url: href,
         },
