@@ -162,6 +162,18 @@ describe('dynatraceApi', () => {
     );
   });
 
+  it('should remove trailing slashes for the URL', () => {
+    // arrange
+    const dynatraceApi = new DynatraceApi(
+      { ...defaultApiConfig, url: 'https://example.com/' },
+      'identifier',
+      logger,
+    );
+
+    // assert
+    expect(dynatraceApi.environmentUrl).toBe('https://example.com');
+  });
+
   describe('getAccessToken', () => {
     it('should throw an error if the token request failed', async () => {
       // arrange

@@ -13,84 +13,172 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TabularDataFactory } from './tabularData';
+import { TableTypes, TabularDataFactory } from './tabularData';
 
 const VALID_OBJECTS = [
-  [], // Empty array
-  [
-    // Standard case
-    {
-      name: 'foo',
-      namespace: 'bar',
-    },
-    {
-      name: 'baz',
-      namespace: 'qux',
-    },
-  ],
-  [
-    // with Link
-    {
-      name: 'foo',
-      namespace: 'bar',
-      extra: { type: 'link', text: 'example.com', url: 'https://example.com' },
-    },
-  ],
+  {
+    input: [], // Empty array
+    output: [],
+  },
+  {
+    input: [
+      // Standard case
+      {
+        name: 'foo',
+        namespace: 'bar',
+      },
+      {
+        name: 'baz',
+        namespace: 'qux',
+      },
+    ],
+    output: [
+      // Standard case
+      {
+        name: 'foo',
+        namespace: 'bar',
+      },
+      {
+        name: 'baz',
+        namespace: 'qux',
+      },
+    ],
+  },
+  {
+    input: [
+      // with Link
+      {
+        name: 'foo',
+        namespace: 'bar',
+        extra: {
+          type: 'link',
+          text: 'example.com',
+          url: 'https://example.com',
+        },
+      },
+    ],
+    output: [
+      // with Link
+      {
+        name: 'foo',
+        namespace: 'bar',
+        extra: {
+          type: 'link',
+          text: 'example.com',
+          url: 'https://example.com',
+        },
+      },
+    ],
+  },
+  {
+    input: [
+      {
+        name: 'some-name',
+        extra: 'foo',
+      },
+      {
+        extra: 'foo', // different structure (missing columns)
+      },
+    ],
+    output: [
+      {
+        name: 'some-name',
+        extra: 'foo',
+      },
+      {
+        extra: 'foo', // different structure (missing columns)
+      },
+    ],
+  },
+  {
+    input: [
+      {
+        extra: { text: 'example.com', url: 'https://example.com' }, // different objects
+      },
+    ],
+    output: [
+      {
+        extra: {
+          type: TableTypes.OBJECT,
+          content: JSON.stringify(
+            { text: 'example.com', url: 'https://example.com' },
+            null,
+            2,
+          ),
+        }, // different objects
+      },
+    ],
+  },
+  {
+    input: [
+      {
+        string: 'a',
+        number: 12,
+        boolean: false,
+        null: null,
+        object: {
+          property: {
+            nested: 'abc',
+          },
+        },
+      },
+    ],
+    output: [
+      {
+        string: 'a',
+        number: '12',
+        boolean: 'false',
+        null: 'null',
+        object: {
+          type: TableTypes.OBJECT,
+          content: JSON.stringify(
+            {
+              property: {
+                nested: 'abc',
+              },
+            },
+            null,
+            2,
+          ),
+        },
+      },
+    ],
+  },
+  // different types
 ];
 const INVALID_OBJECTS = [
-  [
-    {
-      name: 'some-name',
-      extra: 'foo',
-    },
-    {
-      extra: 'foo', // different structure (missing columns)
-    },
-  ],
-  [
-    {
-      extra: { text: 'example.com', url: 'https://example.com' }, // missing type
-    },
-  ],
   { thisIsNotAcceptable: 'foo' }, // plain object
 ];
 
 describe('TabularDataFactory', () => {
   describe('fromString', () => {
-    it('parses valid input', () => {
-      VALID_OBJECTS.forEach(validInput => {
+    it.each(VALID_OBJECTS)(
+      'parses valid input',
+      ({ input: validInput, output }) => {
         const input = JSON.stringify(validInput);
 
         const deployment = TabularDataFactory.fromString(input);
 
-        expect(deployment).toEqual(validInput);
-      });
-    });
+        expect(deployment).toEqual(output);
+      },
+    );
 
-    it('throws on invalid inputs', () => {
-      INVALID_OBJECTS.forEach(invalidInput => {
-        const input = JSON.stringify(invalidInput);
+    it.each(INVALID_OBJECTS)('throws on invalid inputs', invalidInput => {
+      const input = JSON.stringify(invalidInput);
 
-        expect(() => TabularDataFactory.fromString(input)).toThrow();
-      });
+      expect(() => TabularDataFactory.fromString(input)).toThrow();
     });
   });
 
   describe('fromObject', () => {
-    it('parses valid input', () => {
-      VALID_OBJECTS.forEach(validInput => {
-        const input = validInput;
+    it.each(VALID_OBJECTS)('parses valid input', ({ input, output }) => {
+      const deployment = TabularDataFactory.fromObject(input);
 
-        const deployment = TabularDataFactory.fromObject(input);
-
-        expect(deployment).toEqual(validInput);
-      });
+      expect(deployment).toEqual(output);
     });
 
-    it('throws on invalid inputs', () => {
-      INVALID_OBJECTS.forEach(invalidInput => {
-        expect(() => TabularDataFactory.fromObject(invalidInput)).toThrow();
-      });
+    it.each(INVALID_OBJECTS)('throws on invalid inputs', invalidInput => {
+      expect(() => TabularDataFactory.fromObject(invalidInput)).toThrow();
     });
   });
 });
