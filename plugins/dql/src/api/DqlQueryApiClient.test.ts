@@ -15,31 +15,31 @@
  */
 import { DqlQueryApiClient } from './DqlQueryApiClient';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
-import { http } from 'msw';
-import { setupServer } from 'msw/node';
 
-const server = setupServer();
-
+const fetchMock = jest.spyOn(global, 'fetch');
 const mockFetchResponse = (
-  response: any,
-  url: string = '*',
-  queryParams: string | null = null,
+  data: any,
+  properties?: Partial<Awaited<ReturnType<typeof fetch>>>,
 ) => {
-  server.use(
-    http.get(url, ({ request }) => {
-      if (
-        queryParams === null ||
-        new URL(request.url).searchParams.toString() === queryParams
-      ) {
-        return new Response(JSON.stringify(response), {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+  fetchMock.mockResolvedValue({
+    headers: new Headers(),
+    status: 200,
+    async json() {
+      if (typeof data === 'string') {
+        throw new Error('Unexpected token');
       }
-      return new Response(undefined, { status: 404 });
-    }),
-  );
+      return data;
+    },
+    // @ts-ignore
+    async blob() {
+      return {
+        async text() {
+          return typeof data === 'string' ? data : JSON.stringify(data);
+        },
+      };
+    },
+    ...properties,
+  });
 };
 
 const mockDiscoveryApiUrl = (url: string): DiscoveryApi => {
@@ -52,10 +52,7 @@ const mockedEntityRef = 'component:default/example';
 const mockedIdentityToken = 'mock-token';
 
 describe('DQLQueryApiClient', () => {
-  beforeAll(() => server.listen());
   beforeEach(() => jest.resetAllMocks());
-  afterEach(() => server.resetHandlers());
-  afterAll(() => server.close());
 
   it('should ask the discovery API for the DQL query API URL', async () => {
     mockFetchResponse([]);
@@ -84,9 +81,7 @@ describe('DQLQueryApiClient', () => {
     const discoveryApiUrl = 'https://discovery-api.com';
     const queryNamespace = 'namespace';
     const queryName = 'query';
-    const url = `${discoveryApiUrl}/${queryNamespace}/${queryName}`;
-    const queryParams = `entityRef=component%3Adefault%2Fexample`;
-    mockFetchResponse([], url, queryParams);
+    mockFetchResponse([]);
     const discoveryApi = mockDiscoveryApiUrl(discoveryApiUrl);
     const client = new DqlQueryApiClient({ discoveryApi });
 
@@ -97,6 +92,10 @@ describe('DQLQueryApiClient', () => {
       mockedIdentityToken,
     );
 
+    expect(fetchMock).toHaveBeenCalledWith(
+      `${discoveryApiUrl}/${queryNamespace}/${queryName}?entityRef=component%3Adefault%2Fexample`,
+      expect.anything(),
+    );
     expect(result).toEqual([]);
   });
 
@@ -131,12 +130,7 @@ describe('DQLQueryApiClient', () => {
   });
 
   it('should reject for non-json data', async () => {
-    server.use(
-      http.get('*', () => {
-        return new Response('not json');
-      }),
-    );
-
+    mockFetchResponse('not json');
     const discoveryApi = mockDiscoveryApiUrl('https://discovery-api.com');
     const client = new DqlQueryApiClient({ discoveryApi });
 
@@ -184,11 +178,8 @@ describe('DQLQueryApiClient', () => {
   it('should report when a query is not found', async () => {
     const statusCode = 404;
     const statusText = 'Not Found';
-    server.use(
-      http.get('*', () => {
-        return new Response(undefined, { status: statusCode, statusText });
-      }),
-    );
+
+    mockFetchResponse(undefined, { status: statusCode, statusText });
 
     const discoveryApi = mockDiscoveryApiUrl('https://discovery-api.com');
     const client = new DqlQueryApiClient({ discoveryApi });
@@ -214,11 +205,7 @@ describe('DQLQueryApiClient', () => {
   it('should report any generic error to the frontend', async () => {
     const statusCode = 500;
     const statusText = "It's broken";
-    server.use(
-      http.get('*', () => {
-        return new Response(undefined, { status: statusCode, statusText });
-      }),
-    );
+    mockFetchResponse(undefined, { status: statusCode, statusText });
 
     const discoveryApi = mockDiscoveryApiUrl('https://discovery-api.com');
     const client = new DqlQueryApiClient({ discoveryApi });
