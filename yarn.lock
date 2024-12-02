@@ -4835,9 +4835,9 @@
     "@backstage/types" "^1.1.1"
 
 "@backstage/plugin-scaffolder-node@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-node/-/plugin-scaffolder-node-0.5.0.tgz#67c82803736d4b2b2280a6db67fcd942fcfc9ec4"
-  integrity sha512-PM4abMkjslH2tq5zk3Di6kUtDuQDw38nNhe/BqrTl/42E0ThSxDqchrGjBHROaKiXUwd7l4ZE4A22ujIpVSAww==
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-node/-/plugin-scaffolder-node-0.5.1.tgz#e06c7dd010572beec2809f8b2fa1ecd20a7c23ad"
+  integrity sha512-m8QY65drHtROQFGMxYKr5eVY+vf+wbHSn1+t9v576EOTynpDxD5CozivqHhlMvRp87ebWzrSzh+7yL8/tym08w==
   dependencies:
     "@backstage/backend-common" "^0.25.0"
     "@backstage/backend-plugin-api" "^1.0.1"
