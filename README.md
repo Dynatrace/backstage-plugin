@@ -125,8 +125,8 @@ configuring the connection to the Dynatrace environment:
 dynatrace:
   environments:
     - name: xxxxxxxx
-      url: https://xxxxxxxx.sprint.apps.dynatracelabs.com
-      tokenUrl: https://sso-sprint.dynatracelabs.com/sso/oauth2/token
+      url: https://xxxxxxxx.apps.dynatrace.com
+      tokenUrl: https://sso.dynatrace.com/sso/oauth2/token
       accountUrn: <accountUrn>
       clientId: <clientId>
       clientSecret: <clientSecret>
