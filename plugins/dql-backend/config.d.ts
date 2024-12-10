@@ -45,7 +45,7 @@ export type Config = {
       },
     ];
 
-    queries: {
+    queries?: {
       [queryId: string]: string;
     };
   };
