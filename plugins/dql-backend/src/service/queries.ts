@@ -26,6 +26,30 @@ interface ApiConfig {
   environmentUrl: string;
 }
 
+const getKubernetesLogLink = (idField: string, apiConfig: ApiConfig) => {
+  // Resulting DQL:
+  // fetch logs
+  // | filter dt.entity.cloud_application == "CLOUD_APPLICATION-XY" or in(dt.entity.cloud_application, "CLOUD_APPLICATION-XY") or in(dt.entity.cloud_application_instance, classicEntitySelector("type(CLOUD_APPLICATION_INSTANCE),fromRelationShip.IS_INSTANCE_OF(type(CLOUD_APPLICATION),entityId(\"CLOUD_APPLICATION-XY\"))"))
+  // | sort timestamp desc
+  const concatArray = [
+    `concat("${apiConfig.environmentUrl}"`,
+    `"/ui/apps/dynatrace.notebooks/intent/view-query#${encodeURIComponent(
+      '{"dt.query":"fetch logs\\n| filter dt.entity.cloud_application == \\"',
+    )}"`,
+    idField,
+    `"${encodeURIComponent('\\" or in(dt.entity.cloud_application, \\"')}"`,
+    idField,
+    `"${encodeURIComponent(
+      '\\") or in(dt.entity.cloud_application_instance, classicEntitySelector(\\"type(CLOUD_APPLICATION_INSTANCE),fromRelationShip.IS_INSTANCE_OF(type(CLOUD_APPLICATION),entityId(\\\\\\"',
+    )}"`,
+    idField,
+    `"${encodeURIComponent(
+      '\\\\\\"))\\"))\\n| sort timestamp desc","title":"Logs"}',
+    )}")`,
+  ];
+  return concatArray.join(',');
+};
+
 export const isValidDynatraceQueryKey = (
   key: string,
 ): key is DynatraceQueryKeys => key in dynatraceQueries;
@@ -70,7 +94,9 @@ export const dynatraceQueries: Record<
     | sort upper(name) asc    
     | lookup [fetch dt.entity.kubernetes_cluster, from: -10m | fields id, clusterName = entity.name],sourceField:cluster.id, lookupField:id, fields:{clusterName}
     | lookup [fetch dt.entity.cloud_application_namespace, from: -10m | fields id, namespaceName = entity.name], sourceField:namespace.id, lookupField:id, fields:{namespaceName}
-    | fieldsAdd Workload = record({type="link", text=name, url=concat("${apiConfig.environmentUrl}/ui/apps/dynatrace.kubernetes/resources/workload?entityId=", id, "&cluster=", clusterName, "&namespace=", namespaceName, "&workload=", name)})
+    | fieldsAdd Workload = record({type="link", text=name, url=concat("${
+      apiConfig.environmentUrl
+    }/ui/apps/dynatrace.kubernetes/resources/workload?entityId=", id, "&cluster=", clusterName, "&namespace=", namespaceName, "&workload=", name)})
     | fieldsAdd Cluster = clusterName, Namespace = namespaceName
     | fieldsRemove clusterName, namespaceName
     | lookup [fetch events, from: -30m | filter event.kind == "DAVIS_PROBLEM" | fieldsAdd affected_entity_id = affected_entity_ids[0] | summarize collectDistinct(event.status), by:{display_id, affected_entity_id}, alias:problem_status | filter NOT in(problem_status, "CLOSED") | summarize Problems = count(), by:{affected_entity_id}], sourceField:id, lookupField:affected_entity_id, fields:{Problems}
@@ -80,11 +106,10 @@ export const dynatraceQueries: Record<
     ${filterKubernetesId} 
     ${filterNamespace} 
     ${filterLabel}
-    | fieldsAdd Logs = record({type="link", text="Show logs", url=concat(
-      "${apiConfig.environmentUrl}",
-      "/ui/apps/dynatrace.notebooks/intent/view-query#%7B%22dt.query%22%3A%22fetch%20logs%20%7C%20filter%20matchesValue(dt.entity.cloud_application%2C%5C%22",
-      id,
-      "%5C%22)%20%7C%20sort%20timestamp%20desc%22%2C%22title%22%3A%22Logs%22%7D")})
+    | fieldsAdd Logs = record({type="link", text="Show logs", url=${getKubernetesLogLink(
+      'id',
+      apiConfig,
+    )}})
     | fieldsRemove id, name, workload.labels, cluster.id, namespace.id
     | fieldsAdd Environment = "${apiConfig.environmentName}"`;
   },
