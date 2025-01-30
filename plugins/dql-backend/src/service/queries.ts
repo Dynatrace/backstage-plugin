@@ -96,7 +96,7 @@ export const dynatraceQueries: Record<
     | lookup [fetch dt.entity.cloud_application_namespace, from: -10m | fields id, namespaceName = entity.name], sourceField:namespace.id, lookupField:id, fields:{namespaceName}
     | fieldsAdd Workload = record({type="link", text=name, url=concat("${
       apiConfig.environmentUrl
-    }/ui/apps/dynatrace.kubernetes/resources/workload?entityId=", id, "&cluster=", clusterName, "&namespace=", namespaceName, "&workload=", name)})
+    }/ui/apps/dynatrace.kubernetes/explorer/workload?detailsId=", id, "&filtering=Cluster+%3D+", clusterName, "+Namespace+%3D+", namespaceName, "+Workload+%3D+", name)})
     | fieldsAdd Cluster = clusterName, Namespace = namespaceName
     | fieldsRemove clusterName, namespaceName
     | lookup [fetch events, from: -30m | filter event.kind == "DAVIS_PROBLEM" | fieldsAdd affected_entity_id = affected_entity_ids[0] | summarize collectDistinct(event.status), by:{display_id, affected_entity_id}, alias:problem_status | filter NOT in(problem_status, "CLOSED") | summarize Problems = count(), by:{affected_entity_id}], sourceField:id, lookupField:affected_entity_id, fields:{Problems}
