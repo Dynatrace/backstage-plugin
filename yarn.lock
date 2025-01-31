@@ -3191,7 +3191,7 @@
     knex "^3.0.0"
     luxon "^3.0.0"
 
-"@backstage/backend-plugin-api@^0.8.0", "@backstage/backend-plugin-api@^0.8.1":
+"@backstage/backend-plugin-api@^0.8.1":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@backstage/backend-plugin-api/-/backend-plugin-api-0.8.1.tgz#da1a2baea63098ae0c7da88ecad58e4b96ee90ac"
   integrity sha512-Ckr/aE+jSZzwooH6nRCRWhtJFhm4P1JTyukH8gygP0wIkQGdoC7n3Xt7cheGP2fMV//9p5NZ+sfNZTr8LpO8hg==
