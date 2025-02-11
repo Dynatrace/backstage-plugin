@@ -2621,15 +2621,23 @@
     luxon "^3.0.0"
     react-use "^17.2.4"
 
-"@backstage-community/plugin-tech-radar@^0.7.4":
-  version "0.7.6"
-  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-tech-radar/-/plugin-tech-radar-0.7.6.tgz#415f4ca26236fac055c55be370929795f7b02187"
-  integrity sha512-24RjWlMWao6SEiy3ldd+TcVchXuZXlQTKMuc9xujEj9t0fcw8wcyBDrOelhSOWc3jGYy1NYyeA3TTmDGBQ94FQ==
+"@backstage-community/plugin-tech-radar-common@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-tech-radar-common/-/plugin-tech-radar-common-1.1.0.tgz#ce9786e2dc387ff19c7b58bcc2489d98f0486d70"
+  integrity sha512-USEDGtsPDGO/i6862KfhrJDyoImY/Gn6HnofZqheaz2NtHzZk2TbU4XR6jou6On3ltAjnDiZxyuKRZFw41h9/g==
   dependencies:
-    "@backstage/core-compat-api" "^0.2.7"
-    "@backstage/core-components" "^0.14.9"
-    "@backstage/core-plugin-api" "^1.9.3"
-    "@backstage/frontend-plugin-api" "^0.6.7"
+    zod "^3.20.0"
+
+"@backstage-community/plugin-tech-radar@^1.0.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-tech-radar/-/plugin-tech-radar-1.1.0.tgz#8b8750dde6cebb6b58a084860566238cd99ac03b"
+  integrity sha512-+D0xtPYjZZYgN78KwKWgITd+23+vp5seFN+4qnz5R4WumcYPc0iDirpzkNJ5D6lSbzh036DBls5hAh4OPZBdAQ==
+  dependencies:
+    "@backstage-community/plugin-tech-radar-common" "^1.1.0"
+    "@backstage/core-compat-api" "^0.3.4"
+    "@backstage/core-components" "^0.16.2"
+    "@backstage/core-plugin-api" "^1.10.2"
+    "@backstage/frontend-plugin-api" "^0.9.3"
     "@material-ui/core" "^4.12.2"
     "@material-ui/icons" "^4.9.1"
     "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
@@ -3627,7 +3635,7 @@
     "@backstage/version-bridge" "^1.0.8"
     "@types/react" "^16.13.1 || ^17.0.0"
 
-"@backstage/core-compat-api@^0.3.5":
+"@backstage/core-compat-api@^0.3.4", "@backstage/core-compat-api@^0.3.5":
   version "0.3.5"
   resolved "https://registry.yarnpkg.com/@backstage/core-compat-api/-/core-compat-api-0.3.5.tgz#6da048fd8f3b923dcbd136ddc6e05fc694420658"
   integrity sha512-q4v9sD/81q2aer/oP0pjr5dm4CknYQclddPs6oFZXlSFrCGY1D8Q+wUsPn+KTkX7WRHGUb65L2gSCZiZgHapWQ==
@@ -3722,7 +3730,7 @@
     zen-observable "^0.10.0"
     zod "^3.22.4"
 
-"@backstage/core-components@^0.16.0", "@backstage/core-components@^0.16.3":
+"@backstage/core-components@^0.16.0", "@backstage/core-components@^0.16.2", "@backstage/core-components@^0.16.3":
   version "0.16.3"
   resolved "https://registry.yarnpkg.com/@backstage/core-components/-/core-components-0.16.3.tgz#3e0da7421c66580ff8e6f2ed08cf64ca4f7d4c38"
   integrity sha512-B+A8bdWY57gMIyRrp8s9MIsQvJ0oaGAFHjKEjguQMkSq/kYVtr8MszNlaCsABPHyfXhY3eIrQnLCMZzj+70m2A==
@@ -3776,7 +3784,7 @@
     "@backstage/version-bridge" "^1.0.10"
     history "^5.0.0"
 
-"@backstage/core-plugin-api@^1.10.3":
+"@backstage/core-plugin-api@^1.10.2", "@backstage/core-plugin-api@^1.10.3":
   version "1.10.3"
   resolved "https://registry.yarnpkg.com/@backstage/core-plugin-api/-/core-plugin-api-1.10.3.tgz#232b3a19b574dd85ab146081bb587d03d871e9ef"
   integrity sha512-Wxd9SGXOfpaQacHkzNVlBmDPtjKQJeUjZKrXgaoc3IDE5hnCViQprULLOmuBTtmDrgnGxKLKOKTe88c3nPggGQ==
@@ -3885,7 +3893,7 @@
     zod "^3.22.4"
     zod-to-json-schema "^3.21.4"
 
-"@backstage/frontend-plugin-api@^0.9.4":
+"@backstage/frontend-plugin-api@^0.9.3", "@backstage/frontend-plugin-api@^0.9.4":
   version "0.9.4"
   resolved "https://registry.yarnpkg.com/@backstage/frontend-plugin-api/-/frontend-plugin-api-0.9.4.tgz#d25be97732482f820920c9014a04a2b51f7194db"
   integrity sha512-TFMCTxf84VtWDlHu56mPjLAVs6TJcNF1BZ6PU9+YkXoX7J+lmqzazGKYEm0JtmltwWoP7za/rPI7c33oIPSL6Q==
@@ -12777,7 +12785,7 @@ anymatch@^3.0.3, anymatch@~3.1.2:
   version "0.0.0"
   dependencies:
     "@backstage-community/plugin-github-actions" "^0.7.0"
-    "@backstage-community/plugin-tech-radar" "^0.7.4"
+    "@backstage-community/plugin-tech-radar" "^1.0.0"
     "@backstage/app-defaults" "^1.5.5"
     "@backstage/catalog-model" "^1.5.0"
     "@backstage/cli" "^0.29.0"
@@ -29412,7 +29420,7 @@ zod-validation-error@^3.4.0:
   resolved "https://registry.yarnpkg.com/zod-validation-error/-/zod-validation-error-3.4.0.tgz#3a8a1f55c65579822d7faa190b51336c61bee2a6"
   integrity sha512-ZOPR9SVY6Pb2qqO5XHt+MkkTRxGXb4EVtnjc9JpXUOtUB1T9Ru7mZOT361AN3MsetVe7R0a1KZshJDZdgp9miQ==
 
-zod@^3.22.4:
+zod@^3.20.0, zod@^3.22.4:
   version "3.24.1"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.24.1.tgz#27445c912738c8ad1e9de1bea0359fa44d9d35ee"
   integrity sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==
