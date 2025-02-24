@@ -79,5 +79,6 @@
   },
   "dependencies": {
     "@types/webpack-env": "1.18.8"
-  }
+  },
+  "packageManager": "yarn@4.6.0"
 }
