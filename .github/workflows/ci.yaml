@@ -18,8 +18,11 @@ jobs:
         with:
           node-version: 22.x
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Lint
         run: yarn lint:all
