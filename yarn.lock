@@ -7760,14 +7760,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dynatrace/backstage-plugin-dql-backend@npm:^0.1.0, @dynatrace/backstage-plugin-dql-backend@workspace:plugins/dql-backend":
+"@dynatrace/backstage-plugin-dql-backend@npm:^2.1.5, @dynatrace/backstage-plugin-dql-backend@workspace:plugins/dql-backend":
   version: 0.0.0-use.local
   resolution: "@dynatrace/backstage-plugin-dql-backend@workspace:plugins/dql-backend"
   dependencies:
     "@backstage/cli": "npm:^0.28.2"
     "@backstage/config": "npm:^1.2.0"
     "@backstage/test-utils": "npm:^1.7.0"
-    "@dynatrace/backstage-plugin-dql-common": "npm:^0.1.0"
+    "@dynatrace/backstage-plugin-dql-common": "npm:^2.1.5"
     "@types/express": "npm:*"
     "@types/supertest": "npm:^6.0.0"
     express: "npm:^4.17.1"
@@ -7781,7 +7781,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dynatrace/backstage-plugin-dql-common@npm:^0.1.0, @dynatrace/backstage-plugin-dql-common@workspace:plugins/dql-common":
+"@dynatrace/backstage-plugin-dql-common@npm:^2.1.5, @dynatrace/backstage-plugin-dql-common@workspace:plugins/dql-common":
   version: 0.0.0-use.local
   resolution: "@dynatrace/backstage-plugin-dql-common@workspace:plugins/dql-common"
   dependencies:
@@ -7792,7 +7792,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dynatrace/backstage-plugin-dql@npm:^0.1.0, @dynatrace/backstage-plugin-dql@workspace:plugins/dql":
+"@dynatrace/backstage-plugin-dql@npm:^2.1.5, @dynatrace/backstage-plugin-dql@workspace:plugins/dql":
   version: 0.0.0-use.local
   resolution: "@dynatrace/backstage-plugin-dql@workspace:plugins/dql"
   dependencies:
@@ -7806,7 +7806,7 @@ __metadata:
     "@backstage/plugin-catalog-react": "npm:^1.14.0"
     "@backstage/test-utils": "npm:^1.7.0"
     "@backstage/theme": "npm:^0.6.0"
-    "@dynatrace/backstage-plugin-dql-common": "npm:^0.1.0"
+    "@dynatrace/backstage-plugin-dql-common": "npm:^2.1.5"
     "@material-ui/core": "npm:^4.12.2"
     "@material-ui/icons": "npm:^4.9.1"
     "@material-ui/lab": "npm:4.0.0-alpha.61"
@@ -17089,7 +17089,7 @@ __metadata:
     "@backstage/plugin-user-settings": "npm:^0.8.14"
     "@backstage/test-utils": "npm:^1.7.0"
     "@backstage/theme": "npm:^0.6.0"
-    "@dynatrace/backstage-plugin-dql": "npm:^0.1.0"
+    "@dynatrace/backstage-plugin-dql": "npm:^2.1.5"
     "@material-ui/core": "npm:^4.12.2"
     "@material-ui/icons": "npm:^4.9.1"
     "@testing-library/dom": "npm:^8.0.0"
@@ -17898,7 +17898,7 @@ __metadata:
     "@backstage/plugin-search-backend-module-pg": "npm:^0.5.37"
     "@backstage/plugin-search-backend-node": "npm:^1.3.4"
     "@backstage/plugin-techdocs-backend": "npm:^1.11.1"
-    "@dynatrace/backstage-plugin-dql-backend": "npm:^0.1.0"
+    "@dynatrace/backstage-plugin-dql-backend": "npm:^2.1.5"
     "@types/dockerode": "npm:^3.3.0"
     "@types/express": "npm:^4.17.6"
     "@types/express-serve-static-core": "npm:^4.17.5"
