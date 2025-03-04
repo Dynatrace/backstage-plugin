@@ -17,6 +17,18 @@
   "commitMessagePrefix": "chore:",
   "packageRules": [
     {
+      "groupName": "Backstage Minor Updates",
+      "groupSlug": "all-minor-backstage",
+      "packagePatterns": ["^@backstage/"],
+      "updateTypes": ["minor"]
+    },
+    {
+      "groupName": "Backstage Patch Updates",
+      "groupSlug": "all-patch-backstage",
+      "packagePatterns": ["^@backstage/"],
+      "updateTypes": ["patch"]
+    },
+    {
       "groupName": "all patch dependency updates",
       "groupSlug": "all-patch",
       "matchPackagePatterns": ["*"],
