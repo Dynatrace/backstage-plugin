@@ -1,4 +1,4 @@
-# Dynatrace Backstage Plugins
+# Dynatrace Backstage
 
 _Context-rich observability and security insights at hand_ - The Dynatrace
 Backstage plugins enable you to fetch observability and security data from
