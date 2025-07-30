@@ -16,7 +16,7 @@
 
 export type Config = {
   dynatrace: {
-    environments: [
+    environments: 
       {
         /**
          * @visibility frontend
@@ -42,8 +42,7 @@ export type Config = {
          * @visibility backend
          */
         tokenUrl?: string;
-      },
-    ];
+      }[],
 
     queries?: {
       [queryId: string]: string;
