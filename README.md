@@ -108,10 +108,11 @@ Before configuring a Dynatrace connection, an OAuth 2.0 client is required.
 3. Select **Create client**.
 4. Enter a client description and the user email.
 5. Select at least the following scopes.
-   - `storage:metrics:read`
+   - `storage:buckets:read`
    - `storage:entities:read`
    - `storage:events:read`
-   - `storage:buckets:read`
+   - `storage:metrics:read`
+   - `storage:security.events:read`
 6. Scroll down and select **Create client**.
 7. Copy your client ID, client secret, and Dynatrace account URN. These settings
 are required for the Backstage plugin
@@ -480,7 +481,7 @@ fetch events, from: -2d
 Query Security Vulnerabilities:
 
 ```
-fetch events, from: -2d
+fetch security.events, from: -2d
         | filter event.provider=="Dynatrace"
         | filter event.kind=="SECURITY_EVENT"
         | filter event.type=="VULNERABILITY_STATUS_CHANGE_EVENT"
