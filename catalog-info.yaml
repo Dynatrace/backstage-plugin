@@ -6,7 +6,6 @@ metadata:
   annotations:
     backstage.io/kubernetes-id: kubernetescustom
     dynatrace.com/guardian-tags: "service=my-service,stage=development,novalue"
-    app.kubernetes.io/version: "1"
   dynatrace:
     queries:
       - id: Error Logs

@@ -65,8 +65,6 @@ export const dynatraceQueries: Record<
       entity.metadata.annotations?.['backstage.io/kubernetes-id'];
     const namespace =
       entity.metadata.annotations?.['backstage.io/kubernetes-namespace'];
-    const version =
-      entity.metadata.annotations?.['app.kubernetes.io/version'];
 
     const filterLabel = labelSelector
       ? generateKubernetesSelectorFilter(labelSelector)
@@ -78,10 +76,6 @@ export const dynatraceQueries: Record<
         : `| filter workload.labels[\`backstage.io/kubernetes-id\`] == "${kubernetesId}"`;
     const filterNamespace = namespace
       ? `| filter Namespace == "${namespace}"`
-      : '';
-    
-    const fieldVersion = version 
-      ? `| fieldsAdd Version = "${version}"`
       : '';
 
     if (!filterKubernetesId && !filterLabel) {
@@ -116,9 +110,9 @@ export const dynatraceQueries: Record<
       'id',
       apiConfig,
     )}})
-    | fieldsRemove id, name, workload.labels, cluster.id, namespace.id
     | fieldsAdd Environment = "${apiConfig.environmentName}"
-    ${fieldVersion}`;
+    | fieldsAdd Version = coalesce(workload.labels[\`app.kubernetes.io/version\`], "")
+    | fieldsRemove id, name, workload.labels, cluster.id, namespace.id`;
   },
   [DynatraceQueryKeys.SRG_VALIDATIONS]: (entity, apiConfig) => {
     const catalogTags =

@@ -108,7 +108,7 @@ describe('queries', () => {
       );
 
       // assert
-      expect(query).toContain('| fieldsAdd Version = "1.0.1"');
+      expect(query).toContain('| fieldsAdd Version = coalesce(workload.labels[`app.kubernetes.io/version`], "")');
     });
   });
   describe(DynatraceQueryKeys.SRG_VALIDATIONS, () => {

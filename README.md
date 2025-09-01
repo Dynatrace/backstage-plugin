@@ -225,6 +225,11 @@ here:
 [`dynatrace.kubernetes-deployments`](plugins/dql-backend/src/service/queries.ts).
 You can change this query for all cards or override it using a custom query.
 
+_Convention:_ To display the pod's version in Backstage, annotate it using the following key-value pair:
+```yaml
+app.kubernetes.io/version: <version>
+```
+
 ### Site Reliability Guardian Validations
 
 Using the `EntityDqlQueryCard` with the queryId `dynatrace.srg-validations`, you
