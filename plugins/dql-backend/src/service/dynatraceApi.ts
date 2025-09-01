@@ -186,6 +186,10 @@ export class DynatraceApi {
       identifier: this.identifier,
     };
 
+    if (process.env.LOG_QUERY) {
+      this.logger.info(`Executing DQL query: ${query}`);
+    }
+
     const execQueryRes = await executeQuery(environment, query);
     return await waitForQueryResult(
       environment,

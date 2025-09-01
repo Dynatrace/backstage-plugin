@@ -21,7 +21,7 @@ import {
   PollQueryResponse,
   TokenResponse,
 } from './dynatraceApi';
-import { createLogger } from 'winston';
+import { Logger } from 'winston';
 
 jest.mock('../utils', () => ({ dtFetch: jest.fn() }));
 
@@ -59,7 +59,10 @@ describe('dynatraceApi', () => {
     name: 'myEnv',
     accountUrn: 'urn',
   };
-  const logger = createLogger();
+  const logger = {
+    info: jest.fn(),
+    error: jest.fn(),
+  } as unknown as Logger;
   const dynatraceApi = new DynatraceApi(defaultApiConfig, 'identifier', logger);
   const trailingSlashApi = new DynatraceApi(
     { ...defaultApiConfig, url: 'https://example.com/' },
@@ -259,6 +262,51 @@ describe('dynatraceApi', () => {
         'https://example.com/platform/storage/query/v1/query:poll?request-token=myToken',
         'identifier',
       );
+    });
+  });
+
+  describe('logger', () => {
+    beforeEach(() => {
+      mockTokenResult({
+        json: {
+          access_token: 'token',
+          token_type: 'Bearer',
+          expires_in: 10_000,
+          resource: 'resource',
+          scope: 'my scopes',
+        },
+      });
+      mockExecuteResult({
+        json: { state: 'RUNNING', requestToken: 'myToken', ttlSeconds: 200 },
+      });
+      mockPollResult({ ok: false, text: '400: Invalid token' });
+    });
+
+    it('should show logs', async () => {
+      const loggerInfoFn = logger.info;
+      process.env = { LOG_QUERY: 'true' };
+      await expect(() =>
+        dynatraceApi.executeDqlQuery('my query'),
+      ).rejects.toThrow(
+        'Failed to poll query results for request token myToken',
+      );
+      // act, assert
+      expect(loggerInfoFn).toHaveBeenCalledTimes(1);
+      expect(loggerInfoFn).toHaveBeenCalledWith(
+        `Executing DQL query: my query`,
+      );
+    });
+
+    it('should not show logs', async () => {
+      const loggerInfoFn = logger.info;
+      process.env = {};
+      await expect(() =>
+        dynatraceApi.executeDqlQuery('my query'),
+      ).rejects.toThrow(
+        'Failed to poll query results for request token myToken',
+      );
+      // act, assert
+      expect(loggerInfoFn).toHaveBeenCalledTimes(0);
     });
   });
 });
