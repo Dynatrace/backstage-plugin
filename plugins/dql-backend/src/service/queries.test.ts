@@ -95,6 +95,21 @@ describe('queries', () => {
       // assert
       expect(query).toContain('| filter workload.labels[`label`] == "value"');
     });
+
+     it('should return the query with the version column included', () => {
+      // act
+      const query = dynatraceQueries[DynatraceQueryKeys.KUBERNETES_DEPLOYMENTS](
+        getEntity({
+          'backstage.io/kubernetes-label-selector': 'label=value',
+          'backstage.io/kubernetes-namespace': 'namespace',
+          'app.kubernetes.io/version': '1.0.1',
+        }),
+        defaultApiConfig,
+      );
+
+      // assert
+      expect(query).toContain('| fieldsAdd Version = "1.0.1"');
+    });
   });
   describe(DynatraceQueryKeys.SRG_VALIDATIONS, () => {
     it('should return the srg-query', () => {
