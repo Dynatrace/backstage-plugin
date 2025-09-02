@@ -266,6 +266,12 @@ describe('dynatraceApi', () => {
   });
 
   describe('logger', () => {
+    let oldEnv: NodeJS.ProcessEnv;
+
+    afterAll(() => {
+      process.env = oldEnv;
+    });
+
     beforeEach(() => {
       mockTokenResult({
         json: {
@@ -280,6 +286,9 @@ describe('dynatraceApi', () => {
         json: { state: 'RUNNING', requestToken: 'myToken', ttlSeconds: 200 },
       });
       mockPollResult({ ok: false, text: '400: Invalid token' });
+
+      oldEnv = process.env;
+      process.env = { ...process.env, LOG_QUERY: 'true' };
     });
 
     it('should show logs', async () => {
