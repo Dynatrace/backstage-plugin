@@ -110,8 +110,9 @@ export const dynatraceQueries: Record<
       'id',
       apiConfig,
     )}})
-    | fieldsRemove id, name, workload.labels, cluster.id, namespace.id
-    | fieldsAdd Environment = "${apiConfig.environmentName}"`;
+    | fieldsAdd Environment = "${apiConfig.environmentName}"
+    | fieldsAdd Version = coalesce(workload.labels[\`app.kubernetes.io/version\`], "")
+    | fieldsRemove id, name, workload.labels, cluster.id, namespace.id`;
   },
   [DynatraceQueryKeys.SRG_VALIDATIONS]: (entity, apiConfig) => {
     const catalogTags =
