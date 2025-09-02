@@ -154,6 +154,10 @@ details.
 Find here additional features to customize the plugin for different
 requirements.
 
+### DQL Query logs
+
+Setup ```LOG_QUERY=true``` node env variable to be able to log DQL queries during execution 
+
 ### Multi-environment Support
 
 If the component in Backstage should display data from multiple Dynatrace
