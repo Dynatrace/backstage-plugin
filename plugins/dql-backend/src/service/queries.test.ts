@@ -102,7 +102,6 @@ describe('queries', () => {
         getEntity({
           'backstage.io/kubernetes-label-selector': 'label=value',
           'backstage.io/kubernetes-namespace': 'namespace',
-          'app.kubernetes.io/version': '1.0.1',
         }),
         defaultApiConfig,
       );
