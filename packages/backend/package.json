@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "main": "dist/index.cjs.js",
   "types": "src/index.ts",
   "private": true,
@@ -42,7 +42,7 @@
     "@backstage/plugin-search-backend-module-pg": "^0.5.37",
     "@backstage/plugin-search-backend-node": "^1.3.4",
     "@backstage/plugin-techdocs-backend": "^1.11.1",
-    "@dynatrace/backstage-plugin-dql-backend": "^2.2.0",
+    "@dynatrace/backstage-plugin-dql-backend": "^2.3.0",
     "app": "link:../app",
     "dockerode": "^4.0.0",
     "express": "^4.17.1",
