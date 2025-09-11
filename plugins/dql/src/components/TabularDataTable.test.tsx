@@ -18,10 +18,11 @@ import {
   TableTypes,
   TabularData,
 } from '@dynatrace/backstage-plugin-dql-common';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
+import { renderInTestApp } from '@backstage/test-utils';
 
-const prepareComponent = ({
+const prepareComponent = async ({
   title = 'some title',
   data = [] as TabularData,
   pageSize,
@@ -30,7 +31,7 @@ const prepareComponent = ({
   data?: TabularData;
   pageSize?: number;
 }) => {
-  return render(
+  return await renderInTestApp(
     <TabularDataTable title={title} data={data} pageSize={pageSize} />,
   );
 };
@@ -40,26 +41,26 @@ describe('TabularDataTable', () => {
     jest.clearAllMocks();
   });
 
-  it('should render the title', () => {
+  it('should render the title', async () => {
     const title = 'some title';
-    const rendered = prepareComponent({ title });
+    const rendered = await prepareComponent({ title });
 
-    expect(rendered.getByText('some title')).toBeInTheDocument();
+     expect(rendered.getByText('some title')).toBeInTheDocument();
   });
 
-  it('should render plain text cells', () => {
+  it('should render plain text cells', async() => {
     const data: TabularData = [
       {
         Header: 'value',
       },
     ];
-    const rendered = prepareComponent({ data });
+    const rendered = await prepareComponent({ data });
 
     expect(rendered.getByText('Header').closest('th')).toBeInTheDocument();
     expect(rendered.getByText('value').closest('td')).toBeInTheDocument();
   });
 
-  it('should render link cells', () => {
+  it('should render link cells', async() => {
     const href = 'https://example.com/';
     const data: TabularData = [
       {
@@ -70,13 +71,13 @@ describe('TabularDataTable', () => {
         },
       },
     ];
-    const rendered = prepareComponent({ data });
+    const rendered = await prepareComponent({ data });
 
     const link = rendered.getByText('value').closest('a');
     expect(link?.href).toBe(href);
   });
 
-  it('should render anything else as JSON', () => {
+  it('should render anything else as JSON', async() => {
     const unknownObjectType = {
       type: 'something else',
       text: 'value',
@@ -87,38 +88,38 @@ describe('TabularDataTable', () => {
         Header: unknownObjectType,
       },
     ] as unknown as TabularData;
-    const rendered = prepareComponent({ data });
+    const rendered = await prepareComponent({ data });
 
     expect(
       rendered.getByText(JSON.stringify(data[0].Header)),
     ).toBeInTheDocument();
   });
 
-  it('should render 10 rows per page', () => {
+  it('should render 10 rows per page', async() => {
     const data: TabularData = Array.from({ length: 30 }).map((_, i) => ({
       Header: `value ${i}`,
     }));
-    const rendered = prepareComponent({ data });
+    const rendered = await prepareComponent({ data });
 
     expect(rendered.getAllByRole('row').length).toBe(12); // Including header and pagination
   });
 
-  it('should render the given rows per page', () => {
+  it('should render the given rows per page', async() => {
     const data: TabularData = Array.from({ length: 30 }).map((_, i) => ({
       Header: `value ${i}`,
     }));
-    const rendered = prepareComponent({ data, pageSize: 5 });
+    const rendered = await prepareComponent({ data, pageSize: 5 });
 
     expect(rendered.getAllByRole('row').length).toBe(7); // Including header and pagination
   });
 
-  it('should include a filter option', () => {
+  it('should include a filter option', async() => {
     const data: TabularData = [
       {
         Header: 'value',
       },
     ];
-    const rendered = prepareComponent({ data });
+    const rendered = await prepareComponent({ data });
 
     expect(rendered.getByLabelText('Search')).toBeInTheDocument();
   });
@@ -132,7 +133,7 @@ describe('TabularDataTable', () => {
         Header: 'other data',
       },
     ];
-    const rendered = prepareComponent({ data });
+    const rendered = await prepareComponent({ data });
 
     const searchInput = rendered.getByLabelText('Search');
     fireEvent.change(searchInput, { target: { value: 'other' } });
