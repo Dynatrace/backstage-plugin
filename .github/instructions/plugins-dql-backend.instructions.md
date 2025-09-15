@@ -1,5 +1,5 @@
 ---
-applyTo: "plugins/dql-backend/**/*"
+applyTo: "plugins/dql-backend/**/*.ts"
 ---
 
 # Backend Plugin - `plugins/dql-backend`

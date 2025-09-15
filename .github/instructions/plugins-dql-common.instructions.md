@@ -1,5 +1,5 @@
 ---
-applyTo: "plugins/dql-common/**/*"
+applyTo: "plugins/dql-common/**/*.ts"
 ---
 
 # Shared Package - `plugins/dql-common`
