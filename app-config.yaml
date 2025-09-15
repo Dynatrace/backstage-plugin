@@ -15,8 +15,6 @@ backend:
     origin: http://localhost:3000
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
-  metrics:
-    enabled: false
 
 techdocs:
   builder: local
