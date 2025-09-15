@@ -30,7 +30,7 @@ describe('user-agent', () => {
 
   it('should return a sensible default user agent when no data is available', () => {
     jest.resetModules();
-    jest.mock('../../package.json', () => ({}), { virtual: true });
+    jest.mock('../../package.json', () => ({}));
 
     const { getUserAgent: getDefaultUserAgent } = require('./userAgent');
     expect(getDefaultUserAgent()).toBe('DynatraceDQLPlugin/0.0.0');
