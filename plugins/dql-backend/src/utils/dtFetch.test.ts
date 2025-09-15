@@ -21,7 +21,7 @@ import { dtFetch } from './dtFetch';
 jest.mock('../../package.json', () => ({
   name: 'dql-backend',
   version: '1.0.0',
-}), { virtual: true });
+}));
 
 const server = setupServer();
 

@@ -21,7 +21,6 @@ jest.mock(
     name: 'dql-backend',
     version: '1.0.0',
   }),
-  { virtual: true },
 );
 
 describe('user-agent', () => {
@@ -33,7 +32,6 @@ describe('user-agent', () => {
     jest.resetModules();
     jest.mock('../../package.json', () => ({}), { virtual: true });
 
-    // Re-import after mocking
     const { getUserAgent: getDefaultUserAgent } = require('./userAgent');
     expect(getDefaultUserAgent()).toBe('DynatraceDQLPlugin/0.0.0');
   });
