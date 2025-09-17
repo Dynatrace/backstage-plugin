@@ -13,28 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { getUserAgent } from './userAgent';
+
+jest.mock(
+  '../../package.json',
+  () => ({
+    name: 'dql-backend',
+    version: '1.0.0',
+  }),
+);
 
 describe('user-agent', () => {
-  beforeEach(() => jest.resetModules());
-
-  it('should return user agent', async () => {
-    jest.doMock('../../package.json', () => ({
-      name: 'dql-backend',
-      version: '1.0.0',
-    }));
-
-    const userAgentModule = await import('./userAgent');
-    const getUserAgent = userAgentModule.getUserAgent;
-
+  it('should return user agent', () => {
     expect(getUserAgent()).toBe('dql-backend/1.0.0');
   });
 
-  it('should return a sensible default user agent when no data is available', async () => {
-    jest.doMock('../../package.json', () => ({}));
+  it('should return a sensible default user agent when no data is available', () => {
+    jest.resetModules();
+    jest.mock('../../package.json', () => ({}));
 
-    const userAgentModule = await import('./userAgent');
-    const getUserAgent = userAgentModule.getUserAgent;
-
-    expect(getUserAgent()).toBe('DynatraceDQLPlugin/0.0.0');
+    const { getUserAgent: getDefaultUserAgent } = require('./userAgent');
+    expect(getDefaultUserAgent()).toBe('DynatraceDQLPlugin/0.0.0');
   });
 });

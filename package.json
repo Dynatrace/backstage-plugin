@@ -44,7 +44,7 @@
     ]
   },
   "devDependencies": {
-    "@backstage/cli": "^0.28.2",
+    "@backstage/cli": "^0.34.1",
     "@commitlint/cli": "^19.0.0",
     "@commitlint/config-conventional": "^19.0.0",
     "@commitlint/config-lerna-scopes": "^19.0.0",
@@ -62,7 +62,8 @@
   },
   "resolutions": {
     "@types/react": "^17",
-    "@types/react-dom": "^17"
+    "@types/react-dom": "^17",
+    "@opentelemetry/api": "1.9.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [
