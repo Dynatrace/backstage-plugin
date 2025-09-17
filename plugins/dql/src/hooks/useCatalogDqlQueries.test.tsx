@@ -18,7 +18,7 @@ import { useCatalogDqlQueries } from './useCatalogDqlQueries';
 import { identityApiRef } from '@backstage/core-plugin-api';
 import { TestApiProvider } from '@backstage/test-utils';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, waitFor } from '@testing-library/react';
 import React, { ReactNode } from 'react';
 
 const MockDqlQueryApi = {
@@ -38,6 +38,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
     {children}
   </TestApiProvider>
 );
+
 const mockedEntityRef = 'component:default/example';
 
 describe('useDqlQuery', () => {
@@ -46,55 +47,57 @@ describe('useDqlQuery', () => {
   });
 
   it('should delegate to dqlQueryApi and return the result of the query', async () => {
-    const { result, waitForNextUpdate } = renderHook(
+    const { result } = renderHook(
       () => useCatalogDqlQueries('queryNamespace', mockedEntityRef),
       { wrapper },
     );
 
-    await waitForNextUpdate();
-
-    expect(MockDqlQueryApi.getDataFromQueries).toHaveBeenCalledWith<
-      Parameters<DqlQueryApi['getDataFromQueries']>
-    >('queryNamespace', mockedEntityRef, expect.anything());
-    expect(result.current.value).toEqual([]);
+    await waitFor(() => {
+      expect(MockDqlQueryApi.getDataFromQueries).toHaveBeenCalledWith<
+        Parameters<DqlQueryApi['getDataFromQueries']>
+      >('queryNamespace', mockedEntityRef, expect.anything());
+      expect(result.current.value).toEqual([]);
+    });
   });
 
   it('should return loading true while the query is running', async () => {
-    const { result, waitForNextUpdate } = renderHook(
+    const { result } = renderHook(
       () => useCatalogDqlQueries('queryNamespace', mockedEntityRef),
       { wrapper },
     );
 
     expect(result.current.loading).toBeTruthy();
 
-    await waitForNextUpdate();
+    await waitFor(() => {
+      expect(result.current.loading).toBeFalsy();
+    });
   });
 
   it('should return error if the query fails', async () => {
     const error = new Error('test');
     MockDqlQueryApi.getDataFromQueries.mockRejectedValue(error);
 
-    const { result, waitForNextUpdate } = renderHook(
+    const { result } = renderHook(
       () => useCatalogDqlQueries('queryNamespace', mockedEntityRef),
       { wrapper },
     );
 
-    await waitForNextUpdate();
-
-    expect(result.current.error).toEqual(error);
+    await waitFor(() => {
+      expect(result.current.error).toEqual(error);
+    });
   });
 
   it('should return error if identity api fails to retrieve credentials', async () => {
     const error = new Error('Failed to get identity token');
     MockIdentityApi.getCredentials.mockResolvedValue({});
 
-    const { result, waitForNextUpdate } = renderHook(
+    const { result } = renderHook(
       () => useCatalogDqlQueries('queryNamespace', mockedEntityRef),
       { wrapper },
     );
 
-    await waitForNextUpdate();
-
-    expect(result.current.error).toEqual(error);
+    await waitFor(() => {
+      expect(result.current.error).toEqual(error);
+    });
   });
 });
