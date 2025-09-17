@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 import { TabularDataTable } from './TabularDataTable';
+import { renderInTestApp } from '@backstage/test-utils';
 import {
   TableTypes,
   TabularData,
 } from '@dynatrace/backstage-plugin-dql-common';
 import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
-import { renderInTestApp } from '@backstage/test-utils';
 
 const prepareComponent = async ({
   title = 'some title',
@@ -45,10 +45,10 @@ describe('TabularDataTable', () => {
     const title = 'some title';
     const rendered = await prepareComponent({ title });
 
-     expect(rendered.getByText('some title')).toBeInTheDocument();
+    expect(rendered.getByText('some title')).toBeInTheDocument();
   });
 
-  it('should render plain text cells', async() => {
+  it('should render plain text cells', async () => {
     const data: TabularData = [
       {
         Header: 'value',
@@ -60,7 +60,7 @@ describe('TabularDataTable', () => {
     expect(rendered.getByText('value').closest('td')).toBeInTheDocument();
   });
 
-  it('should render link cells', async() => {
+  it('should render link cells', async () => {
     const href = 'https://example.com/';
     const data: TabularData = [
       {
@@ -77,7 +77,7 @@ describe('TabularDataTable', () => {
     expect(link?.href).toBe(href);
   });
 
-  it('should render anything else as JSON', async() => {
+  it('should render anything else as JSON', async () => {
     const unknownObjectType = {
       type: 'something else',
       text: 'value',
@@ -95,7 +95,7 @@ describe('TabularDataTable', () => {
     ).toBeInTheDocument();
   });
 
-  it('should render 10 rows per page', async() => {
+  it('should render 10 rows per page', async () => {
     const data: TabularData = Array.from({ length: 30 }).map((_, i) => ({
       Header: `value ${i}`,
     }));
@@ -104,7 +104,7 @@ describe('TabularDataTable', () => {
     expect(rendered.getAllByRole('row').length).toBe(12); // Including header and pagination
   });
 
-  it('should render the given rows per page', async() => {
+  it('should render the given rows per page', async () => {
     const data: TabularData = Array.from({ length: 30 }).map((_, i) => ({
       Header: `value ${i}`,
     }));
@@ -113,7 +113,7 @@ describe('TabularDataTable', () => {
     expect(rendered.getAllByRole('row').length).toBe(7); // Including header and pagination
   });
 
-  it('should include a filter option', async() => {
+  it('should include a filter option', async () => {
     const data: TabularData = [
       {
         Header: 'value',
