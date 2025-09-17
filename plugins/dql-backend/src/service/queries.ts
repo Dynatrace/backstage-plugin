@@ -137,18 +137,39 @@ export const dynatraceQueries: Record<
       }
     }
     return `
-    fetch bizevents, from: -7d
-    | filter event.provider == "dynatrace.site.reliability.guardian"
-    | filter event.type == "guardian.validation.finished"
-    | parse validation.summary, "JSON:summary"
-    | parse execution_context, "JSON:context"
-    | parse guardian.tags, "JSON:tags"
-    ${filterString}
-    | fieldsAdd Version = if(isNull(context[version]), "N/A", else: context[version])
-    | fieldsRename \`Validation Result\` = validation.status
-    | fieldsAdd Error = summary[error], Fail = summary[fail], Warning = summary[warning], Pass = summary[pass], Info = summary[info]
-    | fieldsAdd Environment = "${apiConfig.environmentName}"
-    | fieldsAdd Link = record({type="link", text="Open Validation", url=concat(
+     fetch events, from: -7d
+      | filter event.kind == "SDLC_EVENT" AND event.type == "validation"
+      | filter event.provider == "dynatrace.site.reliability.guardian"
+      | filter event.status == "finished"
+      | parse dt.srg.validation.summary, "JSON:summary"
+      | parse execution_context, "JSON:context"
+      | parse dt.srg.tags, "JSON:tags"
+      ${filterString}
+      | fieldsAdd Version = if(isNull(context[version]), "N/A", else: context[version])
+      | fieldsRename \`Validation Result\` = validation.result
+      | fieldsAdd Error = summary[error], Fail = summary[fail], Warning = summary[warning], Pass = summary[pass], Info = summary[info]
+      | fieldsAdd Environment = "${apiConfig.environmentName}"
+      | fieldsAdd Link = record({type="link", text="Open Validation", url=concat(
+        "${apiConfig.environmentUrl}",
+        "/ui/intent/dynatrace.site.reliability.guardian/view_validation#%7B%22guardian.id%22%3A%22",
+        dt.srg.id,
+        "%22%2C%22validation.id%22%3A%22",
+        task.id,
+        "%22%7D")})
+      | fieldsKeep Fail, Error, Pass, Info, Warning, Link, \`Validation Result\`, Version, Environment
+      | append [ 
+      fetch bizevents, from: -7d
+      | filter event.provider == "dynatrace.site.reliability.guardian"
+      | filter event.type == "guardian.validation.finished"
+      | parse validation.summary, "JSON:summary"
+      | parse execution_context, "JSON:context"
+      | parse guardian.tags, "JSON:tags"
+      ${filterString}
+      | fieldsAdd Version = if(isNull(context[version]), "N/A", else: context[version])
+      | fieldsRename \`Validation Result\` = validation.status
+      | fieldsAdd Error = summary[error], Fail = summary[fail], Warning = summary[warning], Pass = summary[pass], Info = summary[info]
+      | fieldsAdd Environment = "${apiConfig.environmentName}"
+      | fieldsAdd Link = record({type="link", text="Open Validation", url=concat(
       "${apiConfig.environmentUrl}",
       "/ui/intent/dynatrace.site.reliability.guardian/view_validation#%7B%22guardian.id%22%3A%22",
       guardian.id,
@@ -156,6 +177,7 @@ export const dynatraceQueries: Record<
       validation.id,
       "%22%7D")})
     | fieldsKeep Fail, Error, Pass, Info, Warning, Link, \`Validation Result\`, Version, Environment
+    ]
     `;
   },
 };
