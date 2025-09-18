@@ -58,7 +58,7 @@
     "lint-staged": "^15.0.1",
     "node-gyp": "^10.0.0",
     "prettier": "^2.0.0",
-    "typescript": "~5.7.0"
+    "typescript": "~5.9.0"
   },
   "resolutions": {
     "@types/react": "^18",
@@ -81,5 +81,5 @@
   "dependencies": {
     "@types/webpack-env": "1.18.8"
   },
-  "packageManager": "yarn@4.6.0"
+  "packageManager": "yarn@4.9.4"
 }
