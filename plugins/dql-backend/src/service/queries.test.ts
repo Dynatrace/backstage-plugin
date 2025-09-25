@@ -119,6 +119,9 @@ describe('queries', () => {
       );
 
       // assert
+      
+      expect(query).toContain('fetch events');
+      expect(query).toContain('| filter event.kind == "SDLC_EVENT" AND event.type == "validation"');
       expect(query).toContain('fetch bizevents');
       expect(query).toContain(
         '| filter event.provider == "dynatrace.site.reliability.guardian"',
@@ -135,9 +138,11 @@ describe('queries', () => {
       );
 
       // assert
+      expect(query).toContain('fetch events');
+      expect(query).toContain('| filter event.kind == "SDLC_EVENT" AND event.type == "validation"');
       expect(query).toContain('fetch bizevents');
-      expect(query).toContain('isNotNull(tags[novalue])');
-      expect(query).toContain('in (tags[`service`], "my-service")');
+      expect(query.match(/isNotNull\(tags\[novalue\]\)/g)?.length).toBe(2);
+      expect(query.match(/in \(tags\[`service`\], "my-service"\)/g)?.length).toBe(2);
       expect(query).toContain(
         '| filter event.provider == "dynatrace.site.reliability.guardian"',
       );
