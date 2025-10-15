@@ -1,31 +1,19 @@
 name: snyk.yml
 on:
-  pull_request:
-    branches: [ main ]
   push:
     branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  snyk-monitor:
+  snyk:
+    name: Snyk Security Scan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22.x
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Install dependencies
-        run: yarn install --immutable
+        uses: actions/checkout@v5
 
       - name: Run Snyk monitor
-        uses: snyk/actions/node@master
+        uses: snyk/actions/node@v1.0.0
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
