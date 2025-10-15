@@ -1,12 +1,13 @@
-name: snyk.yml
+name: Snyk Security Scan
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
+  pull_request:
+    branches: [ main ]
+  merge_group: # run if triggered as part of a merge queue
 
 jobs:
   snyk:
-    name: Snyk Security Scan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
