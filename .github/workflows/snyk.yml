@@ -1,0 +1,27 @@
+name: Snyk Security Scan
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  merge_group: # run if triggered as part of a merge queue
+
+jobs:
+  snyk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Run Snyk monitor
+        uses: snyk/actions/node@v1.0.0
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
+        with:
+          command: monitor
+          args: |
+            --all-projects 
+            --detection-depth=4
+            --target-reference=main
+            --project-environment=external
+            --project-business-criticality=low
