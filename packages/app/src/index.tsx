@@ -15,6 +15,7 @@
  */
 import App from './App';
 import '@backstage/cli/asset-types';
+import '@backstage/ui/css/styles.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
