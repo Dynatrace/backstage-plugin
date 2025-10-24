@@ -4865,8 +4865,8 @@ __metadata:
   linkType: hard
 
 "@backstage/plugin-techdocs@npm:^1.14.1":
-  version: 1.15.1
-  resolution: "@backstage/plugin-techdocs@npm:1.15.1"
+  version: 1.15.2
+  resolution: "@backstage/plugin-techdocs@npm:1.15.2"
   dependencies:
     "@backstage/catalog-client": "npm:^1.12.0"
     "@backstage/catalog-model": "npm:^1.7.5"
@@ -4904,7 +4904,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10c0/94ac707dfef4641be2d35596c8b3ecf16487da1b3db3e5005a667df0dac861e19db47192ac2ba2abba6d8a5da5d8d9b0d5951502afa83c17374d9a129c40e5dd
+  checksum: 10c0/8df3d22d3c0028b167179f744c3a764101119083834394f3abf0b381cc68ec0bf60418e9d158249443088da42fc55a5ae4ea0cf7e89751513bf1a149b414eb01
   languageName: node
   linkType: hard
 
@@ -14901,13 +14901,13 @@ __metadata:
   linkType: hard
 
 "@types/dockerode@npm:^3.3.0":
-  version: 3.3.44
-  resolution: "@types/dockerode@npm:3.3.44"
+  version: 3.3.45
+  resolution: "@types/dockerode@npm:3.3.45"
   dependencies:
     "@types/docker-modem": "npm:*"
     "@types/node": "npm:*"
     "@types/ssh2": "npm:*"
-  checksum: 10c0/f6413b84356b19a540812c2a3f60b1693c4f5f105e6c7e938d803e3a1f769b27e88d4ed1c420b160f56052aa80aca527e79a6b6c0f9124565a406817f9a4efcd
+  checksum: 10c0/73611abf15d12ea7e26d3ba3dd76df4795ae83f188bbc110284f2184ff8d428285bc81a331d1276e7dea157a060ea607089bcb93aac618c4266aef6488dd711c
   languageName: node
   linkType: hard
 
@@ -14969,25 +14969,25 @@ __metadata:
   linkType: hard
 
 "@types/express@npm:*":
-  version: 5.0.3
-  resolution: "@types/express@npm:5.0.3"
+  version: 5.0.4
+  resolution: "@types/express@npm:5.0.4"
   dependencies:
     "@types/body-parser": "npm:*"
     "@types/express-serve-static-core": "npm:^5.0.0"
     "@types/serve-static": "npm:*"
-  checksum: 10c0/f0fbc8daa7f40070b103cf4d020ff1dd08503477d866d1134b87c0390bba71d5d7949cb8b4e719a81ccba89294d8e1573414e6dcbb5bb1d097a7b820928ebdef
+  checksum: 10c0/713f81ff2abc389d6288ba5e0f8edf3cba55b418340e4c248d55894502a136a963b88be1c9a50cbf3c066e3d057dbb1e262c92b9fe446bb51b6648e00bb57b62
   languageName: node
   linkType: hard
 
 "@types/express@npm:^4.17.21, @types/express@npm:^4.17.23, @types/express@npm:^4.17.6":
-  version: 4.17.23
-  resolution: "@types/express@npm:4.17.23"
+  version: 4.17.24
+  resolution: "@types/express@npm:4.17.24"
   dependencies:
     "@types/body-parser": "npm:*"
     "@types/express-serve-static-core": "npm:^4.17.33"
     "@types/qs": "npm:*"
     "@types/serve-static": "npm:*"
-  checksum: 10c0/60490cd4f73085007247e7d4fafad0a7abdafa34fa3caba2757512564ca5e094ece7459f0f324030a63d513f967bb86579a8682af76ae2fd718e889b0a2a4fe8
+  checksum: 10c0/664e1983e47dee6e30c3c3cad84a8e43f9da07e24bd596e8398cf3fb36bc107fc813a9bc90e3da01bc8930dc70c5729a380e4ea54998159ec1b1eba2db6ce933
   languageName: node
   linkType: hard
 
