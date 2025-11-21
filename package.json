@@ -82,5 +82,5 @@
   "dependencies": {
     "@types/webpack-env": "1.18.8"
   },
-  "packageManager": "yarn@4.10.3"
+  "packageManager": "yarn@4.11.0"
 }
