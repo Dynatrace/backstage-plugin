@@ -24,10 +24,16 @@
  * you don't want to deal with this.
  */
 const { TextDecoder, TextEncoder } = require('node:util');
+const { ReadableStream, WritableStream } = require('node:stream/web');
+const { MessageChannel, MessagePort } = require('node:worker_threads');
 
 Object.defineProperties(globalThis, {
   TextDecoder: { value: TextDecoder },
   TextEncoder: { value: TextEncoder },
+  ReadableStream: { value: ReadableStream },
+  WritableStream: { value: WritableStream },
+  MessageChannel: { value: MessageChannel },
+  MessagePort: { value: MessagePort },
 });
 
 const { Blob, File } = require('node:buffer');
