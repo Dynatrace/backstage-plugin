@@ -4828,6 +4828,7 @@ __metadata:
     "@backstage/test-utils": "npm:^1.7.11"
     "@dynatrace/backstage-plugin-dql-common": "npm:^2.4.0"
     "@types/express": "npm:^4.17.23"
+    "@types/node-fetch": "npm:^2.6.11"
     "@types/supertest": "npm:^6.0.0"
     express: "npm:^4.17.1"
     express-promise-router: "npm:^4.1.0"
@@ -14234,6 +14235,16 @@ __metadata:
   dependencies:
     "@types/express": "npm:*"
   checksum: 10c0/aed716fdc0bc8c5bfe6689bfe6569b6743b64be795140e80cab169bfe43f687027880b7fc401fca98f820dd464ad5986093ec322d865116eb31ce29a3361c469
+  languageName: node
+  linkType: hard
+
+"@types/node-fetch@npm:^2.6.11":
+  version: 2.6.13
+  resolution: "@types/node-fetch@npm:2.6.13"
+  dependencies:
+    "@types/node": "npm:*"
+    form-data: "npm:^4.0.4"
+  checksum: 10c0/6313c89f62c50bd0513a6839cdff0a06727ac5495ccbb2eeda51bb2bbbc4f3c0a76c0393a491b7610af703d3d2deb6cf60e37e59c81ceeca803ffde745dbf309
   languageName: node
   linkType: hard
 
