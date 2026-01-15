@@ -281,6 +281,12 @@ stage: development
 novalue:
 ```
 
+Set `dynatrace.com/guardian-tags` to empty, if do not want to filter for specific tags.
+
+ ```yaml
+dynatrace.com/guardian-tags: ''
+```
+
 See
 [How to create a Site Reliability Guardian](https://docs.dynatrace.com/docs/shortlink/guardian-create-srg#create-a-guardian-from-a-template)
 and [Guardian tags](https://docs.dynatrace.com/docs/shortlink/srg-landing#tags).
@@ -426,7 +432,7 @@ By default, queries are executed against all defined environments.
 
 Example query defined in `catalog-info.yaml` with environment limitation:
 
-```
+```yaml
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
@@ -455,6 +461,20 @@ metadata:
 
 The environments defined for a query must align with the environments names
 configured in the `app-config.local.yaml` file.
+
+### Multiline DQL queries with comments
+To use comments within your custom DQL queries, use literal block style YAML style, indicated by a pipe (`|`). See [YAML Spec | Literal Style](https://yaml.org/spec/1.2.2/#literal-style).
+
+```yaml
+query: |
+  fetch logs
+    // Filter for errors
+    | filter loglevel == "ERROR"
+    /*
+     *  Count them
+     */
+    | summarize sum=count() // Assign column label
+```
 
 ### Sample DQL Queries
 
