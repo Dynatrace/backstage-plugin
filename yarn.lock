@@ -16135,7 +16135,7 @@ __metadata:
   resolution: "backend@workspace:packages/backend"
   dependencies:
     "@backstage/backend-defaults": "npm:^0.12.0"
-    "@backstage/backend-plugin-api": "npm:1.6.1"
+    "@backstage/backend-plugin-api": "npm:^1.6.1"
     "@backstage/backend-tasks": "npm:^0.6.1"
     "@backstage/catalog-client": "npm:^1.11.0"
     "@backstage/catalog-model": "npm:^1.7.5"
