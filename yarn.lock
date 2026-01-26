@@ -2231,7 +2231,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/backend-plugin-api@npm:1.6.1":
+"@backstage/backend-plugin-api@npm:^1.6.1":
   version: 1.6.1
   resolution: "@backstage/backend-plugin-api@npm:1.6.1"
   dependencies:
@@ -3801,7 +3801,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-scaffolder-node@npm:0.12.3":
+"@backstage/plugin-scaffolder-node@npm:^0.12.3":
   version: 0.12.3
   resolution: "@backstage/plugin-scaffolder-node@npm:0.12.3"
   dependencies:
