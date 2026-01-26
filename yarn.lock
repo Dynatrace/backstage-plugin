@@ -2231,7 +2231,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/backend-plugin-api@npm:1.6.1, @backstage/backend-plugin-api@npm:^1.6.1":
+"@backstage/backend-plugin-api@npm:1.6.1":
   version: 1.6.1
   resolution: "@backstage/backend-plugin-api@npm:1.6.1"
   dependencies:
@@ -2250,47 +2250,6 @@ __metadata:
     luxon: "npm:^3.0.0"
     zod: "npm:^3.22.4"
   checksum: 10c0/438fa8d9e3aba9ab764d54ff1915a567698f6e3ee424f03b75d334ac78e618d92afe309c6423d8dc866f24bf126e5a2aef0aa33b751313c177506de4339e723e
-  languageName: node
-  linkType: hard
-
-"@backstage/backend-plugin-api@npm:^0.8.1":
-  version: 0.8.1
-  resolution: "@backstage/backend-plugin-api@npm:0.8.1"
-  dependencies:
-    "@backstage/cli-common": "npm:^0.1.14"
-    "@backstage/config": "npm:^1.2.0"
-    "@backstage/errors": "npm:^1.2.4"
-    "@backstage/plugin-auth-node": "npm:^0.5.1"
-    "@backstage/plugin-permission-common": "npm:^0.8.1"
-    "@backstage/types": "npm:^1.1.1"
-    "@types/express": "npm:^4.17.6"
-    "@types/luxon": "npm:^3.0.0"
-    express: "npm:^4.17.1"
-    knex: "npm:^3.0.0"
-    luxon: "npm:^3.0.0"
-  checksum: 10c0/14fbd1ce8b0f18b672479b6c0e49a57ff7a77cc965fe9928dc5ff6af31b8c8ee968b912bc3b32c26509578649d67b7717aef4c7a32017dcaaf9425e89e75e9da
-  languageName: node
-  linkType: hard
-
-"@backstage/backend-plugin-api@npm:^1.0.0, @backstage/backend-plugin-api@npm:^1.1.1, @backstage/backend-plugin-api@npm:^1.4.3, @backstage/backend-plugin-api@npm:^1.4.4, @backstage/backend-plugin-api@npm:^1.5.0, @backstage/backend-plugin-api@npm:^1.6.0":
-  version: 1.6.0
-  resolution: "@backstage/backend-plugin-api@npm:1.6.0"
-  dependencies:
-    "@backstage/cli-common": "npm:^0.1.16"
-    "@backstage/config": "npm:^1.3.6"
-    "@backstage/errors": "npm:^1.2.7"
-    "@backstage/plugin-auth-node": "npm:^0.6.10"
-    "@backstage/plugin-permission-common": "npm:^0.9.3"
-    "@backstage/plugin-permission-node": "npm:^0.10.7"
-    "@backstage/types": "npm:^1.2.2"
-    "@types/express": "npm:^4.17.6"
-    "@types/json-schema": "npm:^7.0.6"
-    "@types/luxon": "npm:^3.0.0"
-    json-schema: "npm:^0.4.0"
-    knex: "npm:^3.0.0"
-    luxon: "npm:^3.0.0"
-    zod: "npm:^3.22.4"
-  checksum: 10c0/1d510452cfecd4b14077b4ae6fbd86c9872754c2575b87ba243d9485fb13a0b3290cfdbaed0dafc98a10679e215bcaac0ea6755aaa9cd8d48327475f77eb60b1
   languageName: node
   linkType: hard
 
@@ -3482,21 +3441,6 @@ __metadata:
     yn: "npm:^4.0.0"
     zod: "npm:^3.22.4"
   checksum: 10c0/0e9ee760770ec420b0776d5f821e268c9467d6ab11818ad10307a3922f37b4052d4c229f686d53806f83aae7caa8511aeeb200a889ec27c7dca1d25873cf5bf9
-  languageName: node
-  linkType: hard
-
-"@backstage/plugin-permission-common@npm:^0.8.1":
-  version: 0.8.4
-  resolution: "@backstage/plugin-permission-common@npm:0.8.4"
-  dependencies:
-    "@backstage/config": "npm:^1.3.2"
-    "@backstage/errors": "npm:^1.2.7"
-    "@backstage/types": "npm:^1.2.1"
-    cross-fetch: "npm:^4.0.0"
-    uuid: "npm:^11.0.0"
-    zod: "npm:^3.22.4"
-    zod-to-json-schema: "npm:^3.20.4"
-  checksum: 10c0/35d52365c1abb23c6ad167149ab78aad0396b97d5c9e591f5a5e397ea029855a6b88f05060e2215e2480244bec797d92871ad92fa613255eeddd54228c01b7f1
   languageName: node
   linkType: hard
 
