@@ -46,7 +46,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.34.1",
+    "@backstage/cli": "^0.35.0",
     "@backstage/test-utils": "^1.7.11",
     "@types/node-fetch": "^2.6.11",
     "@types/supertest": "^6.0.0",
