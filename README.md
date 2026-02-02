@@ -210,7 +210,7 @@ component if they are properly annotated in the deployment descriptor. See
 [annotations](https://backstage.io/docs/features/software-catalog/descriptor-format/#annotations-optional).
 
 > [!NOTE]
-> Please unsure you have the `storage:entities:read` permission to read Kubernetes deployments.
+> Please ensure you have the `storage:entities:read` permission to read Kubernetes deployments.
 
 Example:
 
