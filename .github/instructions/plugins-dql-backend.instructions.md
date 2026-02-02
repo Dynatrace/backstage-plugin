@@ -38,6 +38,7 @@ router.get('/custom/:queryId', async (req, res) => {
 ```
 
 ### Configuration Schema
+#### Using OAuth client credentials
 ```typescript
 // config.d.ts
 export type Config = {
@@ -48,6 +49,21 @@ export type Config = {
       clientId: string;      // @visibility secret
       clientSecret: string;  // @visibility secret
       accountUrn: string;    // @visibility secret
+    }>;
+    queries?: { [queryId: string]: string };
+  };
+};
+```
+
+#### Using Dynatrace Platform Tokens
+```typescript
+// config.d.ts
+export type Config = {
+  dynatrace: {
+    environments: Array<{
+      url: string;
+      name: string;
+      platformToken: string;   // @visibility secret
     }>;
     queries?: { [queryId: string]: string };
   };

@@ -122,6 +122,8 @@ are required for the Backstage plugin
 Create or update the `app-config.local.yaml` file (excluded by `.gitignore`)
 configuring the connection to the Dynatrace environment:
 
+#### Using OAuth client credentials
+
 ```yaml
 dynatrace:
   environments:
@@ -131,6 +133,16 @@ dynatrace:
       accountUrn: <accountUrn>
       clientId: <clientId>
       clientSecret: <clientSecret>
+```
+
+#### Using Dynatrace Platform Token
+Read [Platform Token documentation](https://docs.dynatrace.com/docs/shortlink/platform-tokens) for more details.
+```yaml
+dynatrace:
+  environments:
+    - name: xxxxxxxx
+      url: https://xxxxxxxx.apps.dynatrace.com
+      platformToken: <platformToken>
 ```
 
 > See below how to configure
