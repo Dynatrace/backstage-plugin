@@ -198,12 +198,14 @@ describe('dynatraceApi', () => {
     assertExecuteCall(
       'https://example.com/platform/storage/query/v1/query:execute',
       'identifier',
-      'Bearer dt.token.from.platform.6789', 0
+      'Bearer dt.token.from.platform.6789',
+      0,
     );
     assertPollCall(
       'https://example.com/platform/storage/query/v1/query:poll?request-token=myToken',
       'identifier',
-      'Bearer dt.token.from.platform.6789', 1
+      'Bearer dt.token.from.platform.6789',
+      1,
     );
   });
 
