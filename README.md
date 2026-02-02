@@ -209,8 +209,8 @@ _Convention:_ Kubernetes pods will be listed for the corresponding Backstage
 component if they are properly annotated in the deployment descriptor. See
 [annotations](https://backstage.io/docs/features/software-catalog/descriptor-format/#annotations-optional).
 
-[!NOTE]
-Please unsure you have the `storage:entities:read` permission to read Kubernetes deployments.
+> [!NOTE]
+> Please unsure you have the `storage:entities:read` permission to read Kubernetes deployments.
 
 Example:
 
@@ -262,8 +262,8 @@ environment.
 />
 ```
 
-[!NOTE]
-Please unsure you have the `storage:events:read` and `storage:bizevents:read` permissions to read guardian validations.
+> [!NOTE]
+> Please unsure you have the `storage:events:read` and `storage:bizevents:read` permissions to read guardian validations.
 
 To filter for specific guardians, you can filter tags defined in the
 `metadata.annotations` property of the `catalog-info.yaml` file under the key
@@ -328,8 +328,8 @@ dynatrace:
         timestamp
 ```
 
-[!NOTE]
-Depending on your custom query ensure you have the [relevant permissions](https://docs.dynatrace.com/docs/platform/grail/organize-data/assign-permissions-in-grail#grail-permissions-table).
+> [!NOTE]
+> Depending on your custom query ensure you have the [relevant permissions](https://docs.dynatrace.com/docs/platform/grail/organize-data/assign-permissions-in-grail#grail-permissions-table).
 
 Queries can contain placeholders, which will be replaced with the values from
 the context in which it is executed. These placeholders are prefixed with `$$`
