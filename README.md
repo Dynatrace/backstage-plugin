@@ -263,7 +263,7 @@ environment.
 ```
 
 > [!NOTE]
-> Please unsure you have the `storage:events:read` and `storage:bizevents:read` permissions to read guardian validations.
+> Please ensure you have the `storage:events:read` and `storage:bizevents:read` permissions to read guardian validations.
 
 To filter for specific guardians, you can filter tags defined in the
 `metadata.annotations` property of the `catalog-info.yaml` file under the key
