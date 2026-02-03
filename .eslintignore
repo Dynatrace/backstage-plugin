@@ -1,1 +1,5 @@
 packages/app/public
+dist
+**/dist
+dist-types
+**/dist-types
