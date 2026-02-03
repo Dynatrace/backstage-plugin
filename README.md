@@ -122,6 +122,8 @@ are required for the Backstage plugin
 Create or update the `app-config.local.yaml` file (excluded by `.gitignore`)
 configuring the connection to the Dynatrace environment:
 
+#### Using OAuth client credentials
+
 ```yaml
 dynatrace:
   environments:
@@ -131,6 +133,16 @@ dynatrace:
       accountUrn: <accountUrn>
       clientId: <clientId>
       clientSecret: <clientSecret>
+```
+
+#### Using Dynatrace Platform Token
+Read [Platform Token documentation](https://docs.dynatrace.com/docs/shortlink/platform-tokens) for more details.
+```yaml
+dynatrace:
+  environments:
+    - name: xxxxxxxx
+      url: https://xxxxxxxx.apps.dynatrace.com
+      platformToken: <platformToken>
 ```
 
 > See below how to configure
@@ -197,6 +209,9 @@ _Convention:_ Kubernetes pods will be listed for the corresponding Backstage
 component if they are properly annotated in the deployment descriptor. See
 [annotations](https://backstage.io/docs/features/software-catalog/descriptor-format/#annotations-optional).
 
+> [!NOTE]
+> Please ensure you have the `storage:entities:read` permission to read Kubernetes deployments.
+
 Example:
 
 ```yaml
@@ -246,6 +261,9 @@ environment.
   queryId="dynatrace.srg-validations"
 />
 ```
+
+> [!NOTE]
+> Please ensure you have the `storage:events:read` and `storage:bizevents:read` permissions to read guardian validations.
 
 To filter for specific guardians, you can filter tags defined in the
 `metadata.annotations` property of the `catalog-info.yaml` file under the key
@@ -309,6 +327,9 @@ dynatrace:
         fetch events | filter event.kind == "DAVIS_EVENT" | fields event.kind,
         timestamp
 ```
+
+> [!NOTE]
+> Depending on your custom query ensure you have the [relevant permissions](https://docs.dynatrace.com/docs/platform/grail/organize-data/assign-permissions-in-grail#grail-permissions-table).
 
 Queries can contain placeholders, which will be replaced with the values from
 the context in which it is executed. These placeholders are prefixed with `$$`

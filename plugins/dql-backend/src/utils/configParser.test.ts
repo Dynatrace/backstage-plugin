@@ -26,6 +26,12 @@ const TEST_ENVIRONMENT = {
   accountUrn: 'test',
 };
 
+const TEST_ENVIRONMENT_PLATFORM_TOKEN = {
+  name: 'test',
+  url: 'https://test.dynatrace.com',
+  platformToken: 'dt.token.12345'
+};
+
 const logger = createLogger();
 
 describe('config-parser', () => {
@@ -33,6 +39,19 @@ describe('config-parser', () => {
     it('should return a list of DynatraceApis with the corresponding config', () => {
       const config = new MockConfigApi({
         dynatrace: { environments: [TEST_ENVIRONMENT] },
+      });
+      const result = parseEnvironments(config, logger);
+
+      expect(result).toHaveLength(1);
+      const api = result[0];
+      expect(api.environmentName).toEqual(TEST_ENVIRONMENT.name);
+      expect(api.environmentUrl).toEqual(TEST_ENVIRONMENT.url);
+      expect(Reflect.get(api, 'identifier')).toEqual(btoa('test'));
+    });
+
+     it('should support Platform Tokens', () => {
+      const config = new MockConfigApi({
+        dynatrace: { environments: [TEST_ENVIRONMENT_PLATFORM_TOKEN] },
       });
       const result = parseEnvironments(config, logger);
 

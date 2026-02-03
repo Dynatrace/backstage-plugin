@@ -51,6 +51,7 @@ describe('dynatraceApi', () => {
       },
     });
   };
+
   const defaultApiConfig: DynatraceEnvironmentConfig = {
     clientId: 'clientId',
     clientSecret: 'clientSecret',
@@ -59,16 +60,27 @@ describe('dynatraceApi', () => {
     name: 'myEnv',
     accountUrn: 'urn',
   };
+
+  const platformTokenApiConfig: DynatraceEnvironmentConfig = {
+    platformToken: 'dt.token.from.platform.6789',
+    url: 'https://example.com',
+    name: 'myEnv',
+  };
+
   const logger = {
     info: jest.fn(),
     error: jest.fn(),
   } as unknown as Logger;
+
   const dynatraceApi = new DynatraceApi(defaultApiConfig, 'identifier', logger);
+
   const trailingSlashApi = new DynatraceApi(
     { ...defaultApiConfig, url: 'https://example.com/' },
     'identifier',
     logger,
   );
+
+  const dynatracePlatformTokenApi = new DynatraceApi(platformTokenApiConfig, 'identifier', logger);
 
   const mockTokenResult = (result: MockResult<TokenResponse>) =>
     mockResult(result);
@@ -108,8 +120,9 @@ describe('dynatraceApi', () => {
     url: string,
     identifier: string,
     authHeader?: string,
+    index = 2
   ) => {
-    assertExecuteCall(url, identifier, authHeader, 2);
+    assertExecuteCall(url, identifier, authHeader, index);
   };
 
   beforeEach(() => {
@@ -162,6 +175,37 @@ describe('dynatraceApi', () => {
       'https://example.com/platform/storage/query/v1/query:poll?request-token=myToken',
       'identifier',
       'Bearer token',
+    );
+  });
+
+  it('should support Dynatrace Platform Tokens', async () => {
+    // arrange
+    mockExecuteResult({
+      json: { state: 'RUNNING', requestToken: 'myToken', ttlSeconds: 200 },
+    });
+    mockPollResult({
+      json: {
+        state: 'SUCCEEDED',
+        result: { records: [], metadata: {}, types: [] },
+        progress: 100,
+      },
+    });
+
+    // act
+    await dynatracePlatformTokenApi.executeDqlQuery('my query');
+
+    // assert
+    assertExecuteCall(
+      'https://example.com/platform/storage/query/v1/query:execute',
+      'identifier',
+      'Bearer dt.token.from.platform.6789',
+      0,
+    );
+    assertPollCall(
+      'https://example.com/platform/storage/query/v1/query:poll?request-token=myToken',
+      'identifier',
+      'Bearer dt.token.from.platform.6789',
+      1,
     );
   });
 

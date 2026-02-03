@@ -17,14 +17,24 @@ import { dtFetch } from '../utils';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { TabularData } from '@dynatrace/backstage-plugin-dql-common';
 
-export type DynatraceEnvironmentConfig = {
+type DynatraceEnvironmentConfigBase = {
   name: string;
   url: string;
+}
+
+type DynatraceEnvironmentConfigOauth = DynatraceEnvironmentConfigBase & {
   tokenUrl: string;
   clientId: string;
   clientSecret: string;
   accountUrn: string;
-};
+}
+
+type DynatraceEnvironmentConfigPlatformToken = DynatraceEnvironmentConfigBase & {
+  platformToken: string;
+}
+
+
+export type DynatraceEnvironmentConfig = DynatraceEnvironmentConfigOauth | DynatraceEnvironmentConfigPlatformToken;
 
 export type TokenResponse = {
   scope: string;
@@ -119,7 +129,7 @@ const waitForQueryResult = async <RecordType>(
 };
 
 const getAccessToken = async (
-  config: DynatraceEnvironmentConfig,
+  config: DynatraceEnvironmentConfigOauth,
   identifier: string,
   logger: LoggerService,
 ): Promise<TokenResponse> => {
@@ -175,14 +185,21 @@ export class DynatraceApi {
   }
 
   async executeDqlQuery(query: string): Promise<TabularData> {
-    const tokenResponse = await getAccessToken(
-      this.config,
-      this.identifier,
-      this.logger,
-    );
+    let accessToken: string;
+    if ('platformToken' in this.config) {
+      accessToken = this.config.platformToken;
+    } else {
+      const tokenResponse = await getAccessToken(
+        this.config,
+        this.identifier,
+        this.logger,
+      );
+      accessToken = tokenResponse.access_token;
+    }
+
     const environment: DynatraceAccessInfo = {
       url: this.config.url,
-      accessToken: tokenResponse.access_token,
+      accessToken: accessToken,
       identifier: this.identifier,
     };
 
