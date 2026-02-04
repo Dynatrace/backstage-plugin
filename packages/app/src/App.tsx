@@ -19,7 +19,7 @@ import { entityPage } from './components/catalog/EntityPage';
 import { searchPage } from './components/search/SearchPage';
 import { TechRadarPage } from '@backstage-community/plugin-tech-radar';
 import { createApp } from '@backstage/app-defaults';
-import { AppRouter, FlatRoutes } from '@backstage/core-app-api';
+import { FlatRoutes } from '@backstage/core-app-api';
 import {
   AlertDisplay,
   OAuthRequestDialog,
@@ -117,12 +117,17 @@ const routes = (
   </FlatRoutes>
 );
 
-export default app.createRoot(
-  <>
-    <AlertDisplay />
-    <OAuthRequestDialog />
-    <AppRouter>
-      <Root>{routes}</Root>
-    </AppRouter>
-  </>,
-);
+const AppProvider = app.getProvider();
+const Router = app.getRouter();
+
+export default function App() {
+  return (
+    <AppProvider>
+      <AlertDisplay />
+      <OAuthRequestDialog />
+      <Router>
+        <Root>{routes}</Root>
+      </Router>
+    </AppProvider>
+  );
+}
