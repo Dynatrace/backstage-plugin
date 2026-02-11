@@ -2,8 +2,6 @@ name: Snyk Security Scan
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
   merge_group: # run if triggered as part of a merge queue
 
 jobs:
