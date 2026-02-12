@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "incremental": false,
+    "target": "es2022",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": [
+      "es2022"
+    ],
+    "types": [
+      "node",
+      "@playwright/test"
+    ],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": false,
+    "noEmit": true,
+    "baseUrl": "."
+  },
+  "include": [
+    "e2e/**/*.ts",
+    "playwright.config.ts"
+  ]
+}
