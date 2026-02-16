@@ -38,7 +38,11 @@ jobs:
         run: yarn test:all
 
       - name: Create UUID for e2e test runs
-        run: echo "RUN_UUID=$(uuidgen)" >> $GITHUB_ENV
+        run: |
+          RUN_UUID=$(uuidgen)
+          echo "RUN_UUID=$RUN_UUID" >> $GITHUB_ENV
+          echo "### E2E Test Run UUID" >> $GITHUB_STEP_SUMMARY
+          echo "\`$RUN_UUID\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Generate yaml from template
         env:
@@ -62,7 +66,10 @@ jobs:
         env:
           TENANT_APP_URL: ${{ secrets.TENANT_APP_URL }}
           PLATFORM_TOKEN: ${{ secrets.PLATFORM_TOKEN }}
-        run: yarn e2e
+        run: |
+          yarn e2e
+          echo "### Playwright Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Playwright tests completed successfully" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
