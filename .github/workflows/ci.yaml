@@ -10,6 +10,11 @@ jobs:
   build:
     timeout-minutes: 30
     runs-on: ubuntu-latest
+    env:
+      #TENANT_API_URL: ${{ secrets.TENANT_API_URL }}
+      #TENANT_APP_URL: ${{ secrets.TENANT_APP_URL }}
+      #INGEST_TOKEN: ${{ secrets.INGEST_TOKEN }}
+      #PLATFORM_TOKEN: ${{ secrets.PLATFORM_TOKEN }}
 
     steps:
       - uses: actions/checkout@v6
@@ -33,6 +38,23 @@ jobs:
 
       - name: Run Tests
         run: yarn test:all
+
+      - name: Create UUID for e2e test runs
+        run: echo "RUN_UUID=$(uuidgen)" >> $GITHUB_ENV
+
+      - run: echo "TENANT_API_URL=AAA" >> $GITHUB_ENV
+      - run: echo "TENANT_APP_URL=BBB" >> $GITHUB_ENV
+      - run: echo "INGEST_TOKEN=CCC" >> $GITHUB_ENV
+      - run: echo "PLATFORM_TOKEN=DDD" >> $GITHUB_ENV  
+
+      - name: Generate yaml from template
+        run: envsubst < e2e/app-config.local.template > app-config.local
+
+      - name: show config
+        run: cat app-config.local
+
+      - name: Ingest events
+        run: node e2e/ingestEvents.js
 
       - name: Typecheck e2e
         run: yarn tsc:e2e  

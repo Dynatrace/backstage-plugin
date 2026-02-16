@@ -1,0 +1,11 @@
+dynatrace:
+  environments:
+    - name: E2E-ENV
+      url: ${TENANT_APP_URL}
+      platformToken: ${PLATFORM_TOKEN}
+  queries:
+    - id: davis-events
+      query: |
+        fetch events
+        | filter testId == "${TEST_ID}"
+        | fields testId, timestamp
