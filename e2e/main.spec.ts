@@ -15,9 +15,7 @@
  */
 import { test, expect } from '@playwright/test';
 
-const url = "http://localhost:3000/catalog/default/component/demo-backstage/dynatrace/davis-events";
-
-test('has title', async ({ page }) => {
+test('if custom query with tab shows events', async ({ page }) => {
   await page.goto("http://localhost:3000");
   await expect(page).toHaveTitle(/Scaffolded Backstage App/);
   await page.getByRole('button', { name: 'Enter' }).click();
