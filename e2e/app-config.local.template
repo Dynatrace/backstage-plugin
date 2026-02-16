@@ -9,3 +9,6 @@ dynatrace:
         fetch events
         | filter testId == "${RUN_UUID}"
         | fields testId, timestamp
+auth:
+  providers:
+    guest: {}
