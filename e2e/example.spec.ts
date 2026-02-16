@@ -25,4 +25,8 @@ test('has title', async ({ page }) => {
   await page.getByTestId('header-tab-4').click();
   await page.getByRole('tab', { name: 'Davis Events' }).click();
   await expect(page).toHaveTitle(/Davis Events/);
+  const cells = page.getByRole('cell');
+  // wait until at least one cell is visible
+  await cells.first().waitFor({ state: 'visible' });
+  await expect(cells).toHaveCount(5);
 });
