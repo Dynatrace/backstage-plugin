@@ -15,7 +15,19 @@
  */
 import { test, expect } from '@playwright/test';
 
+const getEnvVar = (varName: string): string => {
+  if (!process.env[varName]) {
+    throw new Error(`Env Var "${varName} must be set"`);
+  }
+  return process.env[varName];
+}
+
+const isoDate = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{9}Z$/;
+
 test('if custom query with tab shows events', async ({ page }) => {
+  const runUuid = getEnvVar("RUN_UUID");
+
+  // arrange
   await page.goto("http://localhost:3000");
   await expect(page).toHaveTitle(/Scaffolded Backstage App/);
   await page.getByRole('button', { name: 'Enter' }).click();
@@ -24,7 +36,11 @@ test('if custom query with tab shows events', async ({ page }) => {
   await page.getByRole('tab', { name: 'Davis Events' }).click();
   await expect(page).toHaveTitle(/Davis Events/);
   const cells = page.getByRole('cell');
-  // wait until at least one cell is visible
-  await cells.first().waitFor({ state: 'visible' });
-  await expect(cells).toHaveCount(5);
+  await cells.first().waitFor({ state: 'visible' }); // Wait until table is loaded
+
+  // assert
+  await expect(cells.nth(0)).toHaveText(runUuid);
+  await expect(cells.nth(1)).toHaveText(isoDate);
+  await expect(cells.nth(2)).toHaveText(runUuid);
+  await expect(cells.nth(3)).toHaveText(isoDate);
 });
