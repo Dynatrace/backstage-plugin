@@ -13,11 +13,6 @@ jobs:
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false }}
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    env:
-      TENANT_API_URL: ${{ secrets.TENANT_API_URL }}
-      TENANT_APP_URL: ${{ secrets.TENANT_APP_URL }}
-      INGEST_TOKEN: ${{ secrets.INGEST_TOKEN }}
-      PLATFORM_TOKEN: ${{ secrets.PLATFORM_TOKEN }}
 
     steps:
       - uses: actions/checkout@v6
@@ -46,9 +41,15 @@ jobs:
         run: echo "RUN_UUID=$(uuidgen)" >> $GITHUB_ENV
 
       - name: Generate yaml from template
+        env:
+          TENANT_APP_URL: ${{ secrets.TENANT_APP_URL }}
+          PLATFORM_TOKEN: ${{ secrets.PLATFORM_TOKEN }}
         run: envsubst '${TENANT_APP_URL} ${PLATFORM_TOKEN} ${RUN_UUID}' < e2e/app-config.local.template > app-config.local.yaml
 
       - name: Ingest events
+        env:
+          TENANT_API_URL: ${{ secrets.TENANT_API_URL }}
+          INGEST_TOKEN: ${{ secrets.INGEST_TOKEN }}
         run: node e2e/ingestEvents.js
 
       - name: Typecheck e2e
@@ -58,6 +59,9 @@ jobs:
         run: yarn playwright install chromium firefox --with-deps
 
       - name: Run Playwright tests
+        env:
+          TENANT_APP_URL: ${{ secrets.TENANT_APP_URL }}
+          PLATFORM_TOKEN: ${{ secrets.PLATFORM_TOKEN }}
         run: yarn e2e
 
       - uses: actions/upload-artifact@v4

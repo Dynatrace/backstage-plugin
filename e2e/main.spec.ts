@@ -15,20 +15,25 @@
  */
 import { test, expect } from '@playwright/test';
 
-const getEnvVar = (varName: string): string => {
-  if (!process.env[varName]) {
+const getEnvVar = (varName: string, defaultValue: string | undefined = undefined): string => {
+  const envVar = process.env[varName];
+  if (!envVar && !!defaultValue) {
+    console.warn(`Env Var "${varName}" not set, using default "${defaultValue}"`)
+    return defaultValue;
+  }
+  if (!envVar) {
     throw new Error(`Env Var "${varName}" must be set`);
   }
-  return process.env[varName];
+  return envVar;
 }
 
 const isoDate = /^.*\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{9}Z$/;
 
 test('if custom query with tab shows events', async ({ page }) => {
-  const runUuid = getEnvVar("RUN_UUID");
+  const runUuid = getEnvVar('RUN_UUID', 'no-uuid');
 
   // arrange
-  await page.goto("http://localhost:3000");
+  await page.goto('/');
   await expect(page).toHaveTitle(/Scaffolded Backstage App/);
   await page.getByRole('button', { name: 'Enter' }).click();
   await page.getByRole('link', { name: 'demo-backstage' }).click();
