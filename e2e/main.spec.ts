@@ -17,7 +17,7 @@ import { test, expect } from '@playwright/test';
 
 const getEnvVar = (varName: string): string => {
   if (!process.env[varName]) {
-    throw new Error(`Env Var "${varName} must be set"`);
+    throw new Error(`Env Var "${varName}" must be set`);
   }
   return process.env[varName];
 }
