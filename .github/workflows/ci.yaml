@@ -63,13 +63,22 @@ jobs:
         run: yarn playwright install chromium firefox --with-deps
 
       - name: Run Playwright tests
+        id: playwright
         env:
           TENANT_APP_URL: ${{ secrets.TENANT_APP_URL }}
           PLATFORM_TOKEN: ${{ secrets.PLATFORM_TOKEN }}
+        run: yarn e2e
+
+      - name: Log Playwright test results
+        if: always()
         run: |
-          yarn e2e
-          echo "### Playwright Test Results" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Playwright tests completed successfully" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.playwright.outcome }}" == "success" ]; then
+            echo "### Playwright Test Results" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Playwright tests completed successfully" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### Playwright Test Results" >> $GITHUB_STEP_SUMMARY
+            echo "❌ Playwright tests failed" >> $GITHUB_STEP_SUMMARY
+          fi
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
