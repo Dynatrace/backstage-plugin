@@ -7,5 +7,5 @@ dynatrace:
     - id: davis-events
       query: |
         fetch events
-        | filter testId == "${TEST_ID}"
+        | filter testId == "${RUN_UUID}"
         | fields testId, timestamp
