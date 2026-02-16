@@ -12,7 +12,7 @@ jobs:
   build:
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    env:
+    #env:
       #TENANT_API_URL: ${{ secrets.TENANT_API_URL }}
       #TENANT_APP_URL: ${{ secrets.TENANT_APP_URL }}
       #INGEST_TOKEN: ${{ secrets.INGEST_TOKEN }}
