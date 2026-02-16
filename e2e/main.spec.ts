@@ -37,7 +37,7 @@ test('if custom query with tab shows events', async ({ page }) => {
   await expect(page).toHaveTitle(/Scaffolded Backstage App/);
   await page.getByRole('button', { name: 'Enter' }).click();
   await page.getByRole('link', { name: 'demo-backstage' }).click();
-  await page.getByTestId('header-tab-4').click();
+  await page.getByRole('tab', { name: 'Dynatrace' }).click();
   await page.getByRole('tab', { name: 'Davis Events' }).click();
   await expect(page).toHaveTitle(/Davis Events/);
 
