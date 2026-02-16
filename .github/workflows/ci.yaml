@@ -81,11 +81,19 @@ jobs:
           fi
 
       - uses: actions/upload-artifact@v4
+        id: upload-playwright-report
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+
+      - name: Log Playwright report artifact URL
+        if: ${{ !cancelled() }}
+        run: |
+          ARTIFACT_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts"
+          echo "### Playwright Report" >> $GITHUB_STEP_SUMMARY
+          echo "📊 [View Playwright Report Artifact]($ARTIFACT_URL)" >> $GITHUB_STEP_SUMMARY
 
       - name: Run Audit
         run: yarn audit --level high || true
