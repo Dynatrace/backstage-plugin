@@ -52,7 +52,7 @@ jobs:
         run: node e2e/ingestEvents.js
 
       - name: Typecheck e2e
-        run: yarn tsc:e2e  
+        run: yarn tsc:e2e
 
       - name: Install Playwright Browsers
         run: yarn playwright install chromium firefox --with-deps

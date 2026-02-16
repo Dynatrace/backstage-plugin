@@ -22,7 +22,7 @@ const getEnvVar = (varName: string): string => {
   return process.env[varName];
 }
 
-const isoDate = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{9}Z$/;
+const isoDate = /^.*\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{9}Z$/;
 
 test('if custom query with tab shows events', async ({ page }) => {
   const runUuid = getEnvVar("RUN_UUID");
@@ -35,12 +35,15 @@ test('if custom query with tab shows events', async ({ page }) => {
   await page.getByTestId('header-tab-4').click();
   await page.getByRole('tab', { name: 'Davis Events' }).click();
   await expect(page).toHaveTitle(/Davis Events/);
-  const cells = page.getByRole('cell');
-  await cells.first().waitFor({ state: 'visible' }); // Wait until table is loaded
 
   // assert
-  await expect(cells.nth(0)).toHaveText(runUuid);
-  await expect(cells.nth(1)).toHaveText(isoDate);
-  await expect(cells.nth(2)).toHaveText(runUuid);
-  await expect(cells.nth(3)).toHaveText(isoDate);
+  const rowsWithRun = page.getByRole('row', { name: runUuid });
+  await rowsWithRun.first().waitFor({ state: 'visible' });
+  await expect(rowsWithRun).toHaveCount(2);
+  const expectRowText = async (uuid: string, index: number) => {
+    await expect(rowsWithRun.nth(index)).toContainText(uuid);
+    await expect(rowsWithRun.nth(index)).toContainText(isoDate);
+  };
+  await expectRowText(runUuid, 0);
+  await expectRowText(runUuid, 1);
 });
