@@ -45,7 +45,7 @@ jobs:
         run: echo "RUN_UUID=$(uuidgen)" >> $GITHUB_ENV
 
       - name: Generate yaml from template
-        run: envsubst < e2e/app-config.local.template > app-config.local
+        run: envsubst < e2e/app-config.local.template > app-config.local.yaml
 
       - name: Ingest events
         run: node e2e/ingestEvents.js
