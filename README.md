@@ -576,18 +576,16 @@ To run e2e tests locally, you need:
 
 1. **Dynatrace Environment** with the following:
    - A Dynatrace tenant with API and App URLs
-   - An **Ingest Token** with permissions to ingest events
-   - A **Platform Token** with the following scopes:
+   - An [**Ingest Token**](https://docs.dynatrace.com/docs/platform/openpipeline/getting-started/how-to-ingestion) with permissions to ingest events
+     - `openpipeline.events`
+   - A [**Platform Token**](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/platform-tokens#my-platform-tokens) with the following scopes:
      - `storage:buckets:read`
-     - `storage:entities:read`
      - `storage:events:read`
-     - `storage:metrics:read`
-     - `storage:security.events:read`
 
 2. **Environment Variables** set in your terminal:
    ```bash
-   export TENANT_API_URL="https://xxxxxxxx.live.dynatrace.com/api/v2"
-   export TENANT_APP_URL="https://xxxxxxxx.apps.dynatrace.com"
+   export TENANT_API_URL="https://{your-environment-id}.live.dynatrace.com"
+   export TENANT_APP_URL="https://{your-environment-id}.apps.dynatrace.com"
    export INGEST_TOKEN="<your-ingest-token>"
    export PLATFORM_TOKEN="<your-platform-token>"
    export RUN_UUID="$(uuidgen)"
@@ -606,7 +604,7 @@ To run e2e tests locally, you need:
    ```
    This script posts two test events with a unique `testId` (from `RUN_UUID`) that the e2e tests will query.
 
-3. **Type-check e2e test files**:
+3. **Type-check e2e test files** (optional):
    ```bash
    yarn tsc:e2e
    ```
