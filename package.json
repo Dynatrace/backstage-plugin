@@ -75,7 +75,7 @@
     "@backstage/backend-plugin-api": "1.6.2",
     "elliptic": "6.6.1",
     "fast-xml-parser": "5.3.6",
-    "qs": "^6.14.1",
+    "qs": "6.14.2",
     "jsonpath": "1.2.1"
   },
   "lint-staged": {
