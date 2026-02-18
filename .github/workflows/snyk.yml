@@ -22,6 +22,8 @@ jobs:
       - name: Run Snyk monitor
         if: steps.metadata.outputs.isDefaultOrReleaseBranch
         uses: snyk/actions/node@v1.0.0
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
           command: monitor
           args: |
