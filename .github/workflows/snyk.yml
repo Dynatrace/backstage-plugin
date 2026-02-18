@@ -1,17 +1,26 @@
 name: Snyk Security Scan
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+  pull_request:
   merge_group: # run if triggered as part of a merge queue
 
 jobs:
   snyk:
     runs-on: ubuntu-latest
+    # Skip on forks and only run if SNYK_API_TOKEN is available
+    if: ${{ github.event.pull_request.head.repo.fork == false || github.event_name != 'pull_request' }}
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Collect metadata
+        id: metadata
+        uses: ./.github/actions/metadata
+
       - name: Run Snyk monitor
+        if: steps.metadata.outputs.isDefaultOrReleaseBranch
         uses: snyk/actions/node@v1.0.0
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
@@ -23,3 +32,14 @@ jobs:
             --target-reference=main
             --project-environment=external
             --project-business-criticality=low
+            --project-lifecycle=production
+            --project-tags=team=team-luminux,ticket-creation=true
+
+      - name: Run Snyk test
+        if: !steps.metadata.outputs.isDefaultOrReleaseBranch
+        uses: snyk/actions/node@v1.0.0
+        with:
+          command: test
+          args: |
+            --all-projects 
+            --detection-depth=4
