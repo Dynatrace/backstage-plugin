@@ -32,6 +32,8 @@ jobs:
             --target-reference=main
             --project-environment=external
             --project-business-criticality=low
+            --project-lifecycle=production
+            --project-tags=team=team-luminux,ticket-creation=true
 
       - name: Run Snyk test
         if: !steps.metadata.outputs.isDefaultOrReleaseBranch
