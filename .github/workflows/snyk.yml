@@ -20,7 +20,7 @@ jobs:
         uses: ./.github/actions/metadata
 
       - name: Run Snyk monitor
-        if: steps.metadata.outputs.isDefaultOrReleaseBranch
+        if: ${{ steps.metadata.outputs.isDefaultOrReleaseBranch == 'true' }}
         uses: snyk/actions/node@v1.0.0
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
@@ -32,11 +32,9 @@ jobs:
             --target-reference=main
             --project-environment=external
             --project-business-criticality=low
-            --project-lifecycle=production
-            --project-tags=team=team-luminux,ticket-creation=true
 
       - name: Run Snyk test
-        if: !steps.metadata.outputs.isDefaultOrReleaseBranch
+        if: ${{ steps.metadata.outputs.isDefaultOrReleaseBranch != 'true' }}
         uses: snyk/actions/node@v1.0.0
         with:
           command: test
