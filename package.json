@@ -14,6 +14,7 @@
     "build-image": "yarn workspace backend build-image",
     "tsc": "tsc",
     "tsc:full": "tsc --skipLibCheck false --incremental false",
+    "tsc:e2e": "tsc --project tsconfig.e2e.json",
     "clean": "backstage-cli repo clean",
     "test": "backstage-cli repo test",
     "test:all": "backstage-cli repo test --coverage",
@@ -22,7 +23,10 @@
     "lint:all": "backstage-cli repo lint",
     "prettier:check": "prettier --check .",
     "new": "backstage-cli new --scope internal",
-    "prepare": "husky"
+    "prepare": "husky",
+    "e2e": "playwright test",
+    "e2e:ui": "yarn e2e --ui",
+    "e2e:install-browsers": "playwright install chromium --with-deps"
   },
   "jest": {
     "testPathIgnorePatterns": [
@@ -48,8 +52,10 @@
     "@commitlint/cli": "^19.0.0",
     "@commitlint/config-conventional": "^19.0.0",
     "@commitlint/config-lerna-scopes": "^19.0.0",
+    "@playwright/test": "^1.58.2",
     "@spotify/prettier-config": "^15.0.0",
     "@trivago/prettier-plugin-sort-imports": "^4.2.1",
+    "@types/node": "^22.0.0",
     "@typescript-eslint/parser": "^7.0.0",
     "concurrently": "^8.0.0",
     "eslint-plugin-header": "^3.1.1",

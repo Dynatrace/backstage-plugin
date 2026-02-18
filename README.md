@@ -22,6 +22,7 @@ include the plugins so you can start the app and see them in action.
 - [Overview](#overview)
 - [Getting Started](#getting-started)
 - [Additional Features](#additional-features)
+- [E2E Testing](#e2e-testing)
 - [Contributing](#contributing)
 
 ## Overview
@@ -564,6 +565,84 @@ The query returns a result of:
   }
 ]
 ```
+
+## E2E Testing
+
+This repository includes end-to-end tests using Playwright to verify the plugin functionality.
+
+### Prerequisites
+
+To run e2e tests locally, you need:
+
+1. **Dynatrace Environment** with the following:
+   - A Dynatrace tenant with API and App URLs
+   - An [**Ingest Token**](https://docs.dynatrace.com/docs/platform/openpipeline/getting-started/how-to-ingestion) with permissions to ingest events
+     - `openpipeline.events`
+   - A [**Platform Token**](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/platform-tokens#my-platform-tokens) with the following scopes:
+     - `storage:buckets:read`
+     - `storage:events:read`
+
+2. **Environment Variables** set in your terminal:
+   ```bash
+   export TENANT_API_URL="https://{your-environment-id}.live.dynatrace.com"
+   export TENANT_APP_URL="https://{your-environment-id}.apps.dynatrace.com"
+   export INGEST_TOKEN="<your-ingest-token>"
+   export PLATFORM_TOKEN="<your-platform-token>"
+   export RUN_UUID="$(uuidgen)"
+   ```
+
+### Running E2E Tests Locally
+
+1. **Generate local configuration** from template:
+   ```bash
+   envsubst '${TENANT_APP_URL} ${PLATFORM_TOKEN} ${RUN_UUID}' < e2e/app-config.local.template > app-config.local.yaml
+   ```
+
+2. **Ingest test events** to Dynatrace:
+   ```bash
+   node e2e/ingestEvents.js
+   ```
+   This script posts two test events with a unique `testId` (from `RUN_UUID`) that the e2e tests will query.
+
+3. **Type-check e2e test files** (optional):
+   ```bash
+   yarn tsc:e2e
+   ```
+
+4. **Install Playwright browsers** (first time only):
+   ```bash
+   yarn playwright install chromium firefox --with-deps
+   ```
+
+5. **Run the e2e tests**:
+   ```bash
+   yarn e2e
+   ```
+   
+   Or run in UI mode for debugging:
+   ```bash
+   yarn e2e:ui
+   ```
+
+### What the E2E Tests Verify
+
+The e2e tests validate:
+- ✅ Configuration is read correctly from `app-config.local.yaml`
+- ✅ Backstage development server starts successfully
+- ✅ Authentication via Dynatrace Platform Token works
+- ✅ Custom DQL queries execute and populate data tables with expected results
+- ✅ Test events ingested via the API are queryable and displayed in the UI
+
+### Continuous Integration
+
+E2E tests run automatically in GitHub Actions on every push and pull request to the `main` branch. The CI workflow:
+- Generates a unique UUID for each test run
+- Creates a temporary configuration file with secrets
+- Ingests test events to Dynatrace
+- Runs Playwright tests against Chromium and Firefox
+- Uploads test reports as artifacts
+
+**Note:** E2E tests are skipped on forked pull requests to protect repository secrets.
 
 ## Help & Support
 
