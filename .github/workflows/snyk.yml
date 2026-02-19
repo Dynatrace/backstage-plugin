@@ -38,6 +38,8 @@ jobs:
       - name: Run Snyk test
         if: ${{ steps.metadata.outputs.isDefaultOrReleaseBranch != 'true' }}
         uses: snyk/actions/node@v1.0.0
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
           command: test
           args: |
