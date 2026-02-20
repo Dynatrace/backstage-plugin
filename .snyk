@@ -1,0 +1,76 @@
+# Snyk (https://snyk.io) policy file
+
+version: v1.25.0
+
+# Ignored vulnerabilities - no patches available from upstream
+ignore:
+  # Critical: jsonpath@1.2.1 - Arbitrary Code Injection
+  # No patch available. Latest version is 1.2.1.
+  # Transitive dependency of @backstage/cli@0.35.4 > bfj@8.0.0
+  SNYK-JS-JSONPATH-13645034:
+    - '*':
+        reason: No patch available. Latest version (1.2.1) is vulnerable. Transitive dependency of @backstage/cli (dev-only).
+        expires: 2026-05-20T00:00:00.000Z
+  
+  # High: ajv@6.12.6 - ReDoS
+  # No patch available in 6.x branch. Upgrading to 8.x breaks eslint@8.x compatibility.
+  # Transitive dependency of @backstage/cli@0.35.4 > eslint@8.57.1
+  SNYK-JS-AJV-15274295:
+    - '*':
+        reason: No patch in ajv 6.x branch. ajv 8.x breaks eslint@8.x compatibility. Transitive dependency of @backstage/cli (dev-only).
+        expires: 2026-05-20T00:00:00.000Z
+  
+  # High: minimatch@9.0.5 - ReDoS
+  # Upgrading to 10.x breaks test-exclude and @backstage/cli compatibility.
+  # Using cacache@18.0.4 to avoid minimatch@10.1.1, but pulls 9.0.5.
+  SNYK-JS-MINIMATCH-15309438:
+    - '*':
+        reason: minimatch 10.x breaks test-exclude compatibility. Using cacache@18.0.4 resolution. Transitive dependency of @backstage/cli (dev-only).
+        expires: 2026-05-20T00:00:00.000Z
+  
+  # Medium: elliptic@6.6.1 - Cryptographic Primitive with Risky Implementation
+  # Latest version is 6.6.1, no patch available.
+  # Transitive dependency of @backstage/cli@0.35.4 > node-stdlib-browser
+  SNYK-JS-ELLIPTIC-14908844:
+    - '*':
+        reason: Latest version (6.6.1) is vulnerable, no patch available. Transitive dependency of @backstage/cli (dev-only).
+        expires: 2026-05-20T00:00:00.000Z
+  
+  # Medium: eslint@8.57.1 - Uncontrolled Recursion
+  # Latest 8.x version is 8.57.1, no patch available.
+  # Direct dependency of @backstage/cli@0.35.4
+  SNYK-JS-ESLINT-15102420:
+    - '*':
+        reason: Latest 8.x version (8.57.1) is vulnerable. eslint 9.x not yet supported by @backstage/cli. Dev-only dependency.
+        expires: 2026-05-20T00:00:00.000Z
+  
+  # Medium: inflight@1.0.6 - Missing Release of Resource after Effective Lifetime
+  # Latest version is 1.0.6, no patch available.
+  # Transitive dependency of @backstage/cli@0.35.4 > npm-packlist
+  SNYK-JS-INFLIGHT-6095116:
+    - '*':
+        reason: Latest version (1.0.6) is vulnerable, no patch available. Transitive dependency of @backstage/cli (dev-only).
+        expires: 2026-05-20T00:00:00.000Z
+  
+  # Medium: @octokit/plugin-paginate-rest@6.1.2 - ReDoS
+  # Transitive dependency of @backstage/cli@0.35.4 > @backstage/integration
+  SNYK-JS-OCTOKITPLUGINPAGINATEREST-8730855:
+    - '*':
+        reason: No patch available. Transitive dependency of @backstage/integration (dev-only).
+        expires: 2026-05-20T00:00:00.000Z
+  
+  # Medium: @octokit/request@6.2.8 - ReDoS
+  # Transitive dependency of @backstage/cli@0.35.4 > @backstage/integration
+  SNYK-JS-OCTOKITREQUEST-8730853:
+    - '*':
+        reason: No patch available. Transitive dependency of @backstage/integration (dev-only).
+        expires: 2026-05-20T00:00:00.000Z
+  
+  # Medium: @octokit/request-error@3.0.3 - ReDoS
+  # Transitive dependency of @backstage/cli@0.35.4 > @backstage/integration
+  SNYK-JS-OCTOKITREQUESTERROR-8730854:
+    - '*':
+        reason: No patch available. Transitive dependency of @backstage/integration (dev-only).
+        expires: 2026-05-20T00:00:00.000Z
+
+patch: {}
