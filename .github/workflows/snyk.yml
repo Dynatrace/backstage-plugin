@@ -45,3 +45,4 @@ jobs:
           args: |
             --all-projects 
             --detection-depth=4
+            --policy-path=.snyk
