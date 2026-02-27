@@ -90,6 +90,8 @@
     "minimatch@npm:^9.0.5": "9.0.7",
     "minimatch@npm:^10.1.1": "10.2.3",
     "markdown-it@npm:^12.2.0": "13.0.2",
+    "form-data@npm:~2.3.2": "2.5.4",
+    "jsonpath-plus@npm:^7.2.0": "10.3.0",
     "rollup": "4.59.0",
     "elliptic": "6.6.1",
     "fast-xml-parser": "5.3.8",
