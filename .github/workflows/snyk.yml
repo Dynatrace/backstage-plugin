@@ -26,10 +26,10 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
           command: monitor
-          args: |
+          args: >-
             --all-projects 
             --detection-depth=4
-            --target-reference=main
+            --target-reference=${{ github.ref_name }}
             --project-environment=external
             --project-business-criticality=low
             --project-lifecycle=production
@@ -42,6 +42,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
         with:
           command: test
-          args: |
+          args: >-
             --all-projects 
             --detection-depth=4
+            --severity-threshold=high
