@@ -4293,8 +4293,8 @@ __metadata:
   linkType: hard
 
 "@backstage/plugin-techdocs-node@npm:^1.14.2":
-  version: 1.14.2
-  resolution: "@backstage/plugin-techdocs-node@npm:1.14.2"
+  version: 1.14.3
+  resolution: "@backstage/plugin-techdocs-node@npm:1.14.3"
   dependencies:
     "@aws-sdk/client-s3": "npm:^3.350.0"
     "@aws-sdk/credential-providers": "npm:^3.350.0"
@@ -4306,7 +4306,7 @@ __metadata:
     "@backstage/catalog-model": "npm:^1.7.6"
     "@backstage/config": "npm:^1.3.6"
     "@backstage/errors": "npm:^1.2.7"
-    "@backstage/integration": "npm:^1.20.0"
+    "@backstage/integration": "npm:^1.20.1"
     "@backstage/integration-aws-node": "npm:^0.1.20"
     "@backstage/plugin-search-common": "npm:^1.2.22"
     "@backstage/plugin-techdocs-common": "npm:^0.1.1"
@@ -4325,7 +4325,7 @@ __metadata:
     p-limit: "npm:^3.1.0"
     recursive-readdir: "npm:^2.2.2"
     winston: "npm:^3.2.1"
-  checksum: 10c0/0c45b998f61af395e3eb4861c7de1f2e2dba0cd498dc1b8deff8d8138590929bdd08493e237f3fb35786e745b7c0b427d31cd2f3fbf695ea775f26cb612c817d
+  checksum: 10c0/c1d832444ff0e4fb578d018947939722ca0ef1b21a835a8e9d6eeede6926e224da2e444d4ebd83b9e79ffcd904e1686672332f13207e273976c4870966c3eb66
   languageName: node
   linkType: hard
 
