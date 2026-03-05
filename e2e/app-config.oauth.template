@@ -1,11 +1,11 @@
 dynatrace:
   environments:
     - name: E2E-OAUTH
-      url: ${TENANT_APP_URL}
-      clientId: ${OAUTH_CLIENT_ID}
-      clientSecret: ${OAUTH_CLIENT_SECRET}
-      accountUrn: ${OAUTH_ACCOUNT_URN}
-      tokenUrl: ${OAUTH_TOKEN_URL}
+      url: "${TENANT_APP_URL}"
+      clientId: "${OAUTH_CLIENT_ID}"
+      clientSecret: "${OAUTH_CLIENT_SECRET}"
+      accountUrn: "${OAUTH_ACCOUNT_URN}"
+      tokenUrl: "${OAUTH_TOKEN_URL}"
   queries:
     - id: davis-events
       query: |
