@@ -115,7 +115,7 @@ jobs:
             echo "❌ Playwright tests failed (${{ inputs.auth_mode }})" >> $GITHUB_STEP_SUMMARY
           fi
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: playwright-report-${{ inputs.auth_mode }}
