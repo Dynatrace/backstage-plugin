@@ -137,7 +137,11 @@ dynatrace:
 ```
 
 #### Using Dynatrace Platform Token
-Read [Platform Token documentation](https://docs.dynatrace.com/docs/shortlink/platform-tokens) for more details.
+
+Read
+[Platform Token documentation](https://docs.dynatrace.com/docs/shortlink/platform-tokens)
+for more details.
+
 ```yaml
 dynatrace:
   environments:
@@ -169,7 +173,8 @@ requirements.
 
 ### DQL Query logs
 
-Setup ```LOG_QUERY=true``` node env variable to be able to log DQL queries during execution 
+Setup `LOG_QUERY=true` node env variable to be able to log DQL queries during
+execution
 
 ### Multi-environment Support
 
@@ -210,8 +215,8 @@ _Convention:_ Kubernetes pods will be listed for the corresponding Backstage
 component if they are properly annotated in the deployment descriptor. See
 [annotations](https://backstage.io/docs/features/software-catalog/descriptor-format/#annotations-optional).
 
-> [!NOTE]
-> Please ensure you have the `storage:entities:read` permission to read Kubernetes deployments.
+> [!NOTE] Please ensure you have the `storage:entities:read` permission to read
+> Kubernetes deployments.
 
 Example:
 
@@ -245,7 +250,9 @@ here:
 [`dynatrace.kubernetes-deployments`](plugins/dql-backend/src/service/queries.ts).
 You can change this query for all cards or override it using a custom query.
 
-_Convention:_ To display the pod's version in Backstage, annotate it using the following key-value pair:
+_Convention:_ To display the pod's version in Backstage, annotate it using the
+following key-value pair:
+
 ```yaml
 app.kubernetes.io/version: <version>
 ```
@@ -263,8 +270,8 @@ environment.
 />
 ```
 
-> [!NOTE]
-> Please ensure you have the `storage:events:read` and `storage:bizevents:read` permissions to read guardian validations.
+> [!NOTE] Please ensure you have the `storage:events:read` and
+> `storage:bizevents:read` permissions to read guardian validations.
 
 To filter for specific guardians, you can filter tags defined in the
 `metadata.annotations` property of the `catalog-info.yaml` file under the key
@@ -300,9 +307,10 @@ stage: development
 novalue:
 ```
 
-Set `dynatrace.com/guardian-tags` to empty, if do not want to filter for specific tags.
+Set `dynatrace.com/guardian-tags` to empty, if do not want to filter for
+specific tags.
 
- ```yaml
+```yaml
 dynatrace.com/guardian-tags: ''
 ```
 
@@ -329,8 +337,8 @@ dynatrace:
         timestamp
 ```
 
-> [!NOTE]
-> Depending on your custom query ensure you have the [relevant permissions](https://docs.dynatrace.com/docs/platform/grail/organize-data/assign-permissions-in-grail#grail-permissions-table).
+> [!NOTE] Depending on your custom query ensure you have the
+> [relevant permissions](https://docs.dynatrace.com/docs/platform/grail/organize-data/assign-permissions-in-grail#grail-permissions-table).
 
 Queries can contain placeholders, which will be replaced with the values from
 the context in which it is executed. These placeholders are prefixed with `$$`
@@ -462,7 +470,7 @@ metadata:
   description: Backstage Demo instance.
   annotations:
     backstage.io/kubernetes-id: kubernetescustom
-    dynatrace.com/guardian-tags: "service=my-service,stage=development,novalue"
+    dynatrace.com/guardian-tags: 'service=my-service,stage=development,novalue'
   dynatrace:
     queries:
       - id: Error Logs
@@ -475,7 +483,8 @@ metadata:
                 | filter status == "ERROR"
                 | sort timestamp desc
                 | fieldsAdd content=if(isNull(content), "N/A", else: content)
-                | fieldsAdd source=if(isNull(log.source), "N/A", else: log.source)
+                | fieldsAdd source=if(isNull(log.source), "N/A", else:
+          log.source)
                 | fieldsAdd host=if(isNull(host.name), "N/A", else: host.name)
                 | fieldsAdd environment = "${environmentName}"
                 | fieldsKeep timestamp, source, content, host, environment
@@ -485,7 +494,10 @@ The environments defined for a query must align with the environments names
 configured in the `app-config.local.yaml` file.
 
 ### Multiline DQL queries with comments
-To use comments within your custom DQL queries, use literal block style YAML style, indicated by a pipe (`|`). See [YAML Spec | Literal Style](https://yaml.org/spec/1.2.2/#literal-style).
+
+To use comments within your custom DQL queries, use literal block style YAML
+style, indicated by a pipe (`|`). See
+[YAML Spec | Literal Style](https://yaml.org/spec/1.2.2/#literal-style).
 
 ```yaml
 query: |
@@ -568,81 +580,104 @@ The query returns a result of:
 
 ## E2E Testing
 
-This repository includes end-to-end tests using Playwright to verify the plugin functionality.
+This repository includes end-to-end tests using Playwright to verify the plugin
+functionality.
 
 ### Prerequisites
 
 To run e2e tests locally, you need:
 
 1. **Dynatrace Environment** with the following:
+
    - A Dynatrace tenant with API and App URLs
-   - An [**Ingest Token**](https://docs.dynatrace.com/docs/platform/openpipeline/getting-started/how-to-ingestion) with permissions to ingest events
-     - `openpipeline.events`
-   - A [**Platform Token**](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/platform-tokens#my-platform-tokens) with the following scopes:
-     - `storage:buckets:read`
-     - `storage:events:read`
+   - One authentication method for query execution:
+     - A
+       [**Platform Token**](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/platform-tokens#my-platform-tokens)
+       with scopes:
+       - `storage:buckets:read`
+       - `storage:events:read`
+     - Or an **OAuth client** with equivalent read scopes for DQL and storage
+       access
 
 2. **Environment Variables** set in your terminal:
-   ```bash
-   export TENANT_API_URL="https://{your-environment-id}.live.dynatrace.com"
-   export TENANT_APP_URL="https://{your-environment-id}.apps.dynatrace.com"
-   export INGEST_TOKEN="<your-ingest-token>"
-   export PLATFORM_TOKEN="<your-platform-token>"
-   export RUN_UUID="$(uuidgen)"
-   ```
+
+```bash
+export TENANT_APP_URL="https://{your-environment-id}.apps.dynatrace.com"
+export PLATFORM_TOKEN="<your-platform-token>"
+export OAUTH_CLIENT_ID="<your-oauth-client-id>"
+export OAUTH_CLIENT_SECRET="<your-oauth-client-secret>"
+export OAUTH_ACCOUNT_URN="<your-oauth-account-urn>"
+export OAUTH_TOKEN_URL="https://sso.dynatrace.com/sso/oauth2/token"
+```
 
 ### Running E2E Tests Locally
 
-1. **Generate local configuration** from template:
-   ```bash
-   envsubst '${TENANT_APP_URL} ${PLATFORM_TOKEN} ${RUN_UUID}' < e2e/app-config.local.template > app-config.local.yaml
-   ```
+1. **Install Playwright browsers** (first time only):
 
-2. **Ingest test events** to Dynatrace:
-   ```bash
-   node e2e/ingestEvents.js
-   ```
-   This script posts two test events with a unique `testId` (from `RUN_UUID`) that the e2e tests will query.
+```bash
+yarn e2e:install-browsers
+```
 
-3. **Type-check e2e test files** (optional):
-   ```bash
-   yarn tsc:e2e
-   ```
+2. **Run with Platform Token auth**:
 
-4. **Install Playwright browsers** (first time only):
-   ```bash
-   yarn playwright install chromium firefox --with-deps
-   ```
+```bash
+yarn e2e:platform-token
+```
 
-5. **Run the e2e tests**:
-   ```bash
-   yarn e2e
-   ```
-   
-   Or run in UI mode for debugging:
-   ```bash
-   yarn e2e:ui
-   ```
+3. **Run with OAuth auth**:
+
+```bash
+yarn e2e:oauth
+```
+
+4. Optional manual breakdown (both auth modes use the same flow):
+
+```bash
+# Generate config
+yarn e2e:config:platform-token
+# or
+yarn e2e:config:oauth
+
+# Type-check and execute tests
+yarn tsc:e2e
+yarn e2e
+```
+
+The templates use a deterministic `data record(...)` query with a fixed `testId`
+so no extra data ingestion is required.
+
+Or run in UI mode for debugging:
+
+```bash
+yarn e2e:ui
+```
 
 ### What the E2E Tests Verify
 
 The e2e tests validate:
+
 - ✅ Configuration is read correctly from `app-config.local.yaml`
 - ✅ Backstage development server starts successfully
 - ✅ Authentication via Dynatrace Platform Token works
+- ✅ Authentication via Dynatrace OAuth client credentials works
 - ✅ Custom DQL queries execute and populate data tables with expected results
-- ✅ Test events ingested via the API are queryable and displayed in the UI
+- ✅ Fixed test data from the query template is rendered in the UI
 
 ### Continuous Integration
 
-E2E tests run automatically in GitHub Actions on every push and pull request to the `main` branch. The CI workflow:
-- Generates a unique UUID for each test run
-- Creates a temporary configuration file with secrets
-- Ingests test events to Dynatrace
-- Runs Playwright tests against Chromium and Firefox
-- Uploads test reports as artifacts
+E2E tests run automatically in GitHub Actions on every push and pull request to
+the `main` branch. The CI workflow:
 
-**Note:** E2E tests are skipped on forked pull requests to protect repository secrets.
+- Runs e2e as a dedicated reusable workflow that can also be started directly
+  via workflow dispatch
+- Executes two sequential passes: `platform-token` first, then `oauth`
+- Generates temporary `app-config.local.yaml` from auth-mode-specific templates
+  for each pass
+- Runs Playwright tests (Chromium)
+- Uploads auth-mode-specific Playwright reports as artifacts
+
+**Note:** E2E tests are skipped on forked pull requests to protect repository
+secrets.
 
 ## Help & Support
 
