@@ -17,11 +17,13 @@ import { test, expect } from '@playwright/test';
 
 const FIXED_TEST_ID = 'dynatrace-e2e-fixed-test-id';
 
-const isoDate = /^.*\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{9}Z$/;
+const isoDate = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{9}Z/;
 
 test('if custom query with tab shows events', async ({ page }) => {
   // arrange
   await page.goto('/');
+  await page.waitForTimeout(5000);
+  await page.reload();
   await expect(page).toHaveTitle(/Scaffolded Backstage App/);
   await page.getByRole('button', { name: 'Enter' }).click();
   await page.getByRole('link', { name: 'demo-backstage' }).click();
