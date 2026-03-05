@@ -1,0 +1,132 @@
+name: E2E
+
+permissions:
+  contents: read
+
+on:
+  workflow_call:
+    inputs:
+      auth_mode:
+        required: true
+        type: string
+    secrets:
+      TENANT_APP_URL:
+        required: true
+      PLATFORM_TOKEN:
+        required: false
+      OAUTH_CLIENT_ID:
+        required: false
+      OAUTH_CLIENT_SECRET:
+        required: false
+      OAUTH_ACCOUNT_URN:
+        required: false
+      OAUTH_TOKEN_URL:
+        required: false
+
+  workflow_dispatch:
+    inputs:
+      auth_mode:
+        description: Auth mode used by Dynatrace backend in e2e
+        required: true
+        type: choice
+        options:
+          - platform-token
+          - oauth
+
+jobs:
+  e2e:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Validate common inputs
+        env:
+          TENANT_APP_URL: ${{ secrets.TENANT_APP_URL }}
+        run: |
+          if [ -z "$TENANT_APP_URL" ]; then
+            echo "Missing required secret: TENANT_APP_URL"
+            exit 1
+          fi
+
+      - name: Validate platform-token inputs
+        if: ${{ inputs.auth_mode == 'platform-token' }}
+        env:
+          PLATFORM_TOKEN: ${{ secrets.PLATFORM_TOKEN }}
+        run: |
+          if [ -z "$PLATFORM_TOKEN" ]; then
+            echo "Missing required secret for platform-token mode: PLATFORM_TOKEN"
+            exit 1
+          fi
+
+      - name: Validate oauth inputs
+        if: ${{ inputs.auth_mode == 'oauth' }}
+        env:
+          OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+          OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
+          OAUTH_ACCOUNT_URN: ${{ secrets.OAUTH_ACCOUNT_URN }}
+          OAUTH_TOKEN_URL: ${{ secrets.OAUTH_TOKEN_URL }}
+        run: |
+          if [ -z "$OAUTH_CLIENT_ID" ] || [ -z "$OAUTH_CLIENT_SECRET" ] || [ -z "$OAUTH_ACCOUNT_URN" ] || [ -z "$OAUTH_TOKEN_URL" ]; then
+            echo "Missing one or more required secrets for oauth mode: OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_ACCOUNT_URN, OAUTH_TOKEN_URL"
+            exit 1
+          fi
+
+      - name: Generate platform-token yaml from template
+        if: ${{ inputs.auth_mode == 'platform-token' }}
+        env:
+          TENANT_APP_URL: ${{ secrets.TENANT_APP_URL }}
+          PLATFORM_TOKEN: ${{ secrets.PLATFORM_TOKEN }}
+        run: envsubst '${TENANT_APP_URL} ${PLATFORM_TOKEN}' < e2e/app-config.platform-token.template > app-config.local.yaml
+
+      - name: Generate oauth yaml from template
+        if: ${{ inputs.auth_mode == 'oauth' }}
+        env:
+          TENANT_APP_URL: ${{ secrets.TENANT_APP_URL }}
+          OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+          OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
+          OAUTH_ACCOUNT_URN: ${{ secrets.OAUTH_ACCOUNT_URN }}
+          OAUTH_TOKEN_URL: ${{ secrets.OAUTH_TOKEN_URL }}
+        run: envsubst '${TENANT_APP_URL} ${OAUTH_CLIENT_ID} ${OAUTH_CLIENT_SECRET} ${OAUTH_ACCOUNT_URN} ${OAUTH_TOKEN_URL}' < e2e/app-config.oauth.template > app-config.local.yaml
+
+      - name: Typecheck e2e
+        run: yarn tsc:e2e
+
+      - name: Install Playwright Browsers
+        run: yarn e2e:install-browsers
+
+      - name: Run Playwright tests
+        id: playwright
+        env:
+          TENANT_APP_URL: ${{ secrets.TENANT_APP_URL }}
+        run: yarn e2e
+
+      - name: Log Playwright test results
+        if: always()
+        run: |
+          if [ "${{ steps.playwright.outcome }}" == "success" ]; then
+            echo "### Playwright Test Results" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Playwright tests completed successfully (${{ inputs.auth_mode }})" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### Playwright Test Results" >> $GITHUB_STEP_SUMMARY
+            echo "❌ Playwright tests failed (${{ inputs.auth_mode }})" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-${{ inputs.auth_mode }}
+          path: playwright-report/
+          retention-days: 30

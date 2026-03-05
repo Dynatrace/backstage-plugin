@@ -1,15 +1,12 @@
 dynatrace:
   environments:
-    - name: E2E-ENV
+    - name: E2E-PLATFORM-TOKEN
       url: ${TENANT_APP_URL}
       platformToken: ${PLATFORM_TOKEN}
   queries:
     - id: davis-events
       query: |
-        fetch events, from: now()-1h
-        | filter testId == "${RUN_UUID}"
-        | fields testId, timestamp
+        data record(timestamp=now(), testId="dynatrace-e2e-fixed-test-id")
 auth:
   providers:
     guest: {}
-

@@ -26,6 +26,10 @@
     "prepare": "husky",
     "e2e": "playwright test",
     "e2e:ui": "yarn e2e --ui",
+    "e2e:config:platform-token": "envsubst '${TENANT_APP_URL} ${PLATFORM_TOKEN}' < e2e/app-config.platform-token.template > app-config.local.yaml",
+    "e2e:config:oauth": "envsubst '${TENANT_APP_URL} ${OAUTH_CLIENT_ID} ${OAUTH_CLIENT_SECRET} ${OAUTH_ACCOUNT_URN} ${OAUTH_TOKEN_URL}' < e2e/app-config.oauth.template > app-config.local.yaml",
+    "e2e:platform-token": "yarn e2e:config:platform-token && yarn tsc:e2e && yarn e2e",
+    "e2e:oauth": "yarn e2e:config:oauth && yarn tsc:e2e && yarn e2e",
     "e2e:install-browsers": "playwright install chromium --with-deps",
     "audit": "yarn npm audit --recursive --severity=high"
   },
@@ -100,7 +104,8 @@
     "fast-xml-parser": "5.4.2",
     "qs": "6.15.0",
     "bfj": "9.1.3",
-    "tar": "7.5.10"
+    "tar": "7.5.10",
+    "immutable": "4.3.8"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [

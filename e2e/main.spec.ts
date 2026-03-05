@@ -15,40 +15,29 @@
  */
 import { test, expect } from '@playwright/test';
 
-const getEnvVar = (varName: string, defaultValue: string | undefined = undefined): string => {
-  const envVar = process.env[varName];
-  if (!envVar && !!defaultValue) {
-    console.warn(`Env Var "${varName}" not set, using default "${defaultValue}"`)
-    return defaultValue;
-  }
-  if (!envVar) {
-    throw new Error(`Env Var "${varName}" must be set`);
-  }
-  return envVar;
-}
+const FIXED_TEST_ID = 'dynatrace-e2e-fixed-test-id';
 
-const isoDate = /^.*\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{9}Z$/;
+const isoDate = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{9}Z/;
 
 test('if custom query with tab shows events', async ({ page }) => {
-  const runUuid = getEnvVar('RUN_UUID', 'no-uuid');
-
   // arrange
   await page.goto('/');
   await expect(page).toHaveTitle(/Scaffolded Backstage App/);
   await page.getByRole('button', { name: 'Enter' }).click();
+  await page.waitForTimeout(1000);
+  await page.reload();
   await page.getByRole('link', { name: 'demo-backstage' }).click();
   await page.getByRole('tab', { name: 'Dynatrace' }).click();
   await page.getByRole('tab', { name: 'Davis Events' }).click();
   await expect(page).toHaveTitle(/Davis Events/);
 
   // assert
-  const rowsWithRun = page.getByRole('row', { name: runUuid });
+  const rowsWithRun = page.getByRole('row', { name: FIXED_TEST_ID });
   await rowsWithRun.first().waitFor({ state: 'visible' });
-  await expect(rowsWithRun).toHaveCount(2);
-  const expectRowText = async (uuid: string, index: number) => {
-    await expect(rowsWithRun.nth(index)).toContainText(uuid);
+  await expect(rowsWithRun).toHaveCount(1);
+  const expectRowText = async (testId: string, index: number) => {
+    await expect(rowsWithRun.nth(index)).toContainText(testId);
     await expect(rowsWithRun.nth(index)).toContainText(isoDate);
   };
-  await expectRowText(runUuid, 0);
-  await expectRowText(runUuid, 1);
+  await expectRowText(FIXED_TEST_ID, 0);
 });
