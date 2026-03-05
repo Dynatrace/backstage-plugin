@@ -22,10 +22,10 @@ const isoDate = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{9}Z/;
 test('if custom query with tab shows events', async ({ page }) => {
   // arrange
   await page.goto('/');
-  await page.waitForTimeout(5000);
-  await page.reload();
   await expect(page).toHaveTitle(/Scaffolded Backstage App/);
   await page.getByRole('button', { name: 'Enter' }).click();
+  await page.waitForTimeout(1000);
+  await page.reload();
   await page.getByRole('link', { name: 'demo-backstage' }).click();
   await page.getByRole('tab', { name: 'Dynatrace' }).click();
   await page.getByRole('tab', { name: 'Davis Events' }).click();
