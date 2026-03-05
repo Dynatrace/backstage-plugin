@@ -598,16 +598,25 @@ To run e2e tests locally, you need:
      - Or an **OAuth client** with equivalent read scopes for DQL and storage
        access
 
-2. **Environment Variables** set in your terminal:
+2. **Environment Variables** set in your terminal (only the variables for your
+   chosen auth method are required):
 
-```bash
-export TENANT_APP_URL="https://{your-environment-id}.apps.dynatrace.com"
-export PLATFORM_TOKEN="<your-platform-token>"
-export OAUTH_CLIENT_ID="<your-oauth-client-id>"
-export OAUTH_CLIENT_SECRET="<your-oauth-client-secret>"
-export OAUTH_ACCOUNT_URN="<your-oauth-account-urn>"
-export OAUTH_TOKEN_URL="https://sso.dynatrace.com/sso/oauth2/token"
-```
+   **Platform Token auth:**
+
+   ```bash
+   export TENANT_APP_URL="https://{your-environment-id}.apps.dynatrace.com"
+   export PLATFORM_TOKEN="<your-platform-token>"
+   ```
+
+   **OAuth auth:**
+
+   ```bash
+   export TENANT_APP_URL="https://{your-environment-id}.apps.dynatrace.com"
+   export OAUTH_CLIENT_ID="<your-oauth-client-id>"
+   export OAUTH_CLIENT_SECRET="<your-oauth-client-secret>"
+   export OAUTH_ACCOUNT_URN="<your-oauth-account-urn>"
+   export OAUTH_TOKEN_URL="https://sso.dynatrace.com/sso/oauth2/token"
+   ```
 
 ### Running E2E Tests Locally
 

@@ -69,7 +69,7 @@ jobs:
     steps:
       - name: Validate e2e results
         run: |
-          if [ "${{ needs.e2e-platform-token.result }}" != "success" ] || [ "${{ needs.e2e-oauth.result }}" != "success" ]; then
+          if [ "${{ needs.e2e-platform-token.result }}" == "failure" ] || [ "${{ needs.e2e-oauth.result }}" == "failure" ]; then
             echo "At least one e2e auth mode failed"
             exit 1
           fi
