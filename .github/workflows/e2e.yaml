@@ -52,6 +52,15 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      - name: Validate common inputs
+        env:
+          TENANT_APP_URL: ${{ secrets.TENANT_APP_URL }}
+        run: |
+          if [ -z "$TENANT_APP_URL" ]; then
+            echo "Missing required secret: TENANT_APP_URL"
+            exit 1
+          fi
+
       - name: Validate platform-token inputs
         if: ${{ inputs.auth_mode == 'platform-token' }}
         env:
