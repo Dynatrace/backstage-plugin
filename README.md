@@ -432,7 +432,7 @@ metadata:
                 | fieldsKeep timestamp, source, content, host, environment
 spec:
   type: website
-  owner: user:default/mjakl
+  owner: group:default/integrations-team
   lifecycle: experimental
   system: integrations
 ```
@@ -483,7 +483,8 @@ metadata:
                 | filter status == "ERROR"
                 | sort timestamp desc
                 | fieldsAdd content=if(isNull(content), "N/A", else: content)
-                | fieldsAdd source=if(isNull(log.source), "N/A", else: log.source)
+                | fieldsAdd source=if(isNull(log.source), "N/A", else:
+          log.source)
                 | fieldsAdd host=if(isNull(host.name), "N/A", else: host.name)
                 | fieldsAdd environment = "${environmentName}"
                 | fieldsKeep timestamp, source, content, host, environment
