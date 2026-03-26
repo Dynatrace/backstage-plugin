@@ -178,6 +178,38 @@ describe('dynatraceApi', () => {
     );
   });
 
+  it('should send the DQL query wrapped in a query object as the request body', async () => {
+    // arrange
+    mockTokenResult({
+      json: {
+        access_token: 'token',
+        token_type: 'Bearer',
+        expires_in: 10_000,
+        resource: 'resource',
+        scope: 'my scopes',
+      },
+    });
+    mockExecuteResult({
+      json: { state: 'RUNNING', requestToken: 'myToken', ttlSeconds: 200 },
+    });
+    mockPollResult({
+      json: {
+        state: 'SUCCEEDED',
+        result: { records: [], metadata: {}, types: [] },
+        progress: 100,
+      },
+    });
+
+    // act
+    await dynatraceApi.executeDqlQuery('fetch dt.entity.host');
+
+    // assert - the execute call (index 1) must send { query: "..." } as body
+    const executeCallBody = dtFetchMock.mock.calls[1][2]?.body;
+    expect(executeCallBody).toEqual(
+      JSON.stringify({ query: 'fetch dt.entity.host' }),
+    );
+  });
+
   it('should support Dynatrace Platform Tokens', async () => {
     // arrange
     mockExecuteResult({
