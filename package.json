@@ -108,7 +108,7 @@
     "svgo@npm:^2.7.0": "2.8.2",
     "tar": "7.5.11",
     "immutable": "4.3.8",
-    "flatted": "^3.4.0",
+    "flatted": "^3.4.2",
     "undici": "^7.22.0"
   },
   "lint-staged": {
