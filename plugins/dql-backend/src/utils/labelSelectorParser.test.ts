@@ -51,4 +51,14 @@ describe('label-parser', () => {
     // assert
     expect(filter).toBe('');
   });
+
+  it('should sanitize input', () => {
+    // act
+   const filter = generateKubernetesSelectorFilter('labe"l1,label2="value2"');
+
+    // assert
+    expect(filter).toBe(
+      "| filter workload.labels[`label2`] == \"\\\"value2\\\"\"",
+    );
+  });
 });

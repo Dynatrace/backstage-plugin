@@ -96,7 +96,7 @@ describe('queries', () => {
       expect(query).toContain('| filter workload.labels[`label`] == "value"');
     });
 
-     it('should return the query with the version column included', () => {
+    it('should return the query with the version column included', () => {
       // act
       const query = dynatraceQueries[DynatraceQueryKeys.KUBERNETES_DEPLOYMENTS](
         getEntity({
@@ -107,9 +107,44 @@ describe('queries', () => {
       );
 
       // assert
-      expect(query).toContain('| fieldsAdd Version = coalesce(workload.labels[`app.kubernetes.io/version`], "")');
+      expect(query).toContain(
+        '| fieldsAdd Version = coalesce(workload.labels[`app.kubernetes.io/version`], "")',
+      );
+    });
+
+    it('should sanitize DQL in kubernetes-id annotation', () => {
+      // act
+      const query = dynatraceQueries[DynatraceQueryKeys.KUBERNETES_DEPLOYMENTS](
+        getEntity({
+          'backstage.io/kubernetes-id':
+            'special-id"-1234',
+        }),
+        defaultApiConfig,
+      );
+
+      // assert
+      expect(query).toContain(
+        '| filter workload.labels[`backstage.io/kubernetes-id`] == "special-id\\"-1234',
+      );
+    });
+
+    it('should sanitize DQL in kubernetes-namespace annotation', () => {
+      // act
+      const query = dynatraceQueries[DynatraceQueryKeys.KUBERNETES_DEPLOYMENTS](
+        getEntity({
+          'backstage.io/kubernetes-id': 'kubernetesId',
+          'backstage.io/kubernetes-namespace': '"namespace-with-quotes"',
+        }),
+        defaultApiConfig,
+      );
+
+      // assert
+      expect(query).toContain(
+        '| filter Namespace == \"\\\"namespace-with-quotes\\\"\"',
+      );
     });
   });
+
   describe(DynatraceQueryKeys.SRG_VALIDATIONS, () => {
     it('should return the srg-query', () => {
       // act
@@ -119,9 +154,11 @@ describe('queries', () => {
       );
 
       // assert
-      
+
       expect(query).toContain('fetch events');
-      expect(query).toContain('| filter event.kind == "SDLC_EVENT" AND event.type == "validation"');
+      expect(query).toContain(
+        '| filter event.kind == "SDLC_EVENT" AND event.type == "validation"',
+      );
       expect(query).toContain('fetch bizevents');
       expect(query).toContain(
         '| filter event.provider == "dynatrace.site.reliability.guardian"',
@@ -139,13 +176,31 @@ describe('queries', () => {
 
       // assert
       expect(query).toContain('fetch events');
-      expect(query).toContain('| filter event.kind == "SDLC_EVENT" AND event.type == "validation"');
+      expect(query).toContain(
+        '| filter event.kind == "SDLC_EVENT" AND event.type == "validation"',
+      );
       expect(query).toContain('fetch bizevents');
-      expect(query.match(/isNotNull\(tags\[novalue\]\)/g)?.length).toBe(2);
-      expect(query.match(/in \(tags\[`service`\], "my-service"\)/g)?.length).toBe(2);
+      expect(query.match(/isNotNull\(tags\[`novalue`\]\)/g)?.length).toBe(2);
+      expect(
+        query.match(/in \(tags\[`service`\], "my-service"\)/g)?.length,
+      ).toBe(2);
       expect(query).toContain(
         '| filter event.provider == "dynatrace.site.reliability.guardian"',
       );
+    });
+
+    it('should sanitize DQL in guardian-tags annotation', () => {
+      // act
+      const query = dynatraceQueries[DynatraceQueryKeys.SRG_VALIDATIONS](
+        getEntity({
+          'dynatrace.com/guardian-tags':
+            'service=my-service,foo"my-tag"dd',
+        }),
+        defaultApiConfig,
+      );
+
+      // assert
+      expect(query).toContain('| filter in (tags[`service`], \"my-service\") AND isNotNull(tags[`foo\\\"my-tag\\\"dd`])');
     });
   });
 });

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { sanitizeDqlString } from '../utils/dqlSanitizer';
 import { generateKubernetesSelectorFilter } from '../utils/labelSelectorParser';
 import { Entity } from '@backstage/catalog-model';
 
@@ -54,17 +55,19 @@ export const isValidDynatraceQueryKey = (
   key: string,
 ): key is DynatraceQueryKeys => key in dynatraceQueries;
 
+const getKubernetesAnnotation = (entity: Entity, annotationName: string): string | undefined => {
+  const value = entity.metadata.annotations?.[annotationName];
+  return value ? sanitizeDqlString(value, annotationName) : value;
+}
+
 export const dynatraceQueries: Record<
   DynatraceQueryKeys,
   (entity: Entity, apiConfig: ApiConfig) => string
 > = {
   [DynatraceQueryKeys.KUBERNETES_DEPLOYMENTS]: (entity, apiConfig) => {
-    const labelSelector =
-      entity.metadata.annotations?.['backstage.io/kubernetes-label-selector'];
-    const kubernetesId =
-      entity.metadata.annotations?.['backstage.io/kubernetes-id'];
-    const namespace =
-      entity.metadata.annotations?.['backstage.io/kubernetes-namespace'];
+    const labelSelector = getKubernetesAnnotation(entity, 'backstage.io/kubernetes-label-selector');
+    const kubernetesId = getKubernetesAnnotation(entity, 'backstage.io/kubernetes-id');
+    const namespace = getKubernetesAnnotation(entity, 'backstage.io/kubernetes-namespace');
 
     const filterLabel = labelSelector
       ? generateKubernetesSelectorFilter(labelSelector)
@@ -115,13 +118,13 @@ export const dynatraceQueries: Record<
     | fieldsRemove id, name, workload.labels, cluster.id, namespace.id`;
   },
   [DynatraceQueryKeys.SRG_VALIDATIONS]: (entity, apiConfig) => {
-    const catalogTags =
-      entity.metadata.annotations?.['dynatrace.com/guardian-tags'];
+    const annotationName = 'dynatrace.com/guardian-tags';
+    const catalogTags = entity.metadata.annotations?.[annotationName];
     let filterString = '';
 
     if (catalogTags) {
       const tags = catalogTags.split(',').map(tag => {
-        const [key, value] = tag.split('=');
+        const [key, value] = tag.split('=').map(v => sanitizeDqlString(v, annotationName));
         return { key, value: value !== undefined ? value || '' : undefined };
       });
 
@@ -131,7 +134,7 @@ export const dynatraceQueries: Record<
           .map(({ key, value }) =>
             value !== undefined
               ? `in (tags[\`${key}\`], "${value}")`
-              : `isNotNull(tags[${key}])`,
+              : `isNotNull(tags[\`${key}\`])`,
           )
           .join(' AND ');
       }
