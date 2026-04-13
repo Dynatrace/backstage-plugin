@@ -26,18 +26,28 @@ import {
 } from '@dynatrace/backstage-plugin-dql-common';
 import { Request } from 'express';
 
-const TOKEN_PREFIX = 'Bearer ';
+const extractBearerToken = (
+  authorizationHeader: string | undefined,
+): string | undefined => {
+  if (typeof authorizationHeader !== 'string') {
+    return undefined;
+  }
+
+  const [scheme, ...credentialsParts] = authorizationHeader.trim().split(/\s+/);
+  if (!scheme || scheme.toLowerCase() !== 'bearer') {
+    return undefined;
+  }
+
+  const token = credentialsParts.join(' ').trim();
+  return token ? token : undefined;
+};
 
 const resolveCallerCredentials = async (
   req: Request,
   auth: AuthService,
 ): Promise<BackstageCredentials> => {
   const authorizationHeader = req.headers?.authorization;
-  const requestToken =
-    typeof authorizationHeader === 'string' &&
-    authorizationHeader.startsWith(TOKEN_PREFIX)
-      ? authorizationHeader.substring(TOKEN_PREFIX.length).trim()
-      : undefined;
+  const requestToken = extractBearerToken(authorizationHeader);
 
   if (
     requestToken &&
