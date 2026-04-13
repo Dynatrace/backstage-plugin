@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AuthService } from '@backstage/backend-plugin-api';
+import {
+  AuthService,
+  BackstageCredentials,
+} from '@backstage/backend-plugin-api';
 import { CatalogClient } from '@backstage/catalog-client';
 import { Entity } from '@backstage/catalog-model';
 import {
@@ -22,6 +25,46 @@ import {
   ExtendedEntity,
 } from '@dynatrace/backstage-plugin-dql-common';
 import { Request } from 'express';
+
+const extractBearerToken = (
+  authorizationHeader: string | undefined,
+): string | undefined => {
+  if (typeof authorizationHeader !== 'string') {
+    return undefined;
+  }
+
+  const [scheme, ...credentialsParts] = authorizationHeader.trim().split(/\s+/);
+  if (!scheme || scheme.toLowerCase() !== 'bearer') {
+    return undefined;
+  }
+
+  const token = credentialsParts.join(' ').trim();
+  return token ? token : undefined;
+};
+
+const resolveCallerCredentials = async (
+  req: Request,
+  auth: AuthService,
+): Promise<BackstageCredentials> => {
+  const authorizationHeader = req.headers?.authorization;
+  const requestToken = extractBearerToken(authorizationHeader);
+
+  if (
+    requestToken &&
+    typeof (auth as Partial<AuthService>).authenticate === 'function'
+  ) {
+    return await auth.authenticate(requestToken);
+  }
+
+  if (typeof (auth as Partial<AuthService>).getNoneCredentials === 'function') {
+    return await auth.getNoneCredentials();
+  }
+
+  return {
+    $$type: '@backstage/BackstageCredentials',
+    principal: { type: 'none' },
+  };
+};
 
 export const getEntityFromRequest = async (
   req: Request,
@@ -33,12 +76,14 @@ export const getEntityFromRequest = async (
     throw new Error('Invalid entity ref');
   }
 
+  const callerCredentials = await resolveCallerCredentials(req, auth);
+
   const { token } = await auth.getPluginRequestToken({
-    onBehalfOf: await auth.getOwnServiceCredentials(),
+    onBehalfOf: callerCredentials,
     targetPluginId: 'catalog',
   });
   if (!token) {
-    throw new Error(`Failed to get service token`);
+    throw new Error(`Failed to get catalog token`);
   }
 
   const entity = await client.getEntityByRef(entityRef, { token });
