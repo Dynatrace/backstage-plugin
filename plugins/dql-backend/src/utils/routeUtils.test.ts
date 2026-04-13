@@ -35,11 +35,13 @@ describe('routeUtils', () => {
   } as unknown as CatalogClient;
 
   const getPluginRequestTokenMock: jest.Mock<
-    Awaited<ReturnType<AuthService['getPluginRequestToken']>>
+    ReturnType<AuthService['getPluginRequestToken']>,
+    Parameters<AuthService['getPluginRequestToken']>
   > = jest.fn().mockResolvedValue({ token: 'mock-token' });
 
   const getOwnServiceCredentialsMock: jest.Mock<
-    Awaited<ReturnType<AuthService['getOwnServiceCredentials']>>
+    ReturnType<AuthService['getOwnServiceCredentials']>,
+    Parameters<AuthService['getOwnServiceCredentials']>
   > = jest.fn();
   const mockedAuth = {
     getPluginRequestToken: getPluginRequestTokenMock,
@@ -96,6 +98,28 @@ describe('routeUtils', () => {
           name: 'myComp',
         },
       });
+    });
+
+    it('should not use own service credentials for user-controlled entityRef resolution', async () => {
+      const serviceCredentials = {
+        subject: 'plugin:dynatrace-dql',
+      } as unknown as Awaited<
+        ReturnType<AuthService['getOwnServiceCredentials']>
+      >;
+      getOwnServiceCredentialsMock.mockResolvedValue(serviceCredentials);
+
+      await getEntityFromRequest(
+        getRequest(mockedEntityRef),
+        mockedClient,
+        mockedAuth,
+      );
+
+      expect(getPluginRequestTokenMock).not.toHaveBeenCalledWith(
+        expect.objectContaining({
+          onBehalfOf: serviceCredentials,
+          targetPluginId: 'catalog',
+        }),
+      );
     });
   });
 
