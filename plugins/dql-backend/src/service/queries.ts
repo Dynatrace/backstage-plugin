@@ -87,7 +87,7 @@ export const dynatraceQueries: Record<
       );
     }
 
-    return `
+    const dql1= `
     fetch dt.entity.cloud_application, from: -10m
     | fields id,
         name = entity.name,
@@ -106,7 +106,7 @@ export const dynatraceQueries: Record<
     | fieldsAdd Problems=coalesce(Problems,0)
     | lookup [ fetch security.events, from: -30m | filter event.kind=="SECURITY_EVENT" | filter event.category=="VULNERABILITY_MANAGEMENT" | filter event.provider=="Dynatrace" | filter event.type=="VULNERABILITY_STATE_REPORT_EVENT" | filter in(vulnerability.stack,{"CODE_LIBRARY","SOFTWARE","CONTAINER_ORCHESTRATION"}) | filter event.level=="ENTITY" | summarize { workloadId=arrayFirst(takeFirst(related_entities.kubernetes_workloads.ids)), vulnerability.stack=takeFirst(vulnerability.stack)}, by: {vulnerability.id, affected_entity.id} | summarize { Vulnerabilities=count() }, by: {workloadId}], sourceField:id, lookupField:workloadId, fields:{Vulnerabilities}
     | fieldsAdd Vulnerabilities=coalesce(Vulnerabilities,0)
-    ${filterKubernetesId} 
+    // ${filterKubernetesId} 
     ${filterNamespace} 
     ${filterLabel}
     | fieldsAdd Logs = record({type="link", text="Show logs", url=${getKubernetesLogLink(
@@ -116,6 +116,43 @@ export const dynatraceQueries: Record<
     | fieldsAdd Environment = "${apiConfig.environmentName}"
     | fieldsAdd Version = coalesce(workload.labels[\`app.kubernetes.io/version\`], "")
     | fieldsRemove id, name, workload.labels, cluster.id, namespace.id`;
+    console.log(dql1);
+
+const dql = `smartscapeNodes "K8S_*", from: -10m
+| filter in(type, {"K8S_CRONJOB", "K8S_DAEMONSET", "K8S_DEPLOYMENT", "K8S_STATEFULSET"})
+| fields id, id_classic, type, name, Cluster = k8s.cluster.name, Namespace = k8s.namespace.name, workload.labels = \`tags:k8s.labels\`
+| sort upper(name) asc
+// ${filterKubernetesId} 
+${filterNamespace} 
+${filterLabel}
+| fieldsAdd environmentUrl = "${apiConfig.environmentUrl}"
+| fieldsAdd Version = coalesce(workload.labels[\`app.kubernetes.io/version\`], "")
+| fieldsAdd WorkloadLink = concat(environmentUrl, "/ui/intent/dynatrace.kubernetes/view-entity-dt.smartscape.", lower(type), "#", """{"nodeId":"""", toString(id) ,""""}""")
+| fieldsAdd Workload = record({type="link", text=name, url=WorkloadLink})
+| fieldsAdd LogLink = concat(
+  environmentUrl,
+  "/ui/apps/dynatrace.notebooks/intent/view-query#",
+  """{"dt.query":"""",
+  "fetch logs",
+  concat("""\n| filter k8s.cluster.name == \"""", Cluster, """\""""),
+  concat("""\n| filter k8s.namespace.name == \"""", Namespace, """\""""),
+  concat("""\n| filter k8s.workload.name == \"""", name, """\""""),
+  """\n or in(k8s.pod.name, lookup([smartscapeEdges \"is_part_of\"""",
+  concat("""\n  | filter target_id == toSmartscapeId(\"""", toString(id), """\")"""),       
+  """ and source_type == \"K8S_POD\"\n  | fields k8s.pod.name = getNodeName(source_id)], sourceField:k8s.pod.name, lookupField:k8s.pod.name)[k8s.pod.name])""",
+  """\n| sort timestamp desc""",
+  """","title":"Logs"}"""
+)
+| fieldsAdd Logs = record({type="link", text="Show logs", url=LogLink})
+| lookup [fetch events, from: -30m | filter event.kind == "DAVIS_PROBLEM" | fieldsAdd affected_entity_id = smartscape.affected_entities[0][id] | summarize collectDistinct(event.status), by:{display_id, affected_entity_id}, alias:problem_status | filter NOT in(problem_status, "CLOSED") | summarize Problems = count(), by:{affected_entity_id}], sourceField:id, lookupField:affected_entity_id, fields:{Problems}
+| fieldsAdd Problems=coalesce(Problems,0)
+| lookup [ fetch security.events, from: -30m | filter event.kind=="SECURITY_EVENT" | filter event.category=="VULNERABILITY_MANAGEMENT" | filter event.provider=="Dynatrace" | filter event.type=="VULNERABILITY_STATE_REPORT_EVENT" | filter in(vulnerability.stack,{"CODE_LIBRARY","SOFTWARE","CONTAINER_ORCHESTRATION"}) | filter event.level=="ENTITY" | summarize { workloadId=arrayFirst(takeFirst(related_entities.kubernetes_workloads.ids)), vulnerability.stack=takeFirst(vulnerability.stack)}, by: {vulnerability.id, affected_entity.id} | summarize { Vulnerabilities=count() }, by: {workloadId}], sourceField:id_classic, lookupField:workloadId, fields:{Vulnerabilities}
+| fieldsAdd Vulnerabilities=coalesce(Vulnerabilities,0)
+| fieldsAdd Environment = "${apiConfig.environmentName}"
+| fields Workload, Cluster, Namespace, Problems, Vulnerabilities, Logs, Environment, Version
+`
+console.log(dql);
+    return dql;
   },
   [DynatraceQueryKeys.SRG_VALIDATIONS]: (entity, apiConfig) => {
     const annotationName = 'dynatrace.com/guardian-tags';
