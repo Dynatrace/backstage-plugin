@@ -27,30 +27,6 @@ interface ApiConfig {
   environmentUrl: string;
 }
 
-const getKubernetesLogLink = (idField: string, apiConfig: ApiConfig) => {
-  // Resulting DQL:
-  // fetch logs
-  // | filter dt.entity.cloud_application == "CLOUD_APPLICATION-XY" or in(dt.entity.cloud_application, "CLOUD_APPLICATION-XY") or in(dt.entity.cloud_application_instance, classicEntitySelector("type(CLOUD_APPLICATION_INSTANCE),fromRelationShip.IS_INSTANCE_OF(type(CLOUD_APPLICATION),entityId(\"CLOUD_APPLICATION-XY\"))"))
-  // | sort timestamp desc
-  const concatArray = [
-    `concat("${apiConfig.environmentUrl}"`,
-    `"/ui/apps/dynatrace.notebooks/intent/view-query#${encodeURIComponent(
-      '{"dt.query":"fetch logs\\n| filter dt.entity.cloud_application == \\"',
-    )}"`,
-    idField,
-    `"${encodeURIComponent('\\" or in(dt.entity.cloud_application, \\"')}"`,
-    idField,
-    `"${encodeURIComponent(
-      '\\") or in(dt.entity.cloud_application_instance, classicEntitySelector(\\"type(CLOUD_APPLICATION_INSTANCE),fromRelationShip.IS_INSTANCE_OF(type(CLOUD_APPLICATION),entityId(\\\\\\"',
-    )}"`,
-    idField,
-    `"${encodeURIComponent(
-      '\\\\\\"))\\"))\\n| sort timestamp desc","title":"Logs"}',
-    )}")`,
-  ];
-  return concatArray.join(',');
-};
-
 export const isValidDynatraceQueryKey = (
   key: string,
 ): key is DynatraceQueryKeys => key in dynatraceQueries;
@@ -87,42 +63,11 @@ export const dynatraceQueries: Record<
       );
     }
 
-    const dql1= `
-    fetch dt.entity.cloud_application, from: -10m
-    | fields id,
-        name = entity.name,
-        workload.labels = cloudApplicationLabels,
-        cluster.id = clustered_by[dt.entity.kubernetes_cluster],
-        namespace.id = belongs_to[dt.entity.cloud_application_namespace]
-    | sort upper(name) asc    
-    | lookup [fetch dt.entity.kubernetes_cluster, from: -10m | fields id, clusterName = entity.name],sourceField:cluster.id, lookupField:id, fields:{clusterName}
-    | lookup [fetch dt.entity.cloud_application_namespace, from: -10m | fields id, namespaceName = entity.name], sourceField:namespace.id, lookupField:id, fields:{namespaceName}
-    | fieldsAdd Workload = record({type="link", text=name, url=concat("${
-      apiConfig.environmentUrl
-    }/ui/intent/dynatrace.kubernetes/entityKubernetesWorkload/#%7B%22dt.entity.cloud_application%22%3A%22", id,"%22%7D")})
-    | fieldsAdd Cluster = clusterName, Namespace = namespaceName
-    | fieldsRemove clusterName, namespaceName
-    | lookup [fetch events, from: -30m | filter event.kind == "DAVIS_PROBLEM" | fieldsAdd affected_entity_id = affected_entity_ids[0] | summarize collectDistinct(event.status), by:{display_id, affected_entity_id}, alias:problem_status | filter NOT in(problem_status, "CLOSED") | summarize Problems = count(), by:{affected_entity_id}], sourceField:id, lookupField:affected_entity_id, fields:{Problems}
-    | fieldsAdd Problems=coalesce(Problems,0)
-    | lookup [ fetch security.events, from: -30m | filter event.kind=="SECURITY_EVENT" | filter event.category=="VULNERABILITY_MANAGEMENT" | filter event.provider=="Dynatrace" | filter event.type=="VULNERABILITY_STATE_REPORT_EVENT" | filter in(vulnerability.stack,{"CODE_LIBRARY","SOFTWARE","CONTAINER_ORCHESTRATION"}) | filter event.level=="ENTITY" | summarize { workloadId=arrayFirst(takeFirst(related_entities.kubernetes_workloads.ids)), vulnerability.stack=takeFirst(vulnerability.stack)}, by: {vulnerability.id, affected_entity.id} | summarize { Vulnerabilities=count() }, by: {workloadId}], sourceField:id, lookupField:workloadId, fields:{Vulnerabilities}
-    | fieldsAdd Vulnerabilities=coalesce(Vulnerabilities,0)
-    // ${filterKubernetesId} 
-    ${filterNamespace} 
-    ${filterLabel}
-    | fieldsAdd Logs = record({type="link", text="Show logs", url=${getKubernetesLogLink(
-      'id',
-      apiConfig,
-    )}})
-    | fieldsAdd Environment = "${apiConfig.environmentName}"
-    | fieldsAdd Version = coalesce(workload.labels[\`app.kubernetes.io/version\`], "")
-    | fieldsRemove id, name, workload.labels, cluster.id, namespace.id`;
-    console.log(dql1);
-
-const dql = `smartscapeNodes "K8S_*", from: -10m
+    const dql = `smartscapeNodes "K8S_*", from: -10m
 | filter in(type, {"K8S_CRONJOB", "K8S_DAEMONSET", "K8S_DEPLOYMENT", "K8S_STATEFULSET"})
 | fields id, id_classic, type, name, Cluster = k8s.cluster.name, Namespace = k8s.namespace.name, workload.labels = \`tags:k8s.labels\`
 | sort upper(name) asc
-// ${filterKubernetesId} 
+${filterKubernetesId} 
 ${filterNamespace} 
 ${filterLabel}
 | fieldsAdd environmentUrl = "${apiConfig.environmentUrl}"
@@ -134,13 +79,13 @@ ${filterLabel}
   "/ui/apps/dynatrace.notebooks/intent/view-query#",
   """{"dt.query":"""",
   "fetch logs",
-  concat("""\n| filter k8s.cluster.name == \"""", Cluster, """\""""),
-  concat("""\n| filter k8s.namespace.name == \"""", Namespace, """\""""),
-  concat("""\n| filter k8s.workload.name == \"""", name, """\""""),
-  """\n or in(k8s.pod.name, lookup([smartscapeEdges \"is_part_of\"""",
-  concat("""\n  | filter target_id == toSmartscapeId(\"""", toString(id), """\")"""),       
-  """ and source_type == \"K8S_POD\"\n  | fields k8s.pod.name = getNodeName(source_id)], sourceField:k8s.pod.name, lookupField:k8s.pod.name)[k8s.pod.name])""",
-  """\n| sort timestamp desc""",
+  concat("""\\n| filter k8s.cluster.name == \\"""", Cluster, """\\""""),
+  concat("""\\n| filter k8s.namespace.name == \\"""", Namespace, """\\""""),
+  concat("""\\n| filter k8s.workload.name == \\"""", name, """\\""""),
+  """\\n or in(k8s.pod.name, lookup([smartscapeEdges \\"is_part_of\\"""",
+  concat("""\\n | filter target_id == toSmartscapeId(\\"""", toString(id), """\\")"""),
+  """ and source_type == \\"K8S_POD\\"\\n | fields k8s.pod.name = getNodeName(source_id)], sourceField:k8s.pod.name, lookupField:k8s.pod.name)[k8s.pod.name])""",
+  """\\n| sort timestamp desc""",
   """","title":"Logs"}"""
 )
 | fieldsAdd Logs = record({type="link", text="Show logs", url=LogLink})
@@ -151,7 +96,6 @@ ${filterLabel}
 | fieldsAdd Environment = "${apiConfig.environmentName}"
 | fields Workload, Cluster, Namespace, Problems, Vulnerabilities, Logs, Environment, Version
 `
-console.log(dql);
     return dql;
   },
   [DynatraceQueryKeys.SRG_VALIDATIONS]: (entity, apiConfig) => {
