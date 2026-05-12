@@ -67,8 +67,8 @@ export const dynatraceQueries: Record<
 | filter in(type, {"K8S_CRONJOB", "K8S_DAEMONSET", "K8S_DEPLOYMENT", "K8S_STATEFULSET"})
 | fields id, id_classic, type, name, Cluster = k8s.cluster.name, Namespace = k8s.namespace.name, workload.labels = \`tags:k8s.labels\`
 | sort upper(name) asc
-${filterKubernetesId} 
-${filterNamespace} 
+${filterKubernetesId}
+${filterNamespace}
 ${filterLabel}
 | fieldsAdd environmentUrl = "${apiConfig.environmentUrl}"
 | fieldsAdd Version = coalesce(workload.labels[\`app.kubernetes.io/version\`], "")
