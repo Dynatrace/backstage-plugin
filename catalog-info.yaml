@@ -5,7 +5,7 @@ metadata:
   description: Backstage Demo instance.
   annotations:
     backstage.io/kubernetes-id: kubernetescustom
-    dynatrace.com/guardian-tags: ''
+    dynatrace.com/guardian-tags: 'service=my-service,stage=development,novalue'
   dynatrace:
     queries:
       - id: Error Logs
