@@ -125,7 +125,7 @@ yarn test:all
 
 ## Step 8 — Final report
 
-Print a structured summary:
+Print a structured summary, as markdown so it is ready to be copied and pasted for a PR's description:
 
 ```
 === Package Update Summary ===
@@ -155,3 +155,5 @@ Source/test files changed:
   plugins/dql/src/api.ts — updated import path
   ...
 ```
+
+Print it as markdown so it is ready to be copied and pasted for a PR's description.

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": "18 || 20 || 22"
+    "node": "20 || 22 || 24"
   },
   "scripts": {
     "dev": "yarn workspaces foreach -A --include backend --include app --parallel -v -i run start",
@@ -115,7 +115,9 @@
     "undici": "^7.22.0",
     "protobufjs": "^7.5.5",
     "vm2": "^3.11.0",
-    "uuid": ">=9.0.1"
+    "uuid@npm:^8.0.0": "9.0.1",
+    "uuid@npm:^8.3.0": "9.0.1",
+    "uuid@npm:^8.3.2": "9.0.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [
