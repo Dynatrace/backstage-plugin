@@ -114,7 +114,8 @@
     "flatted": "^3.4.2",
     "undici": "^7.22.0",
     "protobufjs": "^7.5.5",
-    "vm2": "^3.11.0"
+    "vm2": "^3.11.0",
+    "uuid": ">=9.0.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [
