@@ -44,10 +44,10 @@
     "@backstage/plugin-techdocs-backend": "^2.1.4",
     "@dynatrace/backstage-plugin-dql-backend": "^2.7.0",
     "app": "link:../app",
-    "dockerode": "^4.0.0",
-    "express": "^4.17.1",
+    "dockerode": "4.0.12",
+    "express": "4.22.2",
     "express-promise-router": "^4.1.0",
-    "pg": "^8.3.0",
+    "pg": "8.20.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
