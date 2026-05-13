@@ -112,6 +112,46 @@ describe('queries', () => {
       );
     });
 
+    it('should query smartscapeNodes with the correct Kubernetes workload types', () => {
+      const query = dynatraceQueries[DynatraceQueryKeys.KUBERNETES_DEPLOYMENTS](
+        getEntity({ 'backstage.io/kubernetes-id': 'myapp' }),
+        defaultApiConfig,
+      );
+
+      expect(query).toContain('smartscapeNodes "K8S_*"');
+      expect(query).toContain('"K8S_CRONJOB", "K8S_DAEMONSET", "K8S_DEPLOYMENT", "K8S_STATEFULSET"');
+    });
+
+    it('should inject the environment URL as a DQL field', () => {
+      const query = dynatraceQueries[DynatraceQueryKeys.KUBERNETES_DEPLOYMENTS](
+        getEntity({ 'backstage.io/kubernetes-id': 'myapp' }),
+        { environmentName: 'myenv', environmentUrl: 'https://example.dynatrace.com' },
+      );
+
+      expect(query).toContain('| fieldsAdd environmentUrl = "https://example.dynatrace.com"');
+    });
+
+    it('should build WorkloadLink using the Smartscape URL format', () => {
+      const query = dynatraceQueries[DynatraceQueryKeys.KUBERNETES_DEPLOYMENTS](
+        getEntity({ 'backstage.io/kubernetes-id': 'myapp' }),
+        defaultApiConfig,
+      );
+
+      expect(query).toContain('/ui/intent/dynatrace.kubernetes/view-entity-dt.smartscape.');
+      expect(query).toContain('"""{"nodeId":""""');
+    });
+
+    it('should select the expected output columns', () => {
+      const query = dynatraceQueries[DynatraceQueryKeys.KUBERNETES_DEPLOYMENTS](
+        getEntity({ 'backstage.io/kubernetes-id': 'myapp' }),
+        defaultApiConfig,
+      );
+
+      expect(query).toContain(
+        '| fields Workload, Cluster, Namespace, Problems, Vulnerabilities, Logs, Environment, Version',
+      );
+    });
+
     it('should sanitize DQL in kubernetes-id annotation', () => {
       // act
       const query = dynatraceQueries[DynatraceQueryKeys.KUBERNETES_DEPLOYMENTS](
@@ -126,6 +166,24 @@ describe('queries', () => {
       expect(query).toContain(
         '| filter workload.labels[`backstage.io/kubernetes-id`] == "special-id\\"-1234',
       );
+    });
+
+    it('should contain literal DQL escape sequences in the LogLink field', () => {
+      const query = dynatraceQueries[DynatraceQueryKeys.KUBERNETES_DEPLOYMENTS](
+        getEntity({ 'backstage.io/kubernetes-id': 'myapp' }),
+        defaultApiConfig,
+      );
+
+      // LogLink concat must carry literal \n and \" for DQL to interpret them on the Dynatrace side.
+      // Using '"""\\n' in the JS test string matches the two-char sequence backslash+n in the query.
+      expect(query).toContain('"""\\n| filter k8s.cluster.name');
+      expect(query).toContain('"""\\n| filter k8s.namespace.name');
+      expect(query).toContain('"""\\n| filter k8s.workload.name');
+      expect(query).toContain('\\"is_part_of\\"');
+      expect(query).toContain('"""\\n | filter target_id');
+      expect(query).toContain('\\"K8S_POD\\"');
+      expect(query).toContain('\\"K8S_POD\\"\\n | fields k8s.pod.name');
+      expect(query).toContain('"""\\n| sort timestamp desc"""');
     });
 
     it('should sanitize DQL in kubernetes-namespace annotation', () => {
