@@ -85,6 +85,7 @@ Do **not** upgrade `@backstage/*` packages on your own initiative. Only do so if
 - A security vulnerability in Step 3 targets a `@backstage/*` package that must be upgraded
 
 If upgrading Backstage packages, always upgrade them together as a group to the same target version. Pin each to an exact version.
+Consult https://backstage.io/docs/releases/v<version> for info about breaking changes and how to handle them.
 
 ---
 
