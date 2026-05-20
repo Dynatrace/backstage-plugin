@@ -22,9 +22,17 @@ import { Request } from 'express';
 
 const mockedEntityRef = 'component:default/example';
 
+const defaultNoneCredentials = {
+  $$type: '@backstage/BackstageCredentials',
+  principal: { type: 'none' },
+} as unknown as Awaited<ReturnType<AuthService['getNoneCredentials']>>;
+
 describe('routeUtils', () => {
-  const getRequest = (ref: string) => {
-    return { query: { entityRef: ref } } as unknown as Request;
+  const getRequest = (ref: string, authorizationHeader?: string) => {
+    return {
+      query: { entityRef: ref },
+      headers: authorizationHeader ? { authorization: authorizationHeader } : {},
+    } as unknown as Request;
   };
   const getEntityByRefMock: jest.Mock<
     ReturnType<CatalogApi['getEntityByRef']>,
@@ -35,19 +43,37 @@ describe('routeUtils', () => {
   } as unknown as CatalogClient;
 
   const getPluginRequestTokenMock: jest.Mock<
-    Awaited<ReturnType<AuthService['getPluginRequestToken']>>
+    ReturnType<AuthService['getPluginRequestToken']>,
+    Parameters<AuthService['getPluginRequestToken']>
   > = jest.fn().mockResolvedValue({ token: 'mock-token' });
 
   const getOwnServiceCredentialsMock: jest.Mock<
-    Awaited<ReturnType<AuthService['getOwnServiceCredentials']>>
+    ReturnType<AuthService['getOwnServiceCredentials']>,
+    Parameters<AuthService['getOwnServiceCredentials']>
   > = jest.fn();
+
+  const authenticateMock: jest.Mock<
+    ReturnType<AuthService['authenticate']>,
+    Parameters<AuthService['authenticate']>
+  > = jest.fn();
+
+  const getNoneCredentialsMock: jest.Mock<
+    ReturnType<AuthService['getNoneCredentials']>,
+    Parameters<AuthService['getNoneCredentials']>
+  > = jest.fn();
+
   const mockedAuth = {
     getPluginRequestToken: getPluginRequestTokenMock,
     getOwnServiceCredentials: getOwnServiceCredentialsMock,
+    authenticate: authenticateMock,
+    getNoneCredentials: getNoneCredentialsMock,
   } as unknown as AuthService;
 
   beforeEach(() => {
     getEntityByRefMock.mockReset();
+    authenticateMock.mockReset();
+    getNoneCredentialsMock.mockReset();
+    getNoneCredentialsMock.mockResolvedValue(defaultNoneCredentials);
 
     getEntityByRefMock.mockResolvedValue({
       kind: 'component',
@@ -95,6 +121,63 @@ describe('routeUtils', () => {
         metadata: {
           name: 'myComp',
         },
+      });
+    });
+
+    it('should not use own service credentials for user-controlled entityRef resolution', async () => {
+      const serviceCredentials = {
+        subject: 'plugin:dynatrace-dql',
+      } as unknown as Awaited<
+        ReturnType<AuthService['getOwnServiceCredentials']>
+      >;
+      getOwnServiceCredentialsMock.mockResolvedValue(serviceCredentials);
+
+      await getEntityFromRequest(
+        getRequest(mockedEntityRef),
+        mockedClient,
+        mockedAuth,
+      );
+
+      expect(getPluginRequestTokenMock).not.toHaveBeenCalledWith(
+        expect.objectContaining({
+          onBehalfOf: serviceCredentials,
+          targetPluginId: 'catalog',
+        }),
+      );
+    });
+
+    it('should authenticate the caller and use their credentials as onBehalfOf when Authorization header is present', async () => {
+      const callerCredentials = {
+        $$type: '@backstage/BackstageCredentials',
+        principal: { type: 'user', userEntityRef: 'user:default/alice' },
+      } as unknown as Awaited<ReturnType<AuthService['authenticate']>>;
+      authenticateMock.mockResolvedValue(callerCredentials);
+
+      await getEntityFromRequest(
+        getRequest(mockedEntityRef, 'Bearer test-token-123'),
+        mockedClient,
+        mockedAuth,
+      );
+
+      expect(authenticateMock).toHaveBeenCalledWith('test-token-123');
+      expect(getPluginRequestTokenMock).toHaveBeenCalledWith({
+        onBehalfOf: callerCredentials,
+        targetPluginId: 'catalog',
+      });
+    });
+
+    it('should use getNoneCredentials as onBehalfOf when no Authorization header is present', async () => {
+      await getEntityFromRequest(
+        getRequest(mockedEntityRef),
+        mockedClient,
+        mockedAuth,
+      );
+
+      expect(authenticateMock).not.toHaveBeenCalled();
+      expect(getNoneCredentialsMock).toHaveBeenCalled();
+      expect(getPluginRequestTokenMock).toHaveBeenCalledWith({
+        onBehalfOf: defaultNoneCredentials,
+        targetPluginId: 'catalog',
       });
     });
   });

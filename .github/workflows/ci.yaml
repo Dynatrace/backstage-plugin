@@ -1,4 +1,6 @@
 name: CI
+permissions:
+  contents: read
 
 on:
   push:
@@ -8,15 +10,17 @@ on:
 
 jobs:
   build:
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false }}
+    timeout-minutes: 30
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v6
 
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 22.x
+          node-version: 24.x
 
       - name: Enable Corepack
         run: corepack enable
@@ -32,6 +36,40 @@ jobs:
 
       - name: Run Tests
         run: yarn test:all
-
       - name: Run Audit
         run: yarn audit --level high || true
+
+  e2e-platform-token:
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false }}
+    needs: build
+    uses: ./.github/workflows/e2e.yaml
+    with:
+      auth_mode: platform-token
+    secrets:
+      TENANT_APP_URL: ${{ secrets.TENANT_APP_URL }}
+      PLATFORM_TOKEN: ${{ secrets.PLATFORM_TOKEN }}
+
+  e2e-oauth:
+    if: ${{ always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false) && needs.build.result == 'success' }}
+    needs: [build, e2e-platform-token]
+    uses: ./.github/workflows/e2e.yaml
+    with:
+      auth_mode: oauth
+    secrets:
+      TENANT_APP_URL: ${{ secrets.TENANT_APP_URL }}
+      OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+      OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
+      OAUTH_ACCOUNT_URN: ${{ secrets.OAUTH_ACCOUNT_URN }}
+      OAUTH_TOKEN_URL: ${{ secrets.OAUTH_TOKEN_URL }}
+
+  e2e-status:
+    if: ${{ always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false) }}
+    needs: [e2e-platform-token, e2e-oauth]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate e2e results
+        run: |
+          if [ "${{ needs.e2e-platform-token.result }}" == "failure" ] || [ "${{ needs.e2e-oauth.result }}" == "failure" ]; then
+            echo "At least one e2e auth mode failed"
+            exit 1
+          fi

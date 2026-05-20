@@ -82,7 +82,7 @@ const executeQuery = async (
       Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(dql),
+    body: JSON.stringify({ query: dql }),
   });
   if (!queryExecRes.ok) {
     throw new Error(await queryExecRes.text().catch(() => ''));

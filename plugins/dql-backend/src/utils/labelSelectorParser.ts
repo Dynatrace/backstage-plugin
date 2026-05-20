@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { sanitizeDqlString } from './dqlSanitizer';
+
 interface LabelKeyValue {
   key: string;
   value: string;
@@ -57,7 +59,17 @@ export function generateKubernetesSelectorFilter(
     return '';
   }
   const labelMap = labels
-    .map(label => `workload.labels[\`${label.key}\`] == "${label.value}"`)
+    .map(label => {
+      const key = sanitizeDqlString(
+        label.key,
+        'backstage.io/kubernetes-label-selector',
+      );
+      const value = sanitizeDqlString(
+        label.value,
+        'backstage.io/kubernetes-label-selector',
+      );
+      return `workload.labels[\`${key}\`] == "${value}"`;
+    })
     .join(' AND ');
 
   return labelMap ? `| filter ${labelMap}` : '';
