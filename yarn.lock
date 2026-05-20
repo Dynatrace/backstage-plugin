@@ -9058,10 +9058,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@protobufjs/inquire@npm:^1.1.2":
+"@protobufjs/inquire@npm:1.1.2":
   version: 1.1.2
   resolution: "@protobufjs/inquire@npm:1.1.2"
   checksum: 10c0/af69597818a14cac6a00a74cd5b3fb85aa96658b9dbbae73e6d907cb154ebf470953a8c537b3e6095a43de565ec4e6c5b40227c72f4a7d762d34fbec7ac179e7
+  languageName: node
+  linkType: hard
+
+"@protobufjs/inquire@patch:@protobufjs/inquire@npm%3A1.1.2#~/.yarn/patches/@protobufjs-inquire-npm-1.1.2-d8a203d287.patch":
+  version: 1.1.2
+  resolution: "@protobufjs/inquire@patch:@protobufjs/inquire@npm%3A1.1.2#~/.yarn/patches/@protobufjs-inquire-npm-1.1.2-d8a203d287.patch::version=1.1.2&hash=576e3e"
+  checksum: 10c0/9b3e1585df3c739d63ef26c60e374e2ee0f4458634ecf7ba98f0e0f834732532b32b19cd56bc607cc1142c0eed1f71253ae498fb4b7f11044de4c0bbb9dcef36
   languageName: node
   linkType: hard
 
@@ -12927,7 +12934,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=13.7.0":
+"@types/node@npm:*":
   version: 25.3.2
   resolution: "@types/node@npm:25.3.2"
   dependencies:
@@ -12942,6 +12949,15 @@ __metadata:
   dependencies:
     undici-types: "npm:~7.16.0"
   checksum: 10c0/d2c36b78b6050d8677769fa05a32243061675e81ddc2bb43955d91a671af3465506ef2731a24c0c9ab42b6b679bd5c1513de45bbe9ea278c2c07ee63b564b61b
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:>=13.7.0":
+  version: 25.9.1
+  resolution: "@types/node@npm:25.9.1"
+  dependencies:
+    undici-types: "npm:>=7.24.0 <7.24.7"
+  checksum: 10c0/9a04682842bebbcf21a1779dfeab9aa733d7bd7bbc0a0edb641ab3a9a3d43eac543225acf669c334f458f1956443ebc072bc3c72840c543b8b356cab5c82d456
   languageName: node
   linkType: hard
 
@@ -33862,6 +33878,13 @@ __metadata:
   version: 1.13.8
   resolution: "underscore@npm:1.13.8"
   checksum: 10c0/6677688daeda30484823e77c0b89ce4dcf29964a77d5a06f37299c007ab4bb1c66a0ff75e0d274620b62a1fe2a6ba29879f8214533ca611d71a1ae504f2bfc9b
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:>=7.24.0 <7.24.7":
+  version: 7.24.6
+  resolution: "undici-types@npm:7.24.6"
+  checksum: 10c0/d9cd8befb643ac904615c280a095ba4240531f6bb4a5e75a22a7483630ca8d3f1016d2ab6ace6ceda1f63b3a2db2fe037fafe121d6917a0187573aa548ff78ca
   languageName: node
   linkType: hard
 
