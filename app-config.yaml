@@ -1,17 +1,6 @@
 app:
   title: Scaffolded Backstage App
   baseUrl: http://localhost:3000
-  extensions:
-    - entity-card:dynatrace-dql/dql-query:
-        config:
-          props:
-            title: Davis Events
-            queryId: custom.davis-events
-    - entity-card:dynatrace-dql/kubernetes-deployments:
-        config:
-          props:
-            title: Kubernetes Deployments
-    - entity-card:dynatrace-dql/catalog-info-query: {}
 
 organization:
   name: Dynatrace
