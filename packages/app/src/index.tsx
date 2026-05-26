@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import App from './App';
 import '@backstage/cli/asset-types';
-import '@backstage/ui/css/styles.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
+const root = ReactDOM.createRoot(document.getElementById('root')!);
+
+import('./App').then(({ default: app }) => root.render(<>{app}</>));
