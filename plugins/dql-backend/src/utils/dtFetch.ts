@@ -15,25 +15,23 @@
  */
 import packageJson from '../../package.json';
 import { getUserAgent } from './userAgent';
-import { HttpsProxyAgent } from 'https-proxy-agent';
-import fetch, { RequestInfo, RequestInit, Response } from 'node-fetch';
+import { ProxyAgent } from 'undici';
 
 const userAgent: string = getUserAgent();
-const agent = process.env.HTTPS_PROXY
-  ? new HttpsProxyAgent(process.env.HTTPS_PROXY)
+const dispatcher = process.env.HTTPS_PROXY
+  ? new ProxyAgent(process.env.HTTPS_PROXY)
   : undefined;
 
 export const dtFetch = (
-  url: RequestInfo,
+  url: string | URL,
   identifier: string,
   options: RequestInit = {},
 ): Promise<Response> => {
-  // Set the User Agent in the headers
   options.headers = {
     ...options.headers,
     'User-Agent': userAgent,
     Referer: `backstage-plugin@${packageJson.version ?? '1.0.0'}/${identifier}`,
   };
 
-  return fetch(url, { ...options, agent });
+  return fetch(url, { ...options, dispatcher } as RequestInit);
 };

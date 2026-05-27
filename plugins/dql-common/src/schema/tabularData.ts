@@ -40,7 +40,7 @@ const tableCell = z
       })),
   );
 
-const rowData = z.record(tableCell);
+const rowData = z.record(z.string(), tableCell);
 const tabularDataSchema = z.array(rowData);
 
 export const TabularDataFactory = {
@@ -49,11 +49,14 @@ export const TabularDataFactory = {
     return TabularDataFactory.fromObject(data);
   },
 
-  fromObject: (input: unknown) => {
-    return tabularDataSchema.parse(input);
+  fromObject: (input: unknown): TabularData => {
+    return tabularDataSchema.parse(input) as unknown as TabularData;
   },
 };
 
-export type TabularData = z.infer<typeof tabularDataSchema>;
-export type TabularDataRow = z.infer<typeof rowData>;
-export type TabularDataCell = z.infer<typeof tableCell>;
+export type TabularDataCell =
+  | string
+  | { type: TableTypes.LINK; text: string; url: string }
+  | { type: TableTypes.OBJECT; content: string };
+export type TabularDataRow = Record<string, TabularDataCell>;
+export type TabularData = TabularDataRow[];

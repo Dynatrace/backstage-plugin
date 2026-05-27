@@ -100,10 +100,10 @@ export const validateQueries = (
     extendedEntity.metadata.dynatrace?.queries,
   );
   if (parsedQuery.error) {
-    const zodError = parsedQuery.error.errors
+    const zodError = parsedQuery.error.issues
       .map(
-        error =>
-          `"${error.message}" at metadata/dynatrace/queries/${error.path.join(
+        issue =>
+          `"${issue.message}" at metadata/dynatrace/queries/${issue.path.join(
             '/',
           )}`,
       )
