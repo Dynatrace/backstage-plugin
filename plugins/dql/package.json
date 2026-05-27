@@ -1,6 +1,6 @@
 {
   "name": "@dynatrace/backstage-plugin-dql",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -40,7 +40,7 @@
     "@backstage/errors": "^1.3.0",
     "@backstage/plugin-catalog-react": "^2.1.4",
     "@backstage/theme": "^0.7.3",
-    "@dynatrace/backstage-plugin-dql-common": "^2.7.0",
+    "@dynatrace/backstage-plugin-dql-common": "^2.8.0",
     "@material-ui/core": "^4.12.2",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "4.0.0-alpha.61",
