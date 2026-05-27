@@ -74,6 +74,8 @@ Exception: if Step 2 showed that the Backstage release explicitly requires a maj
 
 For all other packages: edit the relevant `package.json` to set the exact latest version (no `^` or `~`). Do **not** run `yarn install` yet.
 
+Type dependencies like @types/node must match the major node version. Look into @.nvmrc to find node version. Also other types like for React must match the major version.
+
 Track skipped packages (name, current version, available version) for the final report.
 
 ---
@@ -124,11 +126,18 @@ yarn test:all
 
 ---
 
-## Step 8 — Final report
 
-Print a structured summary, as markdown so it is ready to be copied and pasted for a PR's description:
+## Step 8 — Commit and push changes
+
+
+If step 7 was successful ask the user if making a new branch is ok. If so create a new branch with `git checkout -b chore/deps-update-XXXXX`. Where `XXXXX` is the current date, like `20260527`.
+Then `git add .`, `git commit -am "chore(deps): maintenance (XXXXX)"`. Then `git push -u origin chore/deps-update-XXXXX`.
+As description of the PR use the report as markdown so the commit is created like this:
 
 ```
+git add . && git commit -m "$(cat <<'EOF'
+chore(deps): maintenance (XXXXX)
+
 === Package Update Summary ===
 
 Security fixes (resolutions):
@@ -155,6 +164,8 @@ Verification:
 Source/test files changed:
   plugins/dql/src/api.ts — updated import path
   ...
+EOF
+)"
 ```
 
-Print it as markdown so it is ready to be copied and pasted for a PR's description.
+At the end construct the URL to create the PR and print it as response. The repo is hosted on GitHub.
