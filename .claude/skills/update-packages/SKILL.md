@@ -74,6 +74,8 @@ Exception: if Step 2 showed that the Backstage release explicitly requires a maj
 
 For all other packages: edit the relevant `package.json` to set the exact latest version (no `^` or `~`). Do **not** run `yarn install` yet.
 
+Type dependencies like @types/node must match the major node version. Look into @.nvmrc to find node version. Also other types like for React must match the major version.
+
 Track skipped packages (name, current version, available version) for the final report.
 
 ---
