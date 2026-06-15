@@ -27,5 +27,5 @@ export const sanitizeDqlString = (
   annotationName: string,
 ): string => {
   assertNoControlCharacters(value, annotationName);
-  return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+  return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/`/g, '\\`');
 };
