@@ -121,7 +121,8 @@
     "shell-quote": "1.8.4",
     "@protobufjs/inquire@npm:^1.1.2": "patch:@protobufjs/inquire@npm%3A1.1.2#~/.yarn/patches/@protobufjs-inquire-npm-1.1.2-d8a203d287.patch",
     "tmp": "0.2.6",
-    "esbuild": "^0.28.1"
+    "esbuild": "^0.28.1",
+    "@grpc/grpc-js": "^1.14.4"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [
