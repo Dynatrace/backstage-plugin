@@ -24,6 +24,14 @@ describe('dql-sanitizer', () => {
     expect(escaped).toBe('a\\\\b\\"c');
   });
 
+  it('should escape backticks alongside backslashes and quotes', () => {
+    // act
+    const escaped = sanitizeDqlString('key`value', 'some-annotation');
+
+    // assert
+    expect(escaped).toBe('key\\`value');
+  });
+
   it('should fail for control characters in DQL strings', () => {
     // act, assert
     expect(() => sanitizeDqlString('line1\nline2', 'some-annotation')).toThrow(
