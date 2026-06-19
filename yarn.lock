@@ -5431,7 +5431,7 @@ __metadata:
     express: "npm:4.22.2"
     express-promise-router: "npm:^4.1.0"
     msw: "npm:2.14.6"
-    undici: "npm:7.24.4"
+    undici: "npm:7.28.0"
     winston: "npm:^3.2.1"
     yn: "npm:5.1.0"
     zod: "npm:4.4.3"
