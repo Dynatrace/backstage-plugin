@@ -74,11 +74,30 @@ jobs:
           PLATFORM_TOKEN: ${{ secrets.PLATFORM_TOKEN }}
         run: envsubst '${TENANT_APP_URL} ${PLATFORM_TOKEN}' < e2e/app-config.platform-token.template > app-config.local.yaml
 
+      - name: Start dev server (platform-token)
+        run: yarn dev > dev-server-platform-token.log 2>&1 &
+             echo $! > .dev-server.pid
+
+      - name: Wait for dev server (platform-token)
+        run: yarn wait-on http://localhost:3000 --timeout 60000
+
       - name: Run Playwright tests (platform-token)
         id: playwright-platform-token
         env:
           TENANT_APP_URL: ${{ secrets.TENANT_APP_URL }}
         run: yarn e2e
+
+      - name: Stop dev server (platform-token)
+        if: always()
+        run: kill $(cat .dev-server.pid) || true
+
+      - name: Upload dev server log (platform-token)
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: dev-server-log-platform-token
+          path: dev-server-platform-token.log
+          retention-days: 30
 
       - name: Log Playwright results (platform-token)
         if: always()
@@ -122,11 +141,30 @@ jobs:
           OAUTH_TOKEN_URL: ${{ secrets.OAUTH_TOKEN_URL }}
         run: envsubst '${TENANT_APP_URL} ${OAUTH_CLIENT_ID} ${OAUTH_CLIENT_SECRET} ${OAUTH_ACCOUNT_URN} ${OAUTH_TOKEN_URL}' < e2e/app-config.oauth.template > app-config.local.yaml
 
+      - name: Start dev server (oauth)
+        run: yarn dev > dev-server-oauth.log 2>&1 &
+             echo $! > .dev-server.pid
+
+      - name: Wait for dev server (oauth)
+        run: yarn wait-on http://localhost:3000 --timeout 60000
+
       - name: Run Playwright tests (oauth)
         id: playwright-oauth
         env:
           TENANT_APP_URL: ${{ secrets.TENANT_APP_URL }}
         run: yarn e2e
+
+      - name: Stop dev server (oauth)
+        if: always()
+        run: kill $(cat .dev-server.pid) || true
+
+      - name: Upload dev server log (oauth)
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: dev-server-log-oauth
+          path: dev-server-oauth.log
+          retention-days: 30
 
       - name: Log Playwright results (oauth)
         if: always()
