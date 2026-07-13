@@ -1,0 +1,13 @@
+# Snyk (https://snyk.io) policy file
+version: v1.25.0
+ignore:
+  SNYK-JS-REACTDEVUTILS-17890708:
+    - '*':
+        reason: >-
+          No fix available upstream. react-dev-utils is a dev-only transitive
+          dependency pulled in by @backstage/cli-module-build and is not
+          present in production builds. The vulnerable openBrowser helper
+          requires local filesystem access to exploit and is not reachable
+          from untrusted input in this project.
+        expires: '2027-07-12T00:00:00.000Z'
+patch: {}
