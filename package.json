@@ -136,7 +136,7 @@
     "@grpc/grpc-js": "1.14.4",
     "form-data@npm:^4.0.0": "4.0.6",
     "form-data@npm:^4.0.5": "4.0.6",
-    "ws": "8.21.0",
+    "ws": "8.21.1",
     "js-cookie": "3.0.8",
     "linkify-it": "5.0.2",
     "websocket-driver": "0.7.5"
