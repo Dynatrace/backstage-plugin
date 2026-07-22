@@ -14060,10 +14060,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"adm-zip@npm:0.5.18":
-  version: 0.5.18
-  resolution: "adm-zip@npm:0.5.18"
-  checksum: 10c0/9b734aa7126a01913baec02bf495d086b5d7e63315522b7087620e3fc8279c8ebd65109da4d99f16fcf873d87522ae6ffd913aef65449fd22c68777b772685e9
+"adm-zip@npm:0.6.0":
+  version: 0.6.0
+  resolution: "adm-zip@npm:0.6.0"
+  checksum: 10c0/440f37590c62255226f1db4cb1a5a618879347f5106ad5b9a24c67c20f9a54bd5b4efcd2b35af858e39c7885d05f4bd35f4c2f42378c98d13f779be380bc9ae4
   languageName: node
   linkType: hard
 
@@ -14825,15 +14825,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:1.16.1":
-  version: 1.16.1
-  resolution: "axios@npm:1.16.1"
+"axios@npm:1.18.1":
+  version: 1.18.1
+  resolution: "axios@npm:1.18.1"
   dependencies:
     follow-redirects: "npm:^1.16.0"
     form-data: "npm:^4.0.5"
     https-proxy-agent: "npm:^5.0.1"
     proxy-from-env: "npm:^2.1.0"
-  checksum: 10c0/2f77e37e6552bbff8a772d058fb09500198e9188c6b20dc799d82dbe12a8cb506f6eed4e4e62a9ba612a35cbab496faa26d68f9bff14a53af6d15c3e136391a7
+  checksum: 10c0/9d9378a3af0d0ad730a52ad9d15ec7201f3926ad6e7e8bbffc5ae21ca2835ad11d1d9598698f5dd9718917486039f55ea1d7dc23d8e44fa827a55cc3262c02fc
   languageName: node
   linkType: hard
 
@@ -19723,10 +19723,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-uri@npm:3.1.3":
-  version: 3.1.3
-  resolution: "fast-uri@npm:3.1.3"
-  checksum: 10c0/0ce405815546770ad7e730b8f8fd58db80cefe4533ee99ee1a3263f11d2ccc3b8a0cf10d6cd9ba590e9746eb43b60f2ef2631d0c379a9ebba063ce0d4076b109
+"fast-uri@npm:3.1.4":
+  version: 3.1.4
+  resolution: "fast-uri@npm:3.1.4"
+  checksum: 10c0/f90948821ceb49980f64f89b8216ba498f5957f26035be813526a55b6145d26cbd63ef5618d5205a3292b31edc9c08589749350cd72bd86c7095eb434dceb757
   languageName: node
   linkType: hard
 
@@ -32710,9 +32710,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svgo@npm:2.8.2":
-  version: 2.8.2
-  resolution: "svgo@npm:2.8.2"
+"svgo@npm:2.8.3":
+  version: 2.8.3
+  resolution: "svgo@npm:2.8.3"
   dependencies:
     commander: "npm:^7.2.0"
     css-select: "npm:^4.1.3"
@@ -32723,7 +32723,7 @@ __metadata:
     stable: "npm:^0.1.8"
   bin:
     svgo: ./bin/svgo
-  checksum: 10c0/a3a533e1678aecdfa1c67f06d71f104da7ef574a3f63a8dfeda10368b42428c67d09a06b4eee233c5ed49ac815f1febb6193cba0f611a21bfc00366d7930205d
+  checksum: 10c0/0052299bbc4c76e22312e4e7288772e9a5655e850622f67a7d61609469ea4da608047e89ebc432d9aab854a559d98d3f4b8b06c89f899f227214cc5145c4933a
   languageName: node
   linkType: hard
 
@@ -34827,14 +34827,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"websocket-driver@npm:>=0.5.1, websocket-driver@npm:^0.7.4":
-  version: 0.7.4
-  resolution: "websocket-driver@npm:0.7.4"
+"websocket-driver@npm:0.7.5":
+  version: 0.7.5
+  resolution: "websocket-driver@npm:0.7.5"
   dependencies:
     http-parser-js: "npm:>=0.5.1"
     safe-buffer: "npm:>=5.1.0"
     websocket-extensions: "npm:>=0.1.1"
-  checksum: 10c0/5f09547912b27bdc57bac17b7b6527d8993aa4ac8a2d10588bb74aebaf785fdcf64fea034aae0c359b7adff2044dd66f3d03866e4685571f81b13e548f9021f1
+  checksum: 10c0/843a3c9f529ce07f2721829f70f62986247525ab22625e857b69da13dc90967bacfe57b85e196801b565cd797e309ddd5b06fa8435732e34e8a8ab6201d7abed
   languageName: node
   linkType: hard
 
@@ -35157,9 +35157,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:8.21.0":
-  version: 8.21.0
-  resolution: "ws@npm:8.21.0"
+"ws@npm:8.21.1":
+  version: 8.21.1
+  resolution: "ws@npm:8.21.1"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ">=5.0.2"
@@ -35168,7 +35168,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 10c0/ef4a243476283fc49bc7550966c4af4aa0eef56273837211e700de3b664e08604a760cdddcb5ba43c049140e74ccfec5b0ee0bb439e08c2adf9138902fdde5f9
+  checksum: 10c0/c4c6f1d95f6d465262de2037c57c715725d67e078dd49420ede4e19115668aba159cb64d85c5e89c06eb2826be599e62e5095860ad6cc54ff42e8bd7684e1db8
   languageName: node
   linkType: hard
 
