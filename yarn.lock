@@ -12741,15 +12741,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express-serve-static-core@npm:4.19.9":
-  version: 4.19.9
-  resolution: "@types/express-serve-static-core@npm:4.19.9"
+"@types/express-serve-static-core@npm:5.1.2":
+  version: 5.1.2
+  resolution: "@types/express-serve-static-core@npm:5.1.2"
   dependencies:
     "@types/node": "npm:*"
     "@types/qs": "npm:*"
     "@types/range-parser": "npm:*"
     "@types/send": "npm:*"
-  checksum: 10c0/31d7afe63c4f0090159a869e4199aae38cbc222948bf9be5d7c257bfdc8e14c9dec46e9f50c08e0004565565acb7ecd95d5c0dbde6d9fdd45a5d0adfabbf00fe
+  checksum: 10c0/0114a6d2e34d195ea3f547e9f599b400ebf445979ffc52f631f6e6ff2f77c8f9780da0cbaec8fd0b0b44739a35c717749e2f33b23743f9a7dea7238c8eadca0f
   languageName: node
   linkType: hard
 
@@ -15061,7 +15061,7 @@ __metadata:
     "@dynatrace/backstage-plugin-dql-backend": "npm:^2.8.0"
     "@types/dockerode": "npm:^4.0.0"
     "@types/express": "npm:4.17.25"
-    "@types/express-serve-static-core": "npm:4.19.9"
+    "@types/express-serve-static-core": "npm:5.1.2"
     "@types/luxon": "npm:^3.0.0"
     app: "link:../app"
     dockerode: "npm:5.0.1"
