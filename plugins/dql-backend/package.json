@@ -48,7 +48,7 @@
     "@backstage/cli": "^0.36.1",
     "@backstage/test-utils": "^1.7.17",
     "@types/supertest": "7.2.1",
-    "msw": "2.14.6"
+    "msw": "2.15.0"
   },
   "files": [
     "dist",
