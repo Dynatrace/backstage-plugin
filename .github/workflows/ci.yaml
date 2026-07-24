@@ -82,7 +82,7 @@ jobs:
              echo $! > .dev-server.pid
 
       - name: Wait for dev server (platform-token)
-        run: yarn wait-on http://localhost:3000 --timeout 60000
+        run: yarn wait-on http://localhost:3000 tcp:localhost:7007 --timeout 60000
 
       - name: Run Playwright tests (platform-token)
         id: playwright-platform-token
@@ -149,7 +149,7 @@ jobs:
              echo $! > .dev-server.pid
 
       - name: Wait for dev server (oauth)
-        run: yarn wait-on http://localhost:3000 --timeout 60000
+        run: yarn wait-on http://localhost:3000 tcp:localhost:7007 --timeout 60000
 
       - name: Run Playwright tests (oauth)
         id: playwright-oauth
