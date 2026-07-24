@@ -82,7 +82,7 @@ jobs:
              echo $! > .dev-server.pid
 
       - name: Wait for dev server (platform-token)
-        run: yarn wait-on http://localhost:3000 tcp:localhost:7007 --timeout 60000
+        run: yarn wait-on http://localhost:3000 tcp:localhost:7007 --timeout 60000 || (echo "=== Backend process check ===" && ps aux | grep node && echo "=== better-sqlite3 binding ===" && ls node_modules/better-sqlite3/lib/binding/ 2>/dev/null && exit 1)
 
       - name: Run Playwright tests (platform-token)
         id: playwright-platform-token
