@@ -155,6 +155,11 @@
     "type": "git",
     "url": "git+https://github.com/Dynatrace/backstage-plugin.git"
   },
+  "dependenciesMeta": {
+    "better-sqlite3": {
+      "built": true
+    }
+  },
   "dependencies": {
     "@types/webpack-env": "1.18.8",
     "better-sqlite3": "12.11.1"

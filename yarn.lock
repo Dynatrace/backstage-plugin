@@ -30715,6 +30715,9 @@ __metadata:
     prettier: "npm:3.9.5"
     typescript: "npm:~5.9.0"
     wait-on: "npm:^9.0.10"
+  dependenciesMeta:
+    better-sqlite3:
+      built: true
   languageName: unknown
   linkType: soft
 
