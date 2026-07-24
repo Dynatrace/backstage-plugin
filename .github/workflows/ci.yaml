@@ -25,6 +25,9 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
+      - name: Install native build dependencies
+        run: sudo apt-get install -y libsqlite3-dev
+
       - name: Install dependencies
         run: yarn install --immutable
 
@@ -79,7 +82,7 @@ jobs:
              echo $! > .dev-server.pid
 
       - name: Wait for dev server (platform-token)
-        run: yarn wait-on http://localhost:3000 --timeout 60000
+        run: yarn wait-on http://localhost:3000 tcp:localhost:7007 --timeout 60000 || (echo "=== better-sqlite3 build/Release ===" && ls node_modules/better-sqlite3/build/Release/ 2>/dev/null || echo "MISSING" && echo "=== better-sqlite3 lib/binding ===" && ls node_modules/better-sqlite3/lib/binding/ 2>/dev/null || echo "MISSING" && echo "=== node-gyp install test ===" && node -e "require('better-sqlite3')" 2>&1 | head -5 && exit 1)
 
       - name: Run Playwright tests (platform-token)
         id: playwright-platform-token
@@ -146,7 +149,7 @@ jobs:
              echo $! > .dev-server.pid
 
       - name: Wait for dev server (oauth)
-        run: yarn wait-on http://localhost:3000 --timeout 60000
+        run: yarn wait-on http://localhost:3000 tcp:localhost:7007 --timeout 60000
 
       - name: Run Playwright tests (oauth)
         id: playwright-oauth
