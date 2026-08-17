@@ -146,7 +146,7 @@
     "linkify-it": "5.0.2",
     "websocket-driver": "0.7.5",
     "ip-address": "10.4.0",
-    "nanoid": "3.3.17"
+    "nanoid": "3.3.18"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [
