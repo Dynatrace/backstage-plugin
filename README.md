@@ -1,3 +1,5 @@
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Dynatrace/backstage-plugin/badge)](https://securityscorecards.dev/viewer/?uri=github.com/Dynatrace/backstage-plugin)
+
 # Dynatrace Backstage Plugins
 
 _Context-rich observability and security insights at hand_ - The Dynatrace
