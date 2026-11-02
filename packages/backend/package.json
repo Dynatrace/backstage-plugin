@@ -41,7 +41,7 @@
     "@backstage/plugin-search-backend": "^2.1.1",
     "@backstage/plugin-search-backend-module-pg": "^0.5.54",
     "@backstage/plugin-search-backend-node": "^1.4.3",
-    "@backstage/plugin-techdocs-backend": "^2.1.7",
+    "@backstage/plugin-techdocs-backend": "^2.2.4",
     "@dynatrace/backstage-plugin-dql-backend": "^2.8.0",
     "app": "link:../app",
     "dockerode": "5.0.1",
