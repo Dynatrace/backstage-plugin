@@ -35,16 +35,6 @@ jobs:
             --project-lifecycle=production
             --project-tags=team=team-observability-intelligence,ticket-creation=true
 
-      - name: Use Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24.x
-
-      - name: Install dependencies for Snyk
-        run: |
-          corepack enable
-          yarn install --immutable
-
       - name: Run Snyk test
         if: ${{ steps.metadata.outputs.isDefaultOrReleaseBranch != 'true' }}
         uses: snyk/actions/node@v1.0.0
