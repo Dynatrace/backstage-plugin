@@ -10,4 +10,13 @@ ignore:
           requires local filesystem access to exploit and is not reachable
           from untrusted input in this project.
         expires: '2027-07-12T00:00:00.000Z'
+  SNYK-JS-REACTROUTER-18313144:
+    - '*':
+        reason: >-
+          Open redirect in react-router 6.30.4 (via react-router-dom). Snyk only
+          offers an upgrade to v7, and Backstage's own packages still depend on
+          react-router-dom ^6.30.2. Tracked until Backstage moves to a
+          react-router version with a fix. Revisit when Backstage releases
+          react-router v7 or v8 support.
+        expires: '2027-02-01T00:00:00.000Z'
 patch: {}
