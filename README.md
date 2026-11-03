@@ -116,6 +116,7 @@ Before configuring a Dynatrace connection, an OAuth 2.0 client is required.
    - `storage:events:read`
    - `storage:metrics:read`
    - `storage:security.events:read`
+   - `storage:smartscape:read` (required for the Kubernetes Deployments query)
 6. Scroll down and select **Create client**.
 7. Copy your client ID, client secret, and Dynatrace account URN. These settings
 are required for the Backstage plugin
@@ -599,7 +600,13 @@ To run e2e tests locally, you need:
        - `storage:buckets:read`
        - `storage:events:read`
      - Or an **OAuth client** with equivalent read scopes for DQL and storage
-       access
+       access, including:
+       - `storage:buckets:read`
+       - `storage:entities:read`
+       - `storage:events:read`
+       - `storage:metrics:read`
+       - `storage:security.events:read`
+       - `storage:smartscape:read`
 
 2. **Environment Variables** set in your terminal (only the variables for your
    chosen auth method are required):
